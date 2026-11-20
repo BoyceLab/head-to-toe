@@ -194,3 +194,6 @@ td.code,th.code{white-space:nowrap}
 @keyframes flashrow{from{background:var(--cta-soft)}to{background:transparent}}
 .item.flash{animation:flashrow 2.2s ease-out}
 @media print{ .finder,.infotip{display:none} }
+.omopc{font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-left:8px}
+.omopc::before{content:"· ";}
+.findres .fhead{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:8px 14px 2px}

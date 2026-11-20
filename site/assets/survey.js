@@ -145,11 +145,19 @@ function loadDrill(){
 }
 function loadOmop(){
   if(OMOP) return; OMOP={terms:{},loading:true};
-  fetch('omop.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ OMOP=j; if(cur==='review') render(true); }).catch(()=>{ OMOP={terms:{},failed:true}; if(cur==='review') render(true); });
+  const done=()=>{ if(cur==='review' || document.body.classList.contains('coord')) render(true); runFind(); };
+  fetch('omop.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ OMOP=j; done(); }).catch(()=>{ OMOP={terms:{},failed:true}; done(); });
 }
+/* The OMOP standard concept for an HPO term, from the mapping in content/mappings, as a short label. */
+function omopText(h){
+  const m=OMOP&&OMOP.terms&&OMOP.terms[h]; if(!m) return '';
+  if(!m[3].length) return 'OMOP: no standard concept';
+  const t=m[3][0]; return 'OMOP '+t[0]+' '+t[1]+(m[1]==='broader'?' (broader concept)':'');
+}
+const omopTag = h => { const t=omopText(h); return t ? ' <span class="omopc">'+esc(t)+'</span>' : ''; };
 function loadMondo(){
   if(MONDO) return; MONDO=[];
-  fetch('mondo.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ MONDO=j.map(([id,n,c])=>({id,n,c,k:n.toLowerCase()})); runMondo(); }).catch(()=>{ MONDO=[]; });
+  fetch('mondo.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ MONDO=j.map(([id,n,c])=>({id,n,c,k:n.toLowerCase()})); runMondo(); runFind(); }).catch(()=>{ MONDO=[]; });
 }
 /* Suggestions from Mondo for the diagnosis name. The typed name is always kept; choosing a suggestion adds a code beside it. */
 function runMondo(){
@@ -191,7 +199,7 @@ function itemRow(it, ctx, where){
   let h = '<div class="item'+(v?' ans-'+v:'')+'" id="row-'+hid+'">';
   h += '<div><div class="lab">'+esc(tk(lab))+elsewhere+'</div>';
   if(it.d) h += '<div class="desc">'+esc(tk(it.d))+'</div>';
-  h += '<div class="cvb"><span class="code">'+it.h+'</span> '+esc(LAB[it.h]||'')+'</div></div>';
+  h += '<div class="cvb"><span class="code">'+it.h+'</span> '+esc(LAB[it.h]||'')+omopTag(it.h)+'</div></div>';
   h += '<div class="tri" role="group" aria-label="'+esc(lab)+'">'+['yes','no','unsure'].map(x=>'<button type="button" id="b-'+hid+'-'+x+'" data-ans="'+it.h+'" data-v="'+x+'" data-where="'+esc(where)+'" aria-pressed="'+(v===x)+'">'+({yes:'Yes',no:'No',unsure:'Not sure'})[x]+'</button>').join('')+'</div>';
   if(v==='yes'){
     h += '<div class="more">';
@@ -248,6 +256,7 @@ function rAbout(){
     <li>Every feature is answered Yes, No, or Not sure.</li>
     <li>Timing choices follow the person's age: months for babies and toddlers, years for children, and broad life stages for adults.</li>
     <li>Places lived, jobs, military service, and activities are asked with ages, and coded to ECTO, an ontology of environmental exposures.</li>
+    <li>Each feature is linked to an OMOP standard concept, and a named diagnosis can be matched to a Mondo disease term on the Diagnosis page. Switch on <strong>Show clinical terms</strong> to see the codes; the Review page exports the answers as a Phenopacket and as OMOP rows.</li>
     <li>Nothing you enter leaves this page.</li>
   </ul>
   <div class="rowbtns"><button type="button" class="btn primary" data-go="you">Start</button></div>
@@ -481,8 +490,14 @@ function runFind(){
     const plain=findName(x.h); const pl=plain.toLowerCase();
     const score=(x.h.toLowerCase()===qv?-3:0)+(IDX[x.h]?-2:0)+(pl.startsWith(qv)||x.l.toLowerCase().startsWith(qv)?-1:0)+plain.length/300;
     return {x,plain,score}; }).sort((a,b)=>a.score-b.score).slice(0,8);
-  if(!hits.length){ out.innerHTML='<p class="fitem muted">No match. Try other everyday words, a clinical term, or an HPO code such as HP:0003186.</p>'; return; }
-  out.innerHTML=hits.map(({x,plain})=>{
+  let dx='';
+  if(MONDO && MONDO.length && qv.length>=4){
+    const dh=MONDO.filter(x=>words.every(w=>x.k.indexOf(w)>=0) || x.id.toLowerCase()===qv).sort((a,b)=>(a.k.startsWith(qv)?0:1)-(b.k.startsWith(qv)?0:1)||a.n.length-b.n.length).slice(0,4);
+    if(dh.length) dx='<div class="fhead">Diagnoses in Mondo</div>'+dh.map(x=>{ const chosen=S.dxMondo&&S.dxMondo.id===x.id;
+      return '<div class="fitem"><div class="fname">'+esc(x.n)+'</div><div class="fcode">'+x.id+' · Athena concept '+esc(x.c)+' (no standard OMOP concept yet)</div><div class="fbtns"><button type="button" class="btn quiet" data-findmondo="'+x.id+'" data-name="'+esc(x.n)+'" data-cid="'+esc(x.c)+'"'+(chosen?' disabled':'')+'>'+(chosen?'Recorded as the diagnosis':'Use as the diagnosis')+'</button></div></div>'; }).join('');
+  }
+  if(!hits.length && !dx){ out.innerHTML='<p class="fitem muted">No match. Try other everyday words, a clinical term, an HPO code such as HP:0003186, or a diagnosis name.</p>'; return; }
+  out.innerHTML=(hits.length?'<div class="fhead">Features in HPO</div>':'')+hits.map(({x,plain})=>{
     const h=x.h, a=S.ans[h]||{}, added=a.v==='yes'||S.extra.some(e=>e.h===h);
     let where='', go='';
     if(IDX[h]){
@@ -492,9 +507,9 @@ function runFind(){
       else if(B.systems.some(s=>s.t===w)) { where+='. That page opens after a Yes or Not sure for it on the head-to-toe check.'; go='<button type="button" class="btn" data-go="screen">Go to the head-to-toe check</button>'; }
     } else if(drillParent(h)) where='A more specific choice under “'+esc(findName(drillParent(h)))+'”';
     else where='Not on a survey page; it can be added as present from here.';
-    return '<div class="fitem"><div class="fname">'+esc(tk(plain))+'</div><div class="fcode">'+esc(x.l)+' · '+h+'</div><div class="fwhere">'+where+'</div><div class="fbtns">'+go+
+    return '<div class="fitem"><div class="fname">'+esc(tk(plain))+'</div><div class="fcode">'+esc(x.l)+' · '+h+(omopText(h)?' · '+esc(omopText(h)):'')+'</div><div class="fwhere">'+where+'</div><div class="fbtns">'+go+
       '<button type="button" class="btn quiet" data-findyes="'+h+'" data-plain="'+esc(plain)+'" data-l="'+esc(x.l)+'"'+(added?' disabled':'')+'>'+(added?'Recorded as present':'Add as present')+'</button></div></div>';
-  }).join('');
+  }).join('')+dx;
 }
 function rMore(){
   let h = '<p>'+tk('If {you} {have_has} a feature that was not listed, search for it in everyday words. The search covers the plain-language synonyms in the Human Phenotype Ontology.')+'</p>';
@@ -689,11 +704,12 @@ document.addEventListener('click', e=>{
   if(d.addecto){ if(!S.exp.other.some(x=>x.id===d.addecto)) S.exp.other.push({id:d.addecto,l:d.l}); render(true); setTimeout(()=>{ loadEcto(); runEcto(); },0); return; }
   if(d.rmecto!==undefined){ S.exp.other.splice(+d.rmecto,1); render(true); return; }
   if(d.findgo){ closeFind(false); go(d.stage); setTimeout(()=>{ let h=d.findgo, el=null; while(h && !(el=document.getElementById('row-'+h.replace(':','')))) h=parentOf(h); if(el){ el.scrollIntoView({block:'center'}); el.classList.add('flash'); } },60); return; }
+  if(d.findmondo){ S.dxNamed='Yes'; S.dxMondo={id:d.findmondo,name:d.name,cid:d.cid}; if(!S.dxName||!S.dxName.trim()) S.dxName=d.name; render(true); runFind(); return; }
   if(d.findyes){ const h=d.findyes;
     if(IDX[h]){ S.ans[h]=Object.assign(S.ans[h]||{}, {v:'yes', where:(S.ans[h]&&S.ans[h].where)||IDX[h].where[0]}); let p=parentOf(h); while(p){ if(!S.ans[p]||S.ans[p].v!=='yes') S.ans[p]=Object.assign(S.ans[p]||{}, {v:'yes', where:IDX[p]?IDX[p].where[0]:(S.ans[h].where)}); p=parentOf(p); } }
     else if(!S.extra.some(x=>x.h===h)) S.extra.push({h, p:d.plain, l:d.l});
     render(true); runFind(); return; }
-  if(t.id==='findBtn'){ const panel=document.getElementById('findPanel'); if(panel.hidden){ panel.hidden=false; t.setAttribute('aria-expanded','true'); const f=document.getElementById('find'); f.focus(); f.select(); loadSearch(); if(!DRILL) loadDrill(); runFind(); } else closeFind(true); return; }
+  if(t.id==='findBtn'){ const panel=document.getElementById('findPanel'); if(panel.hidden){ panel.hidden=false; t.setAttribute('aria-expanded','true'); const f=document.getElementById('find'); f.focus(); f.select(); loadSearch(); if(!DRILL) loadDrill(); loadOmop(); if(!MONDO) loadMondo(); runFind(); } else closeFind(true); return; }
   if(t.id==='coordInfo'){ const tip=document.getElementById('coordHelp'); const open=t.getAttribute('aria-expanded')!=='true'; t.setAttribute('aria-expanded', String(open)); tip.hidden=!open; return; }
   if(d.mondo){ S.dxMondo={id:d.mondo,name:d.name,cid:d.cid}; if(!S.dxName.trim()) S.dxName=d.name; render(true); return; }
   if(d.rmmondo){ S.dxMondo=null; render(true); return; }
@@ -725,11 +741,11 @@ document.getElementById('prevBtn').onclick=()=>{ const L=stages(); const i=L.fin
 document.getElementById('nextBtn').onclick=()=>{ const L=stages(); const i=L.findIndex(s=>s.id===cur); if(i<L.length-1) go(L[i+1].id); };
 document.getElementById('toTop').onclick=e=>{ e.preventDefault(); window.scrollTo(0,0); const j=document.getElementById('jump').querySelector('button[aria-current="true"]'); if(j) j.focus(); };
 const ct=document.getElementById('coordToggle');
-ct.onchange=()=>{ document.body.classList.toggle('coord', ct.checked); try{ localStorage.setItem('h2t-coord', ct.checked?'1':''); }catch(e){} render(true); };
-try{ if(localStorage.getItem('h2t-coord')==='1'){ ct.checked=true; document.body.classList.add('coord'); } }catch(e){}
+ct.onchange=()=>{ document.body.classList.toggle('coord', ct.checked); if(ct.checked) loadOmop(); try{ localStorage.setItem('h2t-coord', ct.checked?'1':''); }catch(e){} render(true); };
+try{ if(localStorage.getItem('h2t-coord')==='1'){ ct.checked=true; document.body.classList.add('coord'); loadOmop(); } }catch(e){}
 window.addEventListener('hashchange', ()=>{ const id=location.hash.slice(1); if(id==='walkthrough'){ if(cur!=='about') go('about'); const v=document.getElementById('walkthrough'); if(v) v.scrollIntoView({block:'start'}); return; } if(id && id!==cur) go(id); });
 function closeFind(refocus){ const panel=document.getElementById('findPanel'), b=document.getElementById('findBtn'); if(!panel||panel.hidden) return; panel.hidden=true; b.setAttribute('aria-expanded','false'); if(refocus) b.focus(); }
-document.addEventListener('click', e=>{ const f=document.querySelector('.finder'); if(f && (!f.contains(e.target) || e.target.closest('#findRes [data-go]'))) closeFind(false); });
+document.addEventListener('click', e=>{ if(!e.target.isConnected) return; const f=document.querySelector('.finder'); if(f && (!f.contains(e.target) || e.target.closest('#findRes [data-go]'))) closeFind(false); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeFind(true); });
 window.addEventListener('beforeprint', ()=>document.querySelectorAll('details').forEach(x=>x.open=true));
 (function(){ const r=(B.config||{}).repo_url; const a=document.getElementById('repoLink'); if(r&&a){ a.href=r+'/issues/new/choose'; a.hidden=false; } })();
