@@ -3,6 +3,7 @@
   --paper:#f5f7f8; --card:#ffffff; --ink:#17262d; --muted:#556871; --line:#d5dee2;
   --accent:#16627a; --accent-ink:#ffffff; --accent-soft:#e2eff3;
   --yes:#16627a; --no:#5b6870; --unsure:#9a6a12; --unsure-soft:#fbf1dd; --warn:#a23b2a;
+  --cta:#a3470c; --cta-ink:#ffffff; --cta-soft:#fdf0e4;
   --font-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   color-scheme:light;
@@ -12,12 +13,14 @@
     --paper:#0f171b; --card:#172328; --ink:#e4ecef; --muted:#9db0b8; --line:#2c3d44;
     --accent:#5fb4cf; --accent-ink:#0b1417; --accent-soft:#1b3440;
     --yes:#5fb4cf; --no:#93a3aa; --unsure:#e2b153; --unsure-soft:#33291a; --warn:#ef8a78; color-scheme:dark;
+    --cta:#f2a35f; --cta-ink:#1d1208; --cta-soft:#36261a;
   }
 }
 :root[data-theme="dark"]{
   --paper:#0f171b; --card:#172328; --ink:#e4ecef; --muted:#9db0b8; --line:#2c3d44;
   --accent:#5fb4cf; --accent-ink:#0b1417; --accent-soft:#1b3440;
   --yes:#5fb4cf; --no:#93a3aa; --unsure:#e2b153; --unsure-soft:#33291a; --warn:#ef8a78; color-scheme:dark;
+  --cta:#f2a35f; --cta-ink:#1d1208; --cta-soft:#36261a;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -156,3 +159,38 @@ td.code,th.code{white-space:nowrap}
 .exphead{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .exphead h3{margin:0}
 .card.exp .q{margin:10px 0}
+
+/* review call to action: header button on every page, and the panel on the About page */
+.toplinks a.reviewcta{background:var(--cta);color:var(--cta-ink);border-radius:999px;padding:4px 14px;font-weight:700;text-decoration:none;align-self:center}
+.toplinks a.reviewcta:hover{filter:brightness(1.08)}
+.reviewpanel{background:var(--cta-soft);border:2px solid var(--cta);border-radius:10px;padding:16px 20px;margin:14px 0 18px}
+.reviewpanel h3{font-size:1.3rem;margin-bottom:.3rem}
+.reviewpanel p{margin:.3rem 0 .6rem}
+.reviewpanel ol{margin:.2rem 0 .9rem;padding-left:1.4rem}
+.reviewpanel li{margin:.3rem 0}
+.reviewpanel .ctarow{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.btn.cta{background:var(--cta);border-color:var(--cta);color:var(--cta-ink);font-size:1.08rem;padding:11px 22px;border-radius:8px;text-decoration:none;display:inline-block}
+.btn.cta:hover{filter:brightness(1.08)}
+@media print{ .toplinks a.reviewcta{background:none;color:inherit;padding:0} }
+
+/* find a feature, and the clinical terms explanation */
+.finder{position:relative}
+.findbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 12px;font-size:.92rem;cursor:pointer;white-space:nowrap}
+.findbtn:hover,.findbtn[aria-expanded="true"]{border-color:var(--accent);color:var(--accent)}
+.findpanel{position:absolute;right:0;top:calc(100% + 6px);width:min(600px,92vw);background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.18);z-index:60;padding:10px}
+.findpanel input{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:8px 12px}
+.findres{max-height:60vh;overflow:auto;margin-top:6px}
+.findres .fitem{padding:9px 14px;border-bottom:1px solid var(--line)}
+.findres .fitem:last-child{border-bottom:none}
+.findres .fname{font-weight:700}
+.findres .fcode{font-family:var(--font-mono);font-size:.82rem;color:var(--muted)}
+.findres .fwhere{font-size:.88rem;color:var(--muted);margin:2px 0 6px}
+.findres .fbtns{display:flex;gap:8px;flex-wrap:wrap}
+.findres .btn{padding:4px 10px;font-size:.88rem}
+.switchgroup{display:inline-flex;align-items:center;gap:6px}
+.infotip{width:22px;height:22px;border-radius:50%;border:1px solid var(--muted);background:var(--card);color:var(--muted);font-weight:700;font-size:.8rem;line-height:1;cursor:pointer;padding:0}
+.infotip[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tiptext{margin:6px 0 4px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.92rem;max-width:900px}
+@keyframes flashrow{from{background:var(--cta-soft)}to{background:transparent}}
+.item.flash{animation:flashrow 2.2s ease-out}
+@media print{ .finder,.infotip{display:none} }

@@ -234,6 +234,16 @@ function ctxField(f){
 /* ---------- stage renderers ---------- */
 function rAbout(){
   return `<p>This is a proposed replacement for the ClinGen GenomeConnect Health Survey, for children and adults. It keeps the head-to-toe order and asks for more detail: each body area opens a list of features in plain language, and a Yes opens more specific choices, so the record ends with specific Human Phenotype Ontology (HPO) terms rather than broad categories.</p>
+  <div class="reviewpanel">
+    <h3>Review the original surveys</h3>
+    <p>The review page sets out every item of the 2018 GenomeConnect Health Survey and the Seizure Survey, one section at a time, with the proposed redesign beside each item for context.</p>
+    <ol>
+      <li><strong>Review each item.</strong> Choose keep all, keep some, reject, or not sure, and add a comment where you have one.</li>
+      <li><strong>Download your review.</strong> Save it as a CSV or JSON file and send it to the review lead. Your answers stay in your browser until you download them.</li>
+      <li><strong>Combine the reviews.</strong> The review lead loads every reviewer's file into a Google Colab notebook. It reports how closely reviewers agree and the consensus on each item, gathers every comment, and makes a copy with reviewer names replaced by codes.</li>
+    </ol>
+    <div class="ctarow"><a class="btn cta" href="annotate.html">Start reviewing the original surveys</a><a href="#walkthrough">Watch the two-minute walk-through</a></div>
+  </div>
   <ul class="list">
     <li>Every feature is answered Yes, No, or Not sure.</li>
     <li>Timing choices follow the person's age: months for babies and toddlers, years for children, and broad life stages for adults.</li>
@@ -246,7 +256,7 @@ function rAbout(){
     <video controls preload="metadata" poster="assets/review-walkthrough-poster.jpg" style="width:100%;max-width:960px;border:1px solid var(--line);border-radius:6px" aria-label="Silent walk-through of the review process, with captions on screen"><source src="assets/review-walkthrough.mp4" type="video/mp4"></video>
     <details><summary>Transcript</summary><div class="in"><ol class="small"><li>Reviewing the original head-to-toe surveys. A walk-through of the proposed review process for the GenomeConnect Health Survey and Seizure Survey. This video has no sound. Captions are on screen.</li><li>The site has a redesigned survey, a before and after comparison, a summary of changes, and a page for reviewing the original surveys.</li><li>Reviewers work on the review page. It lists every item of the original Health Survey and Seizure Survey, one section at a time.</li><li>Start with your name or initials and your role. This walk-through uses an invented reviewer, Jane Doe.</li><li>Each section of the original survey is one page. The bar at the top moves between sections.</li><li>Each item shows the original wording and the HPO term as printed. The proposed redesign is beside it.</li><li>Choose a decision: keep all of it, keep some of it, reject it, or not sure. A comment can say which part to keep.</li><li>Switch off the proposed redesign to judge the original survey without it.</li><li>One button keeps every remaining item in a section, so time goes to the items a reviewer would change.</li><li>The Seizure Survey is reviewed the same way.</li><li>Open questions about the whole redesign have their own page, with room for each reviewer&#x27;s view.</li><li>Answers stay in the reviewer&#x27;s browser. When finished, download the review as a CSV or JSON file and send it to the review lead.</li><li>Combining the reviews. The review lead uploads every reviewer&#x27;s file to a Google Colab notebook in the repository. The notebook reports the consensus for each item, how closely reviewers agree, and every comment. It also writes a version with reviewer names replaced by codes. The review lead combines the files in a Colab notebook.</li><li>The Before and after page shows each original answer beside its replacement.</li><li>The Summary of changes page gives the reason and the source for each proposed change.</li><li>After the review. Agreed changes are proposed as pull requests to the repository. Every pull request is checked against the pinned HPO release before it is merged. Links to every page are at the top of the home page.</li></ol></div></details>
   </div>
-  <p class="small muted">Switch on <strong>Show clinical terms</strong> at the top to see the HPO term behind each answer. <a href="#design-notes" data-go="design-notes">Design notes</a> list what changed from the original.</p>`;
+  <p class="small muted">Use <strong>Find</strong> at the top to look up any feature by everyday words, clinical term, or HPO code. Switch on <strong>Show clinical terms</strong> to see the HPO term behind each answer. <a href="#design-notes" data-go="design-notes">Design notes</a> list what changed from the original.</p>`;
 }
 function rYou(){
   const r = S.resp;
@@ -452,6 +462,40 @@ function expRecord(){
     military:S.exp.mil.served?{served:S.exp.mil.served, branch:S.exp.mil.branch, ageStart:age(S.exp.mil.from), ageEnd:age(S.exp.mil.to), places:S.exp.mil.where||undefined}:undefined,
     smoking:sm.status||sm.second?{status:sm.status||undefined, ageStart:age(sm.from), ageEnd:age(sm.to), livedWithSmoker:sm.second||undefined}:undefined};
 }
+/* ---------- find a feature (header search) ---------- */
+let DRILLPARENT = null;
+function drillParent(h){
+  if(!DRILL) return null;
+  if(!DRILLPARENT){ DRILLPARENT={}; Object.entries(DRILL).forEach(([k,v])=>v[2].forEach(c=>{ if(!DRILLPARENT[c]) DRILLPARENT[c]=k; })); }
+  return DRILLPARENT[h]||null;
+}
+function stageFor(where){ return stages().find(s=>s.t===where || ('Seizure follow-up: '+s.t)===where); }
+function findName(h){ if(IDX[h]) return IDX[h].it.p; const e=(DRILL||{})[h]; if(e&&e[0]) return e[0]; const x=(SEARCH||[]).find(y=>y.h===h); return x ? (x.lay[0]||x.l) : (LAB[h]||h); }
+function runFind(){
+  const inp=document.getElementById('find'), out=document.getElementById('findRes'); if(!inp||!out) return;
+  const qv=inp.value.trim().toLowerCase();
+  if(qv.length<3){ out.innerHTML=''; return; }
+  if(!SEARCH){ out.innerHTML='<p class="fitem muted small">Loading the term list…</p>'; loadSearch(); if(!DRILL) loadDrill(); return; }
+  const words=qv.split(/\s+/).map(w=>w.length>3 && /[^s]s$/.test(w) ? w.slice(0,-1) : w);
+  const hits=SEARCH.filter(x=>words.every(w=>x.k.indexOf(w)>=0)).map(x=>{
+    const plain=findName(x.h); const pl=plain.toLowerCase();
+    const score=(x.h.toLowerCase()===qv?-3:0)+(IDX[x.h]?-2:0)+(pl.startsWith(qv)||x.l.toLowerCase().startsWith(qv)?-1:0)+plain.length/300;
+    return {x,plain,score}; }).sort((a,b)=>a.score-b.score).slice(0,8);
+  if(!hits.length){ out.innerHTML='<p class="fitem muted">No match. Try other everyday words, a clinical term, or an HPO code such as HP:0003186.</p>'; return; }
+  out.innerHTML=hits.map(({x,plain})=>{
+    const h=x.h, a=S.ans[h]||{}, added=a.v==='yes'||S.extra.some(e=>e.h===h);
+    let where='', go='';
+    if(IDX[h]){
+      const w=IDX[h].where[0], st=stageFor(w);
+      where='Asked under '+IDX[h].where.map(esc).join('; ');
+      if(st) go='<button type="button" class="btn" data-findgo="'+h+'" data-stage="'+st.id+'">Go there</button>';
+      else if(B.systems.some(s=>s.t===w)) { where+='. That page opens after a Yes or Not sure for it on the head-to-toe check.'; go='<button type="button" class="btn" data-go="screen">Go to the head-to-toe check</button>'; }
+    } else if(drillParent(h)) where='A more specific choice under “'+esc(findName(drillParent(h)))+'”';
+    else where='Not on a survey page; it can be added as present from here.';
+    return '<div class="fitem"><div class="fname">'+esc(tk(plain))+'</div><div class="fcode">'+esc(x.l)+' · '+h+'</div><div class="fwhere">'+where+'</div><div class="fbtns">'+go+
+      '<button type="button" class="btn quiet" data-findyes="'+h+'" data-plain="'+esc(plain)+'" data-l="'+esc(x.l)+'"'+(added?' disabled':'')+'>'+(added?'Recorded as present':'Add as present')+'</button></div></div>';
+  }).join('');
+}
 function rMore(){
   let h = '<p>'+tk('If {you} {have_has} a feature that was not listed, search for it in everyday words. The search covers the plain-language synonyms in the Human Phenotype Ontology.')+'</p>';
   h += '<div class="searchrow"><input type="text" id="srch" data-search="1" placeholder="Try: toe walking, bushy eyebrows, burning tongue" autocomplete="off"><span class="status" id="srchStatus"></span></div><div id="srchRes" class="results"></div>';
@@ -603,7 +647,7 @@ function rReview(){
 function loadSearch(){
   if(SEARCH) return;
   const st=document.getElementById('srchStatus'); if(st) st.textContent='Loading the term list…';
-  fetch('search.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ SEARCH=j.map(([h,l,lay,ex])=>({h,l,lay:lay?lay.split('|'):[],k:(h+' '+l+' '+(lay||'')+' '+(ex||'')).toLowerCase()})); const s=document.getElementById('srchStatus'); if(s) s.textContent=''; runSearch(); })
+  fetch('search.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ SEARCH=j.map(([h,l,lay,ex])=>({h,l,lay:lay?lay.split('|'):[],k:(h+' '+l+' '+(lay||'')+' '+(ex||'')).toLowerCase()})); const s=document.getElementById('srchStatus'); if(s) s.textContent=''; runSearch(); runFind(); })
    .catch(()=>{ SEARCH=[]; const s=document.getElementById('srchStatus'); if(s) s.textContent='The term list could not be loaded here; use the free-text box below.'; });
 }
 function runSearch(){
@@ -644,6 +688,13 @@ document.addEventListener('click', e=>{
   if(d.exprm){ const [k,i]=d.exprm.split(':'); S.exp[k].splice(+i,1); render(true); return; }
   if(d.addecto){ if(!S.exp.other.some(x=>x.id===d.addecto)) S.exp.other.push({id:d.addecto,l:d.l}); render(true); setTimeout(()=>{ loadEcto(); runEcto(); },0); return; }
   if(d.rmecto!==undefined){ S.exp.other.splice(+d.rmecto,1); render(true); return; }
+  if(d.findgo){ closeFind(false); go(d.stage); setTimeout(()=>{ let h=d.findgo, el=null; while(h && !(el=document.getElementById('row-'+h.replace(':','')))) h=parentOf(h); if(el){ el.scrollIntoView({block:'center'}); el.classList.add('flash'); } },60); return; }
+  if(d.findyes){ const h=d.findyes;
+    if(IDX[h]){ S.ans[h]=Object.assign(S.ans[h]||{}, {v:'yes', where:(S.ans[h]&&S.ans[h].where)||IDX[h].where[0]}); let p=parentOf(h); while(p){ if(!S.ans[p]||S.ans[p].v!=='yes') S.ans[p]=Object.assign(S.ans[p]||{}, {v:'yes', where:IDX[p]?IDX[p].where[0]:(S.ans[h].where)}); p=parentOf(p); } }
+    else if(!S.extra.some(x=>x.h===h)) S.extra.push({h, p:d.plain, l:d.l});
+    render(true); runFind(); return; }
+  if(t.id==='findBtn'){ const panel=document.getElementById('findPanel'); if(panel.hidden){ panel.hidden=false; t.setAttribute('aria-expanded','true'); const f=document.getElementById('find'); f.focus(); f.select(); loadSearch(); if(!DRILL) loadDrill(); runFind(); } else closeFind(true); return; }
+  if(t.id==='coordInfo'){ const tip=document.getElementById('coordHelp'); const open=t.getAttribute('aria-expanded')!=='true'; t.setAttribute('aria-expanded', String(open)); tip.hidden=!open; return; }
   if(d.mondo){ S.dxMondo={id:d.mondo,name:d.name,cid:d.cid}; if(!S.dxName.trim()) S.dxName=d.name; render(true); return; }
   if(d.rmmondo){ S.dxMondo=null; render(true); return; }
   if(d.omopcsv){ downloadOmop(); return; }
@@ -668,6 +719,7 @@ document.addEventListener('input', e=>{
   if(d.text){ setPath(d.text, t.value); if(d.mondosearch) runMondo(); return; }
   if(d.search){ runSearch(); }
   if(d.ectosearch){ loadEcto(); runEcto(); }
+  if(t.id==='find'){ runFind(); }
 });
 document.getElementById('prevBtn').onclick=()=>{ const L=stages(); const i=L.findIndex(s=>s.id===cur); if(i>0) go(L[i-1].id); };
 document.getElementById('nextBtn').onclick=()=>{ const L=stages(); const i=L.findIndex(s=>s.id===cur); if(i<L.length-1) go(L[i+1].id); };
@@ -676,6 +728,9 @@ const ct=document.getElementById('coordToggle');
 ct.onchange=()=>{ document.body.classList.toggle('coord', ct.checked); try{ localStorage.setItem('h2t-coord', ct.checked?'1':''); }catch(e){} render(true); };
 try{ if(localStorage.getItem('h2t-coord')==='1'){ ct.checked=true; document.body.classList.add('coord'); } }catch(e){}
 window.addEventListener('hashchange', ()=>{ const id=location.hash.slice(1); if(id==='walkthrough'){ if(cur!=='about') go('about'); const v=document.getElementById('walkthrough'); if(v) v.scrollIntoView({block:'start'}); return; } if(id && id!==cur) go(id); });
+function closeFind(refocus){ const panel=document.getElementById('findPanel'), b=document.getElementById('findBtn'); if(!panel||panel.hidden) return; panel.hidden=true; b.setAttribute('aria-expanded','false'); if(refocus) b.focus(); }
+document.addEventListener('click', e=>{ const f=document.querySelector('.finder'); if(f && (!f.contains(e.target) || e.target.closest('#findRes [data-go]'))) closeFind(false); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeFind(true); });
 window.addEventListener('beforeprint', ()=>document.querySelectorAll('details').forEach(x=>x.open=true));
 (function(){ const r=(B.config||{}).repo_url; const a=document.getElementById('repoLink'); if(r&&a){ a.href=r+'/issues/new/choose'; a.hidden=false; } })();
 (function(){ const h=location.hash.slice(1); if(h==='walkthrough'){ go('about'); const v=document.getElementById('walkthrough'); if(v) setTimeout(()=>v.scrollIntoView({block:'start'}),50); } else go(h || 'about'); })();
