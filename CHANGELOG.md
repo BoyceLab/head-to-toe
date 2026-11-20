@@ -4,6 +4,8 @@
 
 - Mapping from every selectable HPO term to an OMOP standard concept, built from Athena release v5.0 29-AUG-26, with a note on pull requests for survey terms that have no row or no concept.
 - OMOP rows export on the review page, beside the Phenopacket.
+- Silent, captioned walk-through video of the review process on the home page, with a transcript.
+- `scripts/narrow_example.py` shows how a list of findings narrows the genes in the HPO disease annotations.
 - Mondo name lookup on the diagnosis question; the chosen term is recorded as the disease in the Phenopacket.
 
 ## 0.1.0 (November 2026)
