@@ -222,7 +222,7 @@ function rYou(){
   const r = S.resp;
   let h = q('Who is filling out this survey?', choiceGroup('resp',[['self','I am answering about myself'],['parent','I am a parent or guardian answering about a child'],['care','I am a family member or caregiver answering about an adult'],['bereaved','I am a family member answering about someone who has died']], r),
     'The wording of every later question follows this answer.');
-  h += q(S.resp==='bereaved' ? 'How old was your family member at the time of death?' : tk('How old {is_are} {you} now?'), choiceGroup('age', AGES, S.age), 'Age bands are used instead of a date of birth. They decide which growth, puberty, and development questions appear.');
+  h += q(S.resp==='bereaved' ? 'How old was your family member at the time of death?' : tk('How old {is_are} {you} now?'), choiceGroup('age', AGES, S.age), 'The age band decides which questions and timing choices appear. It assumes the program collects date of birth another way, such as at enrollment, and is not meant to be a study\'s only record of age.');
   h += q('What sex was recorded at birth?', choiceGroup('sex',[['F','Female'],['M','Male'],['I','Intersex or a difference of sex development'],['U','Not sure'],['N','Prefer not to say']], S.sex),
     'This is used to show or hide questions about reproductive organs and some cancers. Gender identity is asked separately below.');
   h += q('Gender identity (optional)', choiceGroup('gender',['Woman','Man','Nonbinary','Another identity','Prefer not to say'], S.gender), 'Optional. It is stored with the survey but is not used to match findings.');

@@ -10,6 +10,8 @@ The original survey stops at general answers, which are of limited help in rare 
 
 Every feature can be answered Yes, No, or Not sure. A Yes opens more specific choices, when it started in choices that fit the person's age, and whether it is present now. The review page builds a record shaped like a GA4GH (Global Alliance for Genomics and Health) Phenopacket, with findings answered No recorded as excluded.
 
+**Age.** The age bands on the first page assume the program collects date of birth, or exact age, another way, for example at enrollment. The bands are used here to choose which questions and timing choices to offer, and are not recommended as a study's only record of age.
+
 ## How the repository is organized
 
 | Path | What it holds |

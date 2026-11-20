@@ -1,6 +1,8 @@
 # Choices for "When did it start?". The choices offered depend on the person's current age band:
 # months for babies and toddlers, years for children, and broad life stages for adults.
 # Every choice maps to an HPO onset term.
+# The age band is a routing aid. It assumes date of birth or exact age is collected another way,
+# and is not recommended as a study's only record of age.
 options:
   - {key: prenatal, plain: Before birth, hpo: HP:0030674}
   - {key: birth, plain: At birth, hpo: HP:0003577}

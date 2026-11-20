@@ -18,6 +18,10 @@ changes:
       toddlers, years for children, and broad life stages for adults. A second question asks whether the feature
       is present now or only in the past. The original asked two ages for every item from one list of months and
       single years.'
+  - name: Age bands are not the study record of age
+    text: The age bands on the first page assume the program collects date of birth, or exact age, another way,
+      for example at enrollment. The bands are used here to choose which questions and timing choices to offer,
+      and are not recommended as a study's only record of age.
   - name: Yes, No, or Not sure for every feature
     text: A No is stored as a finding that was looked for and is absent, which phenotype matching tools can use.
       In the original, an unchecked item could mean absent, unknown, or skipped. A Not sure on a body area opens
@@ -33,8 +37,8 @@ changes:
     text: The testing page adds the result, the sample tested, and reanalysis. Family history asks conditions, relatives,
       and side of the family.
   - name: A standard record
-    text: The review page builds a record shaped like a GA4GH Phenopacket, with onset and excluded findings. Age
-      bands replace dates of birth, and no names are asked.
+    text: The review page builds a record shaped like a GA4GH Phenopacket, with onset and excluded findings. No
+      names are asked.
 fixes:
   - original: Hyperthyroidism
     printed_term: HP:0000853 (now Goiter)
