@@ -1,0 +1,20 @@
+# Age bands offered for every Yes answer, each mapped to an HPO onset term.
+onset_bands:
+  - plain: Before birth
+    hpo: HP:0030674
+  - plain: At birth
+    hpo: HP:0003577
+  - plain: In the first month
+    hpo: HP:0003623
+  - plain: 1 to 12 months
+    hpo: HP:0003593
+  - plain: 1 to 5 years
+    hpo: HP:0011463
+  - plain: 6 to 15 years
+    hpo: HP:0003621
+  - plain: 16 to 39 years
+    hpo: HP:0011462
+  - plain: 40 to 60 years
+    hpo: HP:0003596
+  - plain: Over 60 years
+    hpo: HP:0003584

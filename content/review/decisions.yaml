@@ -1,0 +1,28 @@
+# Choices offered on every item of the annotation page, and the reviewer roles.
+# Codes are what the downloaded file and the combining notebook use; change labels freely, but keep codes stable
+# once reviews have started, or files from different reviewers will not line up.
+decisions:
+  - code: keep_all
+    label: Keep all of it
+    also: Reject none of it
+    help: Keep the item as it is.
+  - code: keep_some
+    label: Keep some of it
+    also: Reject some of it
+    help: Keep part of the item and change or drop the rest. The comment can say which part.
+  - code: reject
+    label: Reject it
+    also: Keep none of it
+    help: Drop the item.
+  - code: unsure
+    label: Not sure
+    help: No view yet, or outside your experience.
+
+roles:
+  - Clinician
+  - Genetic counselor
+  - Researcher or informatician
+  - Person living with epilepsy or ALS
+  - Parent or caregiver
+  - Advocacy organization staff
+  - Other

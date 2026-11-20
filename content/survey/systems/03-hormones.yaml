@@ -1,0 +1,56 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: hormones
+title: Hormones and glands
+question: '{HasHad} problems with hormones or hormone-producing glands?'
+examples: 'For example: diabetes, thyroid problems, puberty that came early or late, or growth hormone problems.'
+items:
+  - hpo: HP:0100651
+    plain: Type 1 diabetes
+    description: Usually needs insulin from the start.
+  - hpo: HP:0005978
+    plain: Type 2 diabetes
+    description: The most common form; may or may not need insulin.
+  - hpo: HP:0000873
+    plain: Diabetes insipidus
+    description: Extreme thirst and passing large amounts of urine.
+  - hpo: HP:0001943
+    plain: Episodes of low blood sugar
+  - hpo: HP:0000821
+    plain: Underactive thyroid
+    description: Low thyroid hormone.
+  - hpo: HP:0000836
+    plain: Overactive thyroid
+    description: High thyroid hormone, including Graves disease.
+  - hpo: HP:0000853
+    plain: Enlarged thyroid gland (goiter)
+    description: May cause swelling in the neck.
+  - hpo: HP:0011767
+    plain: Parathyroid hormone too high or too low
+    more_specific:
+      - hpo: HP:0000843
+        plain: Parathyroid hormone too high
+      - hpo: HP:0000829
+        plain: Parathyroid hormone too low
+  - hpo: HP:0034323
+    plain: Low growth hormone
+    description: Found on a blood test or stimulation test.
+    from_a_report: true
+  - hpo: HP:0000845
+    plain: Too much growth hormone
+    description: Can lead to acromegaly.
+    from_a_report: true
+  - hpo: HP:0000826
+    plain: Puberty that started early
+    description: Before about age 8 in girls or 9 in boys.
+    show_when: school
+  - hpo: HP:0000823
+    plain: Puberty that started late
+    description: No signs of puberty past the usual age.
+    show_when: teen
+  - hpo: HP:0000135
+    plain: Low sex hormones from the testes or ovaries
+    show_when: teen
+  - hpo: HP:0008221
+    plain: Enlarged adrenal glands (adrenal hyperplasia)

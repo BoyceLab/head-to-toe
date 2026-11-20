@@ -1,0 +1,50 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: blood
+title: Blood and bleeding
+question: '{HasHad} problems with blood counts, bleeding, or clotting?'
+examples: 'For example: anemia, low platelets, easy bruising, nosebleeds, or blood clots.'
+items:
+  - hpo: HP:0000978
+    plain: Bruising easily
+  - hpo: HP:0011889
+    plain: Bleeding with little or no injury
+  - hpo: HP:0001934
+    plain: Bleeding that is hard to stop after an injury
+  - hpo: HP:0000421
+    plain: Frequent nosebleeds
+  - hpo: HP:0001977
+    plain: Blood clot in a vein or artery
+  - hpo: HP:0001928
+    plain: A clotting disorder
+    from_a_report: true
+  - hpo: HP:0001877
+    plain: Red blood cell problems
+    from_a_report: true
+    more_specific:
+      - hpo: HP:0001903
+        plain: Anemia
+      - hpo: HP:0001901
+        plain: Too many red blood cells
+  - hpo: HP:0001872
+    plain: Platelet problems
+    from_a_report: true
+    more_specific:
+      - hpo: HP:0001873
+        plain: Low platelets
+      - hpo: HP:0001894
+        plain: High platelets
+  - hpo: HP:0001881
+    plain: White blood cell problems
+    from_a_report: true
+    more_specific:
+      - hpo: HP:0001882
+        plain: Low white blood cells
+      - hpo: HP:0001875
+        plain: Low neutrophils
+      - hpo: HP:0001974
+        plain: High white blood cells
+  - hpo: HP:0001978
+    plain: Blood cells forming outside the bone marrow
+    from_a_report: true

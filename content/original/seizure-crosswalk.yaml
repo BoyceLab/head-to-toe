@@ -1,0 +1,180 @@
+# Maps every question of the GenomeConnect Seizure Survey (version 1.3) to the redesign.
+# original: a question key from seizure-survey-v1.3.yaml, or "question key: option label" for one option
+# change: one of the keys under change_types
+# redesign: HPO terms in the survey, q:<question key> for a module question, or page:<name> for a whole page
+# note: optional, one or two plain sentences
+change_types:
+  same: Same question, plain wording
+  mapped: Now stored as an HPO term
+  split: Split into more precise answers
+  corrected: Wording or classification corrected
+  merged: Two questions asked as one
+  moved: Asked on another page
+  replaced: Replaced by a different approach
+  answer: Handled across the whole survey
+  dropped: Dropped
+
+pages:
+  - page: consent
+    rows:
+      - original: consent
+        change: answer
+        redesign: []
+        note: Consent belongs to the registry that runs the survey. The redesign leaves consent to the hosting program.
+        question_for_reviewers: Should the redesign include a short description of the survey and its time estimate, as the original consent page did?
+      - original: all pages
+        change: corrected
+        redesign: [page:you]
+        note: Every page of the original says "you are providing information about yourself", though parents often answer. The redesign asks who is answering once, and every question follows that answer.
+
+  - page: types
+    rows:
+      - {original: 'seizure_types: Tonic', change: mapped, redesign: [HP:0032792]}
+      - {original: 'seizure_types: Atonic/drop attack', change: mapped, redesign: [HP:0010819]}
+      - {original: 'seizure_types: Myoclonic', change: mapped, redesign: [HP:0032794]}
+      - original: 'seizure_types: Atypical absence/complex partial/focal'
+        change: corrected
+        redesign: [HP:0002384, HP:0002121]
+        note: The option joins atypical absence, a generalized seizure, with focal seizures that impair awareness. The redesign asks them separately, and adds typical absence, which the original does not list.
+      - original: 'seizure_types: Aura/simple partial/focal'
+        change: mapped
+        redesign: [HP:0002349]
+        note: An aura is offered as a more specific choice beneath focal aware seizures.
+      - original: 'seizure_types: Infantile spasms/clonic'
+        change: corrected
+        redesign: [HP:0011097, HP:0020221]
+        note: The option joins epileptic spasms with clonic seizures, which differ. Spasms are asked once, and the age band records whether they began before or after age 2; clonic seizures are asked on their own.
+      - original: 'seizure_types: Juvenile spasms/clonic'
+        change: merged
+        redesign: [HP:0011097]
+        note: Asked with infantile spasms as one item, using the age band to record onset after age 2.
+      - original: 'seizure_types: Convulsion/grand mal/generalized tonic-clonic'
+        change: split
+        redesign: [HP:0002069]
+        note: A more specific choice records seizures that start in one part of the body and spread, which the original could not distinguish from generalized onset.
+      - original: 'seizure_types: Gelastic/dacrystic'
+        change: split
+        redesign: [HP:0025613]
+        note: Laughing and crying are offered as separate, more specific choices.
+      - original: 'seizure_types: Febrile seizure'
+        change: split
+        redesign: [HP:0002373, HP:0032895]
+        note: Separates seizures with fever in early childhood from those before 3 months or after 6 years, which can point toward different causes.
+      - original: 'seizure_types: Other, please specify'
+        change: replaced
+        redesign: [page:more]
+        note: Replaced by the plain-language search near the end of the survey.
+      - original: seizure_types per seizure type, age started
+        change: corrected
+        redesign: [q:sz_first]
+        note: Each Yes asks an age band mapped to an HPO onset term. Single-year ages are less precise in the redesign; the open questions note this.
+      - original: seizure_types per seizure type, frequency now
+        change: corrected
+        redesign: [q:sz_now]
+        note: Kept for each seizure type, with the choices put in order from most to least often. The original lists once daily before multiple per day.
+        question_for_reviewers: Does a frequency for each seizure type add enough to justify the extra time?
+      - original: explanation
+        change: corrected
+        redesign: [q:sz_cause]
+        note: Follows the causes in the ILAE classification. The original groups fever with immune reactions; the redesign asks about an immune or inflammatory condition, and asks about fever with the seizure types.
+      - original: syndromes
+        change: corrected
+        redesign: [q:sz_syndrome]
+        note: Uses the 2022 ILAE syndrome names, with former names in parentheses so families can find the name they were given.
+        question_for_reviewers: Should the former name come first, since it may be the name families were given?
+
+  - page: first
+    rows:
+      - {original: neonatal, change: mapped, redesign: [HP:0032807], note: Asked as a seizure type.}
+      - {original: first_age, change: same, redesign: [q:sz_first]}
+      - original: first_length
+        change: same
+        redesign: [q:sz_first_length]
+        question_for_reviewers: Should a first seizure lasting 5 minutes or more also be recorded as status epilepticus?
+      - {original: before_dx, change: same, redesign: [q:sz_before]}
+      - {original: before_dx_age, change: same, redesign: [q:sz_before_age], note: Shown only when there were such episodes.}
+      - {original: before_dx_seen, change: same, redesign: [q:sz_before_seen], note: Shown only when there were such episodes.}
+      - original: dev_before
+        change: same
+        redesign: [q:sz_dev_before]
+        note: Kept, with a help line on why it is asked.
+
+  - page: frequency
+    rows:
+      - {original: lifetime, change: same, redesign: [q:sz_lifetime]}
+      - {original: past6, change: same, redesign: [q:sz_past6]}
+      - original: month_free
+        change: merged
+        redesign: [q:sz_longest_free]
+        note: Asked together with the longest seizure-free time, since that answer already says whether a month passed.
+      - {original: longest_free, change: same, redesign: [q:sz_longest_free]}
+      - {original: free_after, change: same, redesign: [q:sz_free_after], note: Shown only when a seizure-free time lasted at least a month.}
+      - {original: rescue, change: same, redesign: [q:sz_rescue]}
+      - original: triggers
+        change: mapped
+        redesign: [q:sz_triggers]
+        note: Flashing lights or patterns is also stored as the HPO term Visually-induced seizure (HP:0020216).
+      - original: hosp_life
+        change: same
+        redesign: [q:sz_hosp]
+        note: Counts are grouped in bands rather than single numbers.
+      - {original: hosp_12, change: same, redesign: [q:sz_hosp12], note: Shown only when there was at least one hospital stay.}
+      - original: control_age
+        change: split
+        redesign: [q:sz_control, q:sz_control_age]
+        note: Asks first how controlled seizures are now, then the age only when control was reached.
+      - original: approaches
+        change: same
+        redesign: [q:sz_tried]
+        note: Each choice opens its own detail question, as in the original.
+
+  - page: diet
+    rows:
+      - original: diets
+        change: same
+        redesign: [q:sz_diets]
+      - original: diets per diet, effectiveness
+        change: corrected
+        redesign: [q:sz_diets]
+        note: The original scale puts too many side effects among levels of effectiveness. The redesign asks how seizures changed and, separately, whether side effects led to stopping.
+
+  - page: medication
+    rows:
+      - original: meds
+        change: corrected
+        redesign: [q:sz_meds, q:sz_med_list]
+        note: Fixes the spellings Topomax and Valpric acid, names Epidiolex as cannabidiol, and adds cenobamate, fenfluramine, ganaxolone, and midazolam. A short count question comes first, since many families know how many medicines were tried before they know the names.
+        question_for_reviewers: Are there other medicines the list should include, and should rescue medicines be listed separately?
+      - original: meds per medicine, effectiveness
+        change: corrected
+        redesign: [q:sz_med_list]
+        note: As with diets, how seizures changed and side effects are asked separately.
+      - original: meds_other
+        change: same
+        redesign: [q:sz_med_other]
+
+  - page: surgery
+    rows:
+      - original: surgeries
+        change: corrected
+        redesign: [q:sz_surgery]
+        note: The original instruction asks for the age of diagnosis rather than age at surgery, describes the responsive neurostimulation device as a neurotransmitter, and spells hemispherectomy and corpus callosotomy differently. The redesign corrects these, adds laser ablation, and asks whether removed tissue was tested for genetic changes.
+      - original: surgeries per surgery, effectiveness
+        change: corrected
+        redesign: [q:sz_surgery]
+        note: Adds seizure-free afterward and more seizures to the outcome choices.
+
+  - page: family
+    rows:
+      - original: fam_epilepsy
+        change: moved
+        redesign: [page:family]
+        note: Asked on the shared family history page, which adds the side of the family.
+      - original: fam_neuro
+        change: moved
+        redesign: [page:family]
+        note: Asked on the shared family history page as developmental delay, intellectual disability, or autism.
+      - original: comments
+        change: moved
+        redesign: [page:more]
+        note: The free-text box near the end of the survey.

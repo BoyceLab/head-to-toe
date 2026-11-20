@@ -1,0 +1,64 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: kidneys
+title: Kidneys, bladder, and genitals
+question: '{HasHad} problems with the kidneys, bladder, or genitals?'
+examples: 'For example: kidney disease, kidney stones, bladder control problems, an undescended testicle, or trouble getting pregnant.'
+items:
+  - hpo: HP:0012211
+    plain: Kidneys that do not work as expected
+    more_specific:
+      - hpo: HP:0012622
+        plain: Chronic kidney disease
+      - hpo: HP:0000787
+        plain: Kidney stones
+  - hpo: HP:0012210
+    plain: Kidney shape, size, or position
+    more_specific:
+      - hpo: HP:0000107
+        plain: Kidney cysts
+      - hpo: HP:0000104
+        plain: A missing kidney
+      - hpo: HP:0000085
+        plain: Horseshoe kidney
+  - hpo: HP:0000014
+    plain: Bladder problems
+    more_specific:
+      - hpo: HP:0000020
+        plain: Loss of bladder control
+      - hpo: HP:0000012
+        plain: Sudden strong need to pass urine
+      - hpo: HP:0000011
+        plain: Bladder problems caused by nerves (neurogenic bladder)
+  - hpo: HP:0000076
+    plain: Urine flowing back toward the kidneys (reflux)
+  - hpo: HP:0003110
+    plain: Blood or protein in the urine
+    more_specific:
+      - hpo: HP:0000790
+        plain: Blood in the urine
+      - hpo: HP:0000093
+        plain: Protein in the urine
+  - hpo: HP:0012244
+    plain: Differences of sex development
+    description: 'For example: genitals that are not clearly typical of one sex at birth.'
+  - hpo: HP:0010461
+    plain: Differences in the male genitals
+    show_when: male
+    more_specific:
+      - hpo: HP:0000028
+        plain: Undescended testicle
+      - hpo: HP:0000047
+        plain: Urine opening not at the tip of the penis (hypospadias)
+      - hpo: HP:0000054
+        plain: Small penis
+  - hpo: HP:0010460
+    plain: Differences in the female genitals
+    show_when: female
+  - hpo: HP:0000789
+    plain: Trouble getting pregnant or causing a pregnancy (infertility)
+    show_when: adult
+  - hpo: HP:0008209
+    plain: Ovaries that stopped working early
+    show_when: femaleteen

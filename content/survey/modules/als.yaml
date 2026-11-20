@@ -1,0 +1,234 @@
+# Condition module. Steps appear in order after the body-system pages.
+# Placeholders in braces, such as {you} or {HasHad}, change with who is answering.
+module: als
+opens_when: ALS, or a family history of ALS or FTD, chosen as a reason for joining; also offered when muscle twitching and weakness are both Yes
+steps:
+  - key: a_start
+    title: How symptoms started
+    intro: These questions describe where and when symptoms began. If {you} {have_has} a family history but no symptoms yet, choose that option and the symptom questions will be skipped.
+    questions:
+      - key: als_status
+        question: Which best describes {you} now?
+        type: single
+        options:
+          - Symptoms of ALS or another motor neuron disease
+          - No symptoms; a family history or a known genetic variant
+          - Not sure
+      - key: als_dx
+        question: What did the doctor call the condition?
+        type: single
+        options:
+          - ALS
+          - ALS with frontotemporal dementia (ALS-FTD)
+          - Primary lateral sclerosis (PLS)
+          - Progressive muscular atrophy (PMA)
+          - Progressive bulbar palsy
+          - Another motor neuron disease
+          - No name given yet
+          - Not sure
+        show_when: als_status:Symptoms of ALS or another motor neuron disease
+      - key: als_region
+        question: Where did the first symptoms appear?
+        type: single
+        options:
+          - Speech or swallowing
+          - Hands or arms
+          - Feet or legs
+          - Breathing
+          - Neck or trunk
+          - Changes in thinking or behavior came first
+          - Not sure
+        show_when: als_status:Symptoms of ALS or another motor neuron disease
+        hpo_by_answer:
+          Speech or swallowing: HP:0002483
+          Hands or arms: HP:0003484
+          Feet or legs: HP:0007340
+          Breathing: HP:0002747
+          Neck or trunk: HP:0003327
+          Changes in thinking or behavior came first: HP:0000708
+      - key: als_onset
+        question: How old {were_was} {you} when the first symptom appeared?
+        type: onset
+        show_when: als_status:Symptoms of ALS or another motor neuron disease
+      - key: als_side
+        question: Did weakness start on one side of the body?
+        type: single
+        options:
+          - One side first
+          - Both sides at once
+          - Not sure
+        show_when: als_status:Symptoms of ALS or another motor neuron disease
+      - key: als_pace
+        question: Over the first year after symptoms started, how quickly did things change?
+        type: single
+        options:
+          - Slowly
+          - At a moderate pace
+          - Quickly
+          - Not sure
+        help: Pace is recorded as an HPO modifier on the motor findings, not as a separate finding.
+        show_when: als_status:Symptoms of ALS or another motor neuron disease
+        hpo_by_answer:
+          Slowly: HP:0003677
+          Quickly: HP:0003678
+  - key: a_motor
+    title: Muscles and movement
+    show_when: als_status:Symptoms of ALS or another motor neuron disease
+    intro: Some of these are things a person notices, and some are found during an exam. For exam findings, choose Not sure unless a doctor told you about them.
+    items:
+      - hpo: HP:0002380
+        plain: Muscle twitching under the skin
+      - hpo: HP:0003394
+        plain: Muscle cramps or spasms
+      - hpo: HP:0003202
+        plain: Muscles that have become thinner or wasted
+        more_specific:
+          - hpo: HP:0003393
+            plain: Thinning of the muscle at the base of the thumb
+      - hpo: HP:0003484
+        plain: Weakness of the arms or hands
+        description: 'For example: trouble with buttons, keys, or jars.'
+      - hpo: HP:0007340
+        plain: Weakness of the legs or feet
+        description: 'For example: tripping or trouble with stairs.'
+      - hpo: HP:0009027
+        plain: Foot drop
+      - hpo: HP:0000467
+        plain: Weakness of the neck
+        description: 'For example: trouble holding the head up.'
+      - hpo: HP:0001257
+        plain: Stiffness that increases with fast movement (spasticity)
+      - hpo: HP:0001347
+        plain: Brisk reflexes
+        from_a_report: true
+      - hpo: HP:0003487
+        plain: Toes that fan upward when the sole is stroked (Babinski sign)
+        from_a_report: true
+      - hpo: HP:0003445
+        plain: EMG showed nerve-related changes
+        from_a_report: true
+      - hpo: HP:0003236
+        plain: High creatine kinase (CK) on a blood test
+        from_a_report: true
+  - key: a_bulbar
+    title: Speech, swallowing, breathing, and emotion
+    show_when: als_status:Symptoms of ALS or another motor neuron disease
+    items:
+      - hpo: HP:0001260
+        plain: Slurred or slow speech
+      - hpo: HP:0001611
+        plain: Nasal-sounding voice
+      - hpo: HP:0002015
+        plain: Trouble swallowing
+        more_specific:
+          - hpo: HP:0200136
+            plain: Food or drink going down the wrong way, or choking
+      - hpo: HP:0002307
+        plain: Drooling or too much saliva
+      - hpo: HP:0001308
+        plain: Twitching of the tongue
+      - hpo: HP:0012473
+        plain: Thinning of the tongue
+      - hpo: HP:0002193
+        plain: Laughing or crying that is hard to stop and out of proportion to feelings
+        description: Doctors may call this pseudobulbar affect.
+      - hpo: HP:0012764
+        plain: Shortness of breath when lying flat
+      - hpo: HP:0002875
+        plain: Shortness of breath with activity
+      - hpo: HP:0002747
+        plain: Breathing trouble caused by weak breathing muscles
+      - hpo: HP:0010535
+        plain: Pauses in breathing during sleep (sleep apnea)
+      - hpo: HP:0001824
+        plain: Weight loss without trying
+  - key: a_cog
+    title: Thinking, behavior, and personality
+    intro: Changes in thinking and behavior are part of ALS for some people, and some are linked to particular genes. A family member may notice them first. Please answer each one, even where the answer about mood and behavior was No earlier.
+    items:
+      - hpo: HP:0000741
+        plain: Less interest or motivation than before (apathy)
+      - hpo: HP:0000734
+        plain: Acting on impulse in ways that are out of character (disinhibition)
+        description: 'For example: rude or tactless remarks, or spending that is unusual for {you}.'
+      - hpo: HP:5200037
+        plain: Less empathy or concern for others than before
+      - hpo: HP:0000722
+        plain: New compulsive behaviors or rigid routines
+      - hpo: HP:0030221
+        plain: New cravings for sweets
+      - hpo: HP:0002591
+        plain: Eating much more than before
+      - hpo: HP:0000710
+        plain: Putting objects in the mouth (hyperorality)
+      - hpo: HP:0033051
+        plain: Trouble planning, organizing, or switching between tasks
+      - hpo: HP:0002381
+        plain: Trouble finding or understanding words
+      - hpo: HP:0002354
+        plain: Memory problems
+      - hpo: HP:0002145
+        plain: A diagnosis of frontotemporal dementia (FTD)
+        from_a_report: true
+      - hpo: HP:0006892
+        plain: Shrinkage of the frontal or temporal lobes on a brain MRI
+        from_a_report: true
+      - hpo: HP:0000738
+        plain: Seeing or hearing things that are not there
+      - hpo: HP:0000746
+        plain: Fixed beliefs that are not true (delusions)
+      - hpo: HP:0000716
+        plain: Depression
+      - hpo: HP:0000739
+        plain: Anxiety
+  - key: a_other
+    title: Other body systems that help distinguish ALS genes
+    intro: Some genes linked to ALS also affect the eyes, ears, bones, nerves for feeling, or the muscles themselves. These features rarely come up in an ALS clinic visit, so please answer each one, even where the answer for that body area was No earlier.
+    items:
+      - hpo: HP:0001300
+        plain: Slow movement with stiffness or shaking (parkinsonism)
+      - hpo: HP:0001337
+        plain: Shaking (tremor)
+      - hpo: HP:0001251
+        plain: Unsteady walking or poor balance
+      - hpo: HP:0001332
+        plain: Twisting or held postures (dystonia)
+      - hpo: HP:0002072
+        plain: Dance-like, flowing movements (chorea)
+      - hpo: HP:0003401
+        plain: Numbness, tingling, or pins and needles
+      - hpo: HP:0000763
+        plain: Loss of feeling from nerve damage (sensory neuropathy)
+        from_a_report: true
+      - hpo: HP:0001761
+        plain: High arches
+      - hpo: HP:0003198
+        plain: A doctor said there is a muscle disease (myopathy)
+        from_a_report: true
+      - hpo: HP:0003805
+        plain: Rimmed vacuoles on muscle biopsy
+        from_a_report: true
+      - hpo: HP:0034159
+        plain: Paget disease of bone
+        from_a_report: true
+      - hpo: HP:0000518
+        plain: Cataract
+      - hpo: HP:0000648
+        plain: Optic nerve damage or thinning
+      - hpo: HP:0000602
+        plain: Trouble moving the eyes in some directions
+      - hpo: HP:0000508
+        plain: Droopy upper eyelid
+      - hpo: HP:0001097
+        plain: Dry eyes
+      - hpo: HP:6000420
+        plain: Burning feeling in the eyes
+        description: Some people describe this as acid tears.
+      - hpo: HP:0000365
+        plain: Hearing loss
+      - hpo: HP:0001638
+        plain: Heart muscle disease (cardiomyopathy)
+      - hpo: HP:0000012
+        plain: Sudden strong need to pass urine
+      - hpo: HP:0001250
+        plain: Seizures

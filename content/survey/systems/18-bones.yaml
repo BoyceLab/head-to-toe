@@ -1,0 +1,75 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: bones
+title: Bones, joints, and chest
+question: '{HasHad} differences in the bones, joints, hands, feet, or chest?'
+examples: 'For example: scoliosis, very flexible joints, bones that break easily, extra or joined fingers, a curved little finger, or inverted nipples.'
+items:
+  - hpo: HP:0010674
+    plain: Curved spine
+    more_specific:
+      - hpo: HP:0002650
+        plain: Side-to-side curve (scoliosis)
+      - hpo: HP:0002808
+        plain: Forward rounding (kyphosis)
+  - hpo: HP:0001382
+    plain: Very flexible joints
+  - hpo: HP:0034392
+    plain: Joints that cannot fully straighten or bend (contractures)
+  - hpo: HP:0002659
+    plain: Bones that break easily
+  - hpo: HP:0000939
+    plain: Thin, weak bones (osteoporosis)
+    from_a_report: true
+  - hpo: HP:0034159
+    plain: Paget disease of bone
+    from_a_report: true
+  - hpo: HP:0002813
+    plain: Arm or leg bones shaped or sized differently since birth
+  - hpo: HP:0011297
+    plain: Fingers or toes
+    more_specific:
+      - hpo: HP:0010442
+        plain: Extra fingers or toes
+      - hpo: HP:0001159
+        plain: Fingers or toes joined together
+      - hpo: HP:0004209
+        plain: Little finger that curves inward
+      - hpo: HP:0001156
+        plain: Short fingers or toes
+      - hpo: HP:0001166
+        plain: Long, thin fingers
+      - hpo: HP:0001182
+        plain: Fingers that taper at the ends
+  - hpo: HP:0001155
+    plain: Hands
+    more_specific:
+      - hpo: HP:0000954
+        plain: A single crease across the palm
+      - hpo: HP:0001171
+        plain: A split or cleft hand
+  - hpo: HP:0001760
+    plain: Feet
+    more_specific:
+      - hpo: HP:0001763
+        plain: Flat feet
+      - hpo: HP:0001761
+        plain: High arches
+      - hpo: HP:0001762
+        plain: Clubfoot
+  - hpo: HP:0001385
+    plain: Hip socket that did not form fully (hip dysplasia)
+  - hpo: HP:0000768
+    plain: Breastbone that sticks out
+  - hpo: HP:0000767
+    plain: Breastbone that sinks in
+  - hpo: HP:0003186
+    plain: Inverted nipples
+    description: Nipples that point inward.
+  - hpo: HP:0006610
+    plain: Nipples set wide apart
+  - hpo: HP:0002652
+    plain: A skeletal dysplasia diagnosis
+    description: Differences in how bone and cartilage grow.
+    from_a_report: true

@@ -1,0 +1,55 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: birth
+title: Before and around birth
+question: Were there problems during the pregnancy, delivery, or the first weeks after birth?
+examples: 'For example: born early, a stay in the newborn intensive care unit (NICU), concerns on an ultrasound, or a baby who was floppy or hard to feed.'
+items:
+  - hpo: HP:0001622
+    plain: Born early
+    description: Before 37 weeks of pregnancy.
+  - hpo: HP:0001560
+    plain: Too much or too little amniotic fluid
+    description: The fluid around the baby during pregnancy.
+    more_specific:
+      - hpo: HP:0001561
+        plain: Too much amniotic fluid
+      - hpo: HP:0001562
+        plain: Too little amniotic fluid
+  - hpo: HP:0001558
+    plain: Baby moved less than expected during pregnancy
+  - hpo: HP:0001787
+    plain: Problems during delivery
+    description: 'For example: breech birth, forceps or vacuum, or the cord around the neck.'
+  - hpo: HP:0100767
+    plain: Problems with the placenta
+    description: The placenta did not form, attach, or work as expected.
+  - hpo: HP:0010881
+    plain: Problems with the umbilical cord
+    description: 'For example: a knot, or a cord that did not form as expected.'
+  - hpo: HP:0011438
+    plain: Exposure during pregnancy that can affect a baby
+    description: 'For example: alcohol, cigarettes, street drugs, some medicines, chemicals, or radiation.'
+  - hpo: HP:0009800
+    plain: Diabetes in the mother during pregnancy
+    description: Including gestational diabetes.
+  - hpo: HP:0008071
+    plain: High blood pressure in the mother during pregnancy
+  - hpo: HP:0001518
+    plain: Small for the length of the pregnancy
+  - hpo: HP:0001520
+    plain: Large for the length of the pregnancy
+  - hpo: HP:0001319
+    plain: Floppy, low muscle tone as a newborn
+  - hpo: HP:0008872
+    plain: Trouble feeding as a baby
+  - hpo: HP:0032807
+    plain: Seizures in the first month
+  - hpo: HP:0001998
+    plain: Low blood sugar as a newborn
+  - hpo: HP:0006579
+    plain: Long-lasting newborn jaundice
+    description: Yellow skin that lasted longer than usual.
+  - hpo: HP:0002643
+    plain: Breathing problems as a newborn

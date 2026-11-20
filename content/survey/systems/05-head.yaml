@@ -1,0 +1,105 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: head
+title: Head, face, and neck
+question: '{HasHad} differences in the head, face, or neck that a doctor commented on, or that look different from the rest of the family?'
+examples: 'For example: a small or large head, a cleft lip, unusual eyebrows, eyes set wide apart, or a short neck. Small differences are welcome here; they can help point toward a cause. Eyes and ears come next.'
+items:
+  - hpo: HP:0000929
+    plain: Head size or skull shape
+    more_specific:
+      - hpo: HP:0000252
+        plain: Small head size
+      - hpo: HP:0000256
+        plain: Large head size
+      - hpo: HP:0001363
+        plain: Skull bones that joined too early
+        description: Doctors may call this craniosynostosis.
+      - hpo: HP:0001357
+        plain: Flat spot or uneven head shape
+  - hpo: HP:0001999
+    plain: Face shape that differs from the family
+    more_specific:
+      - hpo: HP:0000280
+        plain: Coarse or heavy facial features
+      - hpo: HP:0000276
+        plain: Long face
+      - hpo: HP:0011800
+        plain: Flat middle of the face
+      - hpo: HP:0000324
+        plain: One side of the face different from the other
+  - hpo: HP:0000574
+    plain: Thick or bushy eyebrows
+  - hpo: HP:0000664
+    plain: Eyebrows that meet in the middle
+  - hpo: HP:0000527
+    plain: Long eyelashes
+  - hpo: HP:0000286
+    plain: Skin fold over the inner corner of the eye
+    description: Doctors may call this an epicanthal fold.
+  - hpo: HP:0000316
+    plain: Eyes set wide apart
+  - hpo: HP:0000601
+    plain: Eyes set close together
+  - hpo: HP:0000582
+    plain: Outer corners of the eyes slant upward
+  - hpo: HP:0000494
+    plain: Outer corners of the eyes slant downward
+  - hpo: HP:0000366
+    plain: Nose shape
+    more_specific:
+      - hpo: HP:0000431
+        plain: Wide bridge of the nose
+      - hpo: HP:0005280
+        plain: Flat bridge of the nose
+      - hpo: HP:0000463
+        plain: Nostrils that tip upward
+  - hpo: HP:0000202
+    plain: Cleft lip or cleft palate
+    description: A split in the lip or the roof of the mouth, present at birth.
+    more_specific:
+      - hpo: HP:0410030
+        plain: Cleft lip
+      - hpo: HP:0000175
+        plain: Cleft palate
+  - hpo: HP:0000153
+    plain: Lips or mouth shape
+    more_specific:
+      - hpo: HP:0000219
+        plain: Thin upper lip
+      - hpo: HP:0000154
+        plain: Wide mouth
+      - hpo: HP:0000160
+        plain: Small or narrow mouth
+  - hpo: HP:0000218
+    plain: High, narrow roof of the mouth
+  - hpo: HP:0000306
+    plain: Chin or jaw shape
+    more_specific:
+      - hpo: HP:0000347
+        plain: Small lower jaw
+      - hpo: HP:0000278
+        plain: Chin set back
+      - hpo: HP:0000303
+        plain: Lower jaw that juts forward
+  - hpo: HP:0000464
+    plain: Neck
+    more_specific:
+      - hpo: HP:0000470
+        plain: Short neck
+      - hpo: HP:0000465
+        plain: Webbed neck
+  - hpo: HP:0001595
+    plain: Hair
+    more_specific:
+      - hpo: HP:0002209
+        plain: Thin or sparse scalp hair
+      - hpo: HP:0002208
+        plain: Coarse hair
+      - hpo: HP:0000294
+        plain: Low hairline on the forehead
+      - hpo: HP:0001007
+        plain: Extra hair on the face or body
+      - hpo: HP:0002216
+        plain: Gray hair at a young age

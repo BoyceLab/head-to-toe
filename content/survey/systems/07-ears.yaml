@@ -1,0 +1,40 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: ears
+title: Ears and hearing
+question: '{HasHad} problems with the ears or hearing?'
+examples: 'For example: hearing loss, ringing in the ears, frequent ear infections, or ears that are shaped or placed differently.'
+items:
+  - hpo: HP:0000365
+    plain: Hearing loss
+    more_specific:
+      - hpo: HP:0000407
+        plain: Hearing loss from the inner ear or hearing nerve
+        description: Doctors may call this sensorineural hearing loss.
+      - hpo: HP:0000405
+        plain: Hearing loss from the ear canal, eardrum, or middle ear
+        description: Doctors may call this conductive hearing loss.
+      - hpo: HP:0000410
+        plain: A mix of both kinds of hearing loss
+  - hpo: HP:0000360
+    plain: Ringing in the ears
+  - hpo: HP:0010780
+    plain: Discomfort with everyday sounds
+  - hpo: HP:0002321
+    plain: Spinning dizziness (vertigo)
+  - hpo: HP:0000403
+    plain: Frequent ear infections
+  - hpo: HP:0000356
+    plain: Outer ear shape or position
+    more_specific:
+      - hpo: HP:0000369
+        plain: Ears set low on the head
+      - hpo: HP:0000358
+        plain: Ears rotated toward the back
+      - hpo: HP:0000378
+        plain: Cupped ears
+      - hpo: HP:0008551
+        plain: Small or underdeveloped ear
+      - hpo: HP:0004467
+        plain: Small pit or tag in front of the ear

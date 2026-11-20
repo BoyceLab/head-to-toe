@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Head-to-Toe Survey Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/survey.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap titlerow">
+    <h1>Head-to-toe health survey, redesigned</h1>
+    <span class="sub">A hypothetical makeover of the ClinGen GenomeConnect Health Survey, with epilepsy and ALS as test cases</span>
+    <span class="toplinks"><a href="compare.html">Before and after</a><a href="annotate.html">Review the original surveys</a><a id="repoLink" href="#" hidden>Suggest a change</a></span>
+    <span id="exampleFlag" class="examplebar" hidden></span>
+  </div>
+</header>
+<div class="stick">
+  <div class="wrap">
+    <div class="navrow">
+      <nav class="jump" id="jump" aria-label="Survey stages"></nav>
+      <label class="switch" for="coordToggle"><input type="checkbox" id="coordToggle"> Show clinical terms and funnel counts</label>
+    </div>
+    <div class="substeps" id="substeps" aria-label="Steps in this stage"></div>
+  </div>
+  <div class="progress" aria-hidden="true"><span id="prog"></span></div>
+</div>
+<main class="wrap" id="top">
+  <div id="stage" aria-live="polite"></div>
+  <div class="pager">
+    <button class="btn quiet" id="prevBtn" type="button">Previous</button>
+    <a href="#top" class="totop" id="toTop">Back to top</a>
+    <button class="btn primary" id="nextBtn" type="button">Next</button>
+  </div>
+</main>
+<script type="application/json" id="bank">/*BANK*/</script>
+<script src="assets/survey.js"></script>
+</body>
+</html>

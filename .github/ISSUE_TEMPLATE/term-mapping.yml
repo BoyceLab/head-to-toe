@@ -1,0 +1,27 @@
+name: Report a term mapping problem
+description: An item maps to the wrong HPO term, a term that is too general, or a term that is now obsolete.
+labels: [mapping]
+body:
+  - type: input
+    id: item
+    attributes:
+      label: Item
+      description: The page and the plain wording of the item.
+    validations:
+      required: true
+  - type: input
+    id: current
+    attributes:
+      label: Current HPO term
+    validations:
+      required: true
+  - type: input
+    id: proposed
+    attributes:
+      label: Proposed HPO term
+  - type: textarea
+    id: reason
+    attributes:
+      label: What is wrong with the current term?
+    validations:
+      required: true

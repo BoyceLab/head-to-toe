@@ -1,0 +1,49 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: digestion
+title: Digestion and feeding
+question: '{HasHad} problems with eating, digestion, the stomach, the bowels, or the liver?'
+examples: 'For example: feeding trouble, reflux, vomiting, severe constipation, loss of bowel control, or liver problems.'
+items:
+  - hpo: HP:0011968
+    plain: Trouble eating or feeding
+  - hpo: HP:0002020
+    plain: Reflux (stomach contents coming back up)
+  - hpo: HP:0002013
+    plain: Frequent vomiting
+  - hpo: HP:0002578
+    plain: Stomach that empties slowly (gastroparesis)
+  - hpo: HP:0002021
+    plain: Narrowing at the stomach outlet (pyloric stenosis)
+  - hpo: HP:0002019
+    plain: Severe or long-lasting constipation
+  - hpo: HP:0002014
+    plain: Long-lasting diarrhea
+  - hpo: HP:0002024
+    plain: Trouble absorbing nutrients (malabsorption)
+    from_a_report: true
+  - hpo: HP:0002579
+    plain: Food moves through the gut too slowly (dysmotility)
+  - hpo: HP:0002607
+    plain: Loss of bowel control
+  - hpo: HP:0002566
+    plain: Twisted intestines at birth (malrotation)
+  - hpo: HP:0002037
+    plain: Inflammation of the bowel
+    description: Including Crohn disease or colitis.
+  - hpo: HP:0004378
+    plain: Anus that did not form as expected
+    description: Including a narrowed or missing opening at birth.
+  - hpo: HP:0001392
+    plain: Liver problems
+    more_specific:
+      - hpo: HP:0002240
+        plain: Enlarged liver
+      - hpo: HP:0002910
+        plain: High liver enzymes on a blood test
+        from_a_report: true
+      - hpo: HP:0001394
+        plain: Scarring of the liver (cirrhosis)
+  - hpo: HP:0001733
+    plain: Inflamed pancreas (pancreatitis)

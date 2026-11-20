@@ -1,0 +1,50 @@
+# Text for the annotation page: notes for reviewers, and open questions they can comment on.
+# Questions about a single item live on that item, as question_for_reviewers in a crosswalk file.
+
+notes:
+  - >-
+    Each item is the original wording, transcribed as printed in the 2018 Health Survey supplement or in version 1.3
+    of the Seizure Survey, including typos and term errors. The proposed redesign appears beside each item for
+    context; it can be hidden for a review of the original alone.
+  - >-
+    HPO term labels come from the release pinned for this build. Several terms printed in 2018 are now obsolete or
+    have new labels, and the item says so where that applies.
+  - >-
+    Reviews stay in this browser until downloaded or copied. Nothing is sent anywhere. Download or copy the review
+    before clearing the browser or switching devices.
+  - >-
+    Permission to publish the transcription of the Seizure Survey is being confirmed. Please keep this page within
+    the review group until that is settled.
+
+questions:
+  - id: age-precision
+    question: Should the redesign keep single-year ages, as the originals ask, instead of age bands mapped to HPO onset terms?
+    context: Age bands store cleanly as HPO onset terms, and single years are more precise for natural history work.
+  - id: age-at-diagnosis
+    question: Should age at diagnosis be asked beside the age when a feature started?
+    context: The Health Survey asked both for every item. The redesign asks only when a feature started, plus who noticed or confirmed it.
+  - id: prefer-not
+    question: Should every item offer a prefer-not-to-answer choice, as the oral health page did?
+    context: The redesign offers Not sure on every item and no prefer-not-to-answer choice.
+  - id: gene-names
+    question: Should participants ever see gene names from the funnel check, or should that stay a coordinator view?
+  - id: not-sure-follow-up
+    question: How should a coordinator follow up on Not sure answers and on general answers that could be more specific?
+  - id: seizure-comparability
+    question: How should answers already collected with version 1.3 of the Seizure Survey be converted, so they can be combined with answers to the redesign?
+  - id: seizure-frequency
+    question: Does asking how often each seizure type happens add enough to justify the extra time, or would one overall frequency do?
+  - id: syndrome-names
+    question: Do families recognize the 2022 ILAE syndrome names with former names in parentheses, or should the former name come first?
+  - id: medicine-list
+    question: Who should keep the seizure medicine list current, and from what source?
+  - id: sex-gender
+    question: Does the wording that separates sex recorded at birth from an optional gender identity question work for the people you work with?
+  - id: membership
+    question: Should the membership question list a program's partner organizations, or keep generic categories?
+  - id: cognitive-interviews
+    question: Who should take part in cognitive interviews to test the plain wording, and at what reading level should it aim?
+  - id: translation
+    question: Which languages should come first for translation?
+  - id: obsolete-terms
+    question: When an HPO term becomes obsolete, should stored answers be updated to the replacement term, or kept with a note?

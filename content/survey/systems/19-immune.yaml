@@ -1,0 +1,22 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: immune
+title: Immune system
+question: '{HasHad} problems with the immune system? Common allergies do not count here.'
+examples: 'For example: infections that keep coming back, an immune deficiency, or an autoimmune condition such as lupus or Hashimoto thyroiditis.'
+items:
+  - hpo: HP:0002719
+    plain: Infections that come back more often than usual
+  - hpo: HP:0002721
+    plain: Immune deficiency
+    from_a_report: true
+  - hpo: HP:0002960
+    plain: Autoimmune condition
+    description: The immune system attacks the body's own tissues.
+  - hpo: HP:0001370
+    plain: Rheumatoid arthritis
+  - hpo: HP:0001954
+    plain: Fevers that keep coming back without a clear cause
+  - hpo: HP:0012647
+    plain: Inflammation that is out of proportion to an injury or infection

@@ -1,2 +1,102 @@
-# head-to-toe
+# Head-to-toe health survey, redesigned
 
+A working redesign of the ClinGen GenomeConnect Health Survey, with epilepsy and amyotrophic lateral sclerosis (ALS) as test cases, built so that anyone can propose changes through pull requests or suggestion forms.
+
+- **The survey:** `index.html` on the published site. It opens with an invented example loaded; the About page offers a blank start.
+- **Before and after:** `compare.html` sets each part of the 2018 Health Survey, and each question of the GenomeConnect Seizure Survey, beside its redesign, with a label on every row saying what changed.
+- **Review the original surveys:** `annotate.html` lets a reviewer mark every original item as *Keep all of it*, *Keep some of it*, *Reject it*, or *Not sure*, add comments, answer open questions, and download the review as CSV or JSON.
+
+Every feature is offered in plain language and maps to a term in the Human Phenotype Ontology (HPO). Every feature can be answered Yes, No, or Not sure, and the review page builds a record shaped like a GA4GH (Global Alliance for Genomics and Health) Phenopacket, with findings answered No recorded as excluded.
+
+## How the repository is organized
+
+| Path | What it holds |
+|---|---|
+| `content/survey/systems/` | One file per body-system page of the head-to-toe screen, in page order |
+| `content/survey/modules/` | The epilepsy and ALS modules |
+| `content/survey/family.yaml`, `onset.yaml` | Family history conditions and the age bands offered for onset |
+| `content/examples/` | Invented example people that open the survey in a realistic state |
+| `content/review/` | The decision choices and reviewer roles for the annotation page, and its notes and open questions |
+| `notebooks/combine_reviews.ipynb` | The Colab notebook that combines reviewers' files, with invented sample files in `notebooks/sample_reviews/` |
+| `content/notes/design-notes.yaml` | The text of the Design notes page: changes, corrections, open questions, sources |
+| `content/original/` | The 2018 Health Survey as transcribed from the published supplement, the Seizure Survey (version 1.3), and a crosswalk for each that maps every original answer or question to the redesign |
+| `site/` | Page templates, styles, and scripts |
+| `scripts/` | Download of the HPO release, checks, and the build |
+| `config.yaml` | The pinned HPO release, the repository address, and the wording rules |
+
+Survey content lives in YAML files that can be edited in the GitHub web editor. The page code reads them through the build, so a wording change never touches HTML or JavaScript.
+
+## How a change reaches the site
+
+1. Someone opens a suggestion form, or edits a file under `content/` and opens a pull request. [CONTRIBUTING.md](CONTRIBUTING.md) explains both.
+2. The **Check content** workflow runs on the pull request. It downloads the pinned HPO release and reports, in the run summary:
+   - any HPO term that is missing or obsolete, with its replacement when HPO names one
+   - any break in the wording rules in `config.yaml`, such as an em dash or "dataset"
+   - any original survey answer left without a row in the crosswalk
+   - any Yes or No left without quotes, which YAML reads as true or false
+3. The same run builds the site and attaches it as a downloadable preview named `site-preview`.
+4. After review and merge into `main`, the **Publish site** workflow rebuilds the site and publishes it to GitHub Pages.
+
+## First-time setup
+
+These steps create the repository and turn on publishing. Replace the owner and name if you choose different ones, and update `repo_url` in `config.yaml` to match.
+
+```bash
+unzip head-to-toe-survey.zip
+cd head-to-toe-survey
+git init -b main
+git add .
+git commit -m "Initial import of the head-to-toe survey redesign"
+gh repo create BoyceLab/head-to-toe-survey --public --source . --push
+```
+
+Then, in the repository on GitHub:
+
+- **Settings > Pages > Build and deployment > Source:** choose **GitHub Actions**. The first push to `main` publishes the site.
+- **Settings > Branches:** add a rule for `main` that requires the **Check content** status to pass before merging, so nothing reaches the site without the checks.
+- **Issues > Labels:** add `wording`, `new-item`, `mapping`, and `original-survey` so the suggestion forms label what they create.
+
+## Running a review of the original surveys
+
+1. Send reviewers the address of `annotate.html` on the published site. Each reviewer works in their own browser; answers are kept on their device until they download them. Nothing is sent to a server.
+2. Each reviewer downloads a CSV or JSON file from the last stage of the page and sends it to the review lead. A reviewer can load the file back into the page later to keep going. Reviewers who prefer a spreadsheet can fill in `review-template.csv`, linked from the same stage, using the decision codes `keep_all`, `keep_some`, `reject`, and `unsure`.
+3. The review lead opens the notebook in Colab, chooses **Runtime > Run all**, and uploads every file when asked: [open combine_reviews.ipynb in Colab](https://colab.research.google.com/github/BoyceLab/head-to-toe-survey/blob/main/notebooks/combine_reviews.ipynb). The link works once the repository is public; for a private repository, upload the notebook to Colab directly.
+4. The notebook reports, for every item, how reviewers split, whether they reached consensus at the threshold set in its first cell, pairwise agreement, and every comment. It lists items that need discussion, summarizes each section, gathers comments on the open questions, and writes an Excel workbook and CSV files in an identified version and a version with reviewer names replaced by codes.
+
+Item ids such as `HS.eyes.coloboma` stay the same from one build to the next, so files from different reviewers line up. To change the decision choices, edit `content/review/decisions.yaml` before reviews begin, and keep the codes the same once they have. If the notebook source changes, edit `scripts/make_notebook.py` and run `python scripts/make_notebook.py` to rewrite the notebook.
+
+## Building locally
+
+Requires Python 3.10 or newer.
+
+```bash
+pip install -r requirements.txt
+make check   # download the pinned HPO release and run the checks
+make serve   # build into _site/ and serve it at http://localhost:8000
+```
+
+The pages read `funnel.json` and `search.json` from beside them, so open them through a local server rather than by double-clicking the file.
+
+## What the build computes
+
+- **Term labels** for every HPO identifier in the content, from the pinned release, so labels stay current when the release changes.
+- **Funnel counts** for the coordinator view. ALS genes are the genes linked to a disease record annotated with Amyotrophic lateral sclerosis (HP:0007354) or named as ALS; the records searched include every record linked to those genes. Seizure-associated genes are the genes linked to a record annotated with Seizure (HP:0001250) or a term beneath it. Annotations marked NOT are ignored, and annotations propagate up the ontology. The counts describe public annotations, not diagnoses or probabilities.
+- **A search index** of HPO terms that have layperson synonyms, for the plain-language search near the end of the survey.
+
+## Moving to a newer HPO release
+
+Change `hpo_release` in `config.yaml` to the new tag (for example `v2026-12-01`), run `make check`, and fix what it reports. Retired terms report their replacement where HPO names one. Record the move in [CHANGELOG.md](CHANGELOG.md).
+
+## The seizure survey
+
+`content/original/seizure-survey-v1.3.yaml` transcribes the GenomeConnect Seizure Survey, version 1.3, and `seizure-crosswalk.yaml` maps each of its questions to the epilepsy module. The Before and after page shows the comparison when both files are present, and the build works without them.
+
+Before making this repository public, confirm that GenomeConnect permits publishing the transcription. If it does not, delete those two files; the survey and the Health Survey comparison are unaffected.
+
+To add another instrument as a comparison, use the **Share an original survey for comparison** form first so permission to transcribe it can be checked.
+
+## Credits and licenses
+
+- The original survey is the GenomeConnect Health Survey, published as supplementary information to Savatt JM, et al. ClinGen's GenomeConnect Registry Enables Patient-Centered Data Sharing. *Human Mutation*. 2018. [PMC6188701](https://pmc.ncbi.nlm.nih.gov/articles/PMC6188701/). The transcription in `content/original/health-survey-2018.yaml` is included for comparison and commentary, credited to its authors, and is not covered by this repository's licenses.
+- This project uses the Human Phenotype Ontology, release pinned in `config.yaml`. See the [HPO license](https://hpo.jax.org/license) and cite: Gargano MA, et al. The Human Phenotype Ontology in 2024: phenotypes around the world. *Nucleic Acids Research*. 2024;52(D1):D1333-D1346. HPO files are downloaded at build time and are not stored in this repository.
+- Code (`site/`, `scripts/`, workflows) is under the MIT License in [LICENSE](LICENSE). Survey content and notes written for this project (`content/`, except `content/original/health-survey-2018.yaml`) are under Creative Commons Attribution 4.0, described in [LICENSE-CONTENT.md](LICENSE-CONTENT.md).

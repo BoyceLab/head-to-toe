@@ -1,0 +1,21 @@
+name: Share an original survey for comparison
+description: Offer another instrument, such as the GenomeConnect seizure survey, to set beside the redesign.
+labels: [original-survey]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Survey name and version or date
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link to a public copy, or the publication it appears in
+  - type: textarea
+    id: permission
+    attributes:
+      label: Can it be transcribed into this repository?
+      description: Note any license or permission. If you are not sure, say so and a maintainer will check before anything is copied.
+    validations:
+      required: true

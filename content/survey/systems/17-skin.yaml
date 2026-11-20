@@ -1,0 +1,56 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: skin
+title: Skin, hair, and nails
+question: '{HasHad} skin differences that a doctor looked at, or birthmarks and patches that stand out?'
+examples: 'For example: light or dark patches, streaks or swirls of color, coffee-colored birthmarks, very stretchy or fragile skin, or sweating problems.'
+items:
+  - hpo: HP:0001010
+    plain: Skin lighter than expected, overall or in areas
+    more_specific:
+      - hpo: HP:0001053
+        plain: Lighter patches of skin
+      - hpo: HP:0009719
+        plain: Small pale patches shaped like a leaf or thumbprint
+  - hpo: HP:0000953
+    plain: Darker patches of skin
+  - hpo: HP:6001387
+    plain: Streaks or swirls of lighter and darker skin
+    description: Often in lines or whorls on the body.
+  - hpo: HP:0000957
+    plain: Coffee-with-milk colored birthmarks
+    more_specific:
+      - hpo: HP:0007565
+        plain: More than a few of these birthmarks
+  - hpo: HP:0001052
+    plain: Red or purple birthmark (port-wine stain)
+  - hpo: HP:0001028
+    plain: Raised red birthmark (hemangioma)
+  - hpo: HP:0010615
+    plain: Small red bumps on the face, often on the nose and cheeks
+  - hpo: HP:0009721
+    plain: A thick, rough patch of skin, often on the lower back
+  - hpo: HP:0007552
+    plain: Unusual fat placement under the skin
+    description: 'For example: fat pads on the buttocks, or dimples over fat.'
+  - hpo: HP:0000974
+    plain: Very stretchy skin
+  - hpo: HP:0000973
+    plain: Loose, sagging skin
+  - hpo: HP:0001030
+    plain: Fragile skin that tears or blisters easily
+  - hpo: HP:0001075
+    plain: Scars that sink in
+  - hpo: HP:0001072
+    plain: Thick skin, often on the palms or soles
+  - hpo: HP:0000992
+    plain: Skin that reacts to sunlight
+  - hpo: HP:0000964
+    plain: Eczema
+  - hpo: HP:0000966
+    plain: Sweating very little
+  - hpo: HP:0000975
+    plain: Sweating much more than needed
+  - hpo: HP:0002164
+    plain: Nails that are unusually shaped or brittle

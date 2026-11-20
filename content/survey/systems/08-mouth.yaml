@@ -1,0 +1,30 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: mouth
+title: Mouth and teeth
+question: '{HasHad} problems with the teeth or gums beyond ordinary cavities or braces?'
+examples: 'For example: missing or extra teeth, unusually shaped teeth, teeth that break easily, or gum disease.'
+items:
+  - hpo: HP:0006483
+    plain: Missing or extra teeth
+  - hpo: HP:0006482
+    plain: Unusually shaped teeth
+  - hpo: HP:0000687
+    plain: Widely spaced teeth
+  - hpo: HP:0000684
+    plain: Teeth that came in late
+  - hpo: HP:0025124
+    plain: Teeth that break or crack easily
+  - hpo: HP:0006481
+    plain: Problems with baby teeth
+  - hpo: HP:0000692
+    plain: Teeth that do not line up, overbite or underbite
+  - hpo: HP:0000704
+    plain: Gum disease
+    description: Loss of the tissue around the teeth.
+  - hpo: HP:0000230
+    plain: Inflamed gums
+    description: Red, swollen gums.
+  - hpo: HP:0410028
+    plain: Repeated cold sores in the mouth

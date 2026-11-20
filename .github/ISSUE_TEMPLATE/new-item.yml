@@ -1,0 +1,39 @@
+name: Suggest a feature to add
+description: Propose a new item for a body-system page or for the epilepsy or ALS module.
+labels: [new-item]
+body:
+  - type: input
+    id: plain
+    attributes:
+      label: The feature in everyday words
+      description: How a family member or participant would describe it.
+    validations:
+      required: true
+  - type: input
+    id: hpo
+    attributes:
+      label: HPO term, if you know it
+      description: For example, HP:0003186 Inverted nipples. Leave blank if unsure; a maintainer will look it up.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where should it go?
+      options:
+        - A body-system page
+        - Epilepsy module
+        - ALS module
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it belongs
+      description: For example, it helps distinguish gene families, or families report it and the survey has no way to record it.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source, if any
+      description: A paper, a disease record, a clinical resource, or a description of the experience it comes from.

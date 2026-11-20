@@ -1,0 +1,68 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: muscles
+title: Muscles and strength
+question: '{HasHad} problems with muscles or strength?'
+examples: 'For example: weakness, muscle twitching, cramps, thinning muscles, stiffness, or muscle pain.'
+items:
+  - hpo: HP:0001324
+    plain: Weakness
+    more_specific:
+      - hpo: HP:0010628
+        plain: Weakness of the face
+      - hpo: HP:0000467
+        plain: Weakness of the neck
+      - hpo: HP:0003484
+        plain: Weakness of the arms or hands
+      - hpo: HP:0007340
+        plain: Weakness of the legs or feet
+      - hpo: HP:0003701
+        plain: Weakness near the trunk
+        description: 'For example: trouble climbing stairs or lifting the arms overhead.'
+      - hpo: HP:0002460
+        plain: Weakness of the hands or feet
+      - hpo: HP:0009027
+        plain: Foot drop
+        description: Toes catch or the foot slaps when walking.
+  - hpo: HP:0003202
+    plain: Muscles that have become thinner or wasted
+    more_specific:
+      - hpo: HP:0003393
+        plain: Thinning of the muscle at the base of the thumb
+  - hpo: HP:0002380
+    plain: Muscle twitching under the skin
+    description: Doctors may call this fasciculations.
+  - hpo: HP:0003394
+    plain: Muscle cramps or spasms
+  - hpo: HP:0003552
+    plain: Muscle stiffness
+  - hpo: HP:0003326
+    plain: Muscle pain
+  - hpo: HP:0002486
+    plain: Trouble relaxing a grip
+    description: Doctors may call this myotonia.
+  - hpo: HP:0003546
+    plain: Tiring quickly with exercise
+  - hpo: HP:0000473
+    plain: Neck turned or tilted to one side
+  - hpo: HP:0003198
+    plain: A doctor said there is a muscle disease (myopathy)
+    from_a_report: true
+  - hpo: HP:0003236
+    plain: High creatine kinase (CK) on a blood test
+    from_a_report: true
+  - hpo: HP:0011805
+    plain: A muscle biopsy that was not typical
+    from_a_report: true
+    more_specific:
+      - hpo: HP:0003805
+        plain: Rimmed vacuoles on muscle biopsy
+        from_a_report: true
+  - hpo: HP:0003457
+    plain: An EMG (muscle and nerve test) that was not typical
+    from_a_report: true
+    more_specific:
+      - hpo: HP:0003445
+        plain: EMG showed nerve-related changes
+        from_a_report: true

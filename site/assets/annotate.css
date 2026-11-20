@@ -1,0 +1,24 @@
+/* Annotation page. Builds on survey.css and compare.css. */
+.ritem{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:10px 0}
+.ritem.done{box-shadow:inset 4px 0 0 var(--accent)}
+.rgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:6px 18px}
+body.noprop .rgrid{grid-template-columns:1fr}
+body.noprop .prop{display:none}
+.rgrid .lab{font-weight:700}
+.rgrid .desc{color:var(--muted);font-size:.92rem}
+.rgrid .term{font-family:var(--font-mono);font-size:.78rem;color:var(--muted)}
+.rgrid .flag{color:var(--warn);font-size:.85rem}
+.prop{border-left:2px solid var(--line);padding-left:12px;font-size:.92rem}
+.prop ul{margin:.3rem 0 0;padding-left:1.1rem}
+.ask{background:var(--unsure-soft);border-left:4px solid var(--unsure);border-radius:4px;padding:6px 10px;margin:10px 0 4px;font-size:.95rem}
+.decision{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 6px}
+.decision .choice small{opacity:.8}
+.ritem textarea{min-height:56px;font-size:.95rem}
+.iid{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);float:right;margin-left:8px}
+.substeps button.complete::after{content:" \2713";color:var(--accent)}
+.tally{border-collapse:collapse;margin:8px 0;font-size:.92rem;width:auto}
+.tally td,.tally th{padding:4px 12px 4px 0;border-bottom:1px solid var(--line);text-align:left}
+.tally td.n{text-align:right;font-variant-numeric:tabular-nums}
+.status.ok{color:var(--accent)}
+.danger{border-color:var(--warn);color:var(--warn)}
+@media (max-width:700px){ .rgrid{grid-template-columns:1fr} .prop{border-left:none;padding-left:0;border-top:1px dashed var(--line);padding-top:6px} }

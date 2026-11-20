@@ -1,0 +1,27 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: growth
+title: Growth and weight
+question: '{HasHad} problems with growth or weight?'
+examples: 'For example: much shorter or taller than expected for the family, trouble gaining weight, lifelong obesity, or unplanned weight loss.'
+items:
+  - hpo: HP:0004322
+    plain: Much shorter than expected
+    description: Compared with family members and others of the same age and sex.
+  - hpo: HP:0000098
+    plain: Much taller than expected
+  - hpo: HP:0001508
+    plain: Trouble growing or gaining weight as a child
+    description: Doctors sometimes call this failure to thrive.
+    show_when: childhood
+  - hpo: HP:0001548
+    plain: Overall large size or overgrowth
+    description: Often noticed from birth or early childhood.
+  - hpo: HP:0001528
+    plain: One side of the body larger or longer than the other
+  - hpo: HP:0001513
+    plain: Obesity
+    description: Long-term trouble with weight that a doctor has noted.
+  - hpo: HP:0001824
+    plain: Weight loss without trying

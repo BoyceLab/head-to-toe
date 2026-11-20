@@ -1,0 +1,47 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: behavior
+title: Thinking, mood, and behavior
+question: '{HasHad} problems with mood, behavior, or mental health?'
+examples: 'For example: autism, attention problems, anxiety, depression, personality changes, or seeing or hearing things that are not there.'
+items:
+  - hpo: HP:0000729
+    plain: Autism or autistic behaviors
+  - hpo: HP:0000736
+    plain: Short attention span, including ADHD
+  - hpo: HP:0000752
+    plain: Hyperactivity
+  - hpo: HP:0000739
+    plain: Anxiety
+  - hpo: HP:0000716
+    plain: Depression
+  - hpo: HP:0007302
+    plain: Bipolar disorder
+  - hpo: HP:0000722
+    plain: Compulsive behaviors or rituals that interfere with daily life
+  - hpo: HP:0000733
+    plain: Repetitive body movements
+    description: 'For example: rocking, hand flapping, or hand wringing.'
+    more_specific:
+      - hpo: HP:0012171
+        plain: Hand wringing or hand washing movements
+  - hpo: HP:0100716
+    plain: Self-injury
+    description: 'For example: head banging, biting, or skin picking.'
+  - hpo: HP:0000718
+    plain: Aggressive behavior
+  - hpo: HP:0000741
+    plain: Loss of motivation or interest (apathy)
+  - hpo: HP:0000734
+    plain: Acting on impulse in ways that are out of character (disinhibition)
+  - hpo: HP:0000712
+    plain: Rapid mood swings
+  - hpo: HP:0000738
+    plain: Seeing or hearing things that are not there
+  - hpo: HP:0000746
+    plain: Fixed beliefs that are not true (delusions)
+  - hpo: HP:0100753
+    plain: Schizophrenia
+  - hpo: HP:0000709
+    plain: Psychosis

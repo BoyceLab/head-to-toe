@@ -1,0 +1,41 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: heart
+title: Heart and blood vessels
+question: '{HasHad} problems with the heart or blood vessels?'
+examples: 'For example: a heart defect at birth, a heart rhythm problem, a weak or thickened heart muscle, fainting, or a stroke.'
+items:
+  - hpo: HP:0001627
+    plain: Heart defect present at birth
+    description: A difference in how the heart or its large vessels formed.
+    more_specific:
+      - hpo: HP:0001629
+        plain: Hole between the lower chambers (VSD)
+      - hpo: HP:0001631
+        plain: Hole between the upper chambers (ASD)
+      - hpo: HP:0001643
+        plain: Patent ductus arteriosus (PDA)
+  - hpo: HP:0011675
+    plain: Heart rhythm problem
+    description: Too fast, too slow, or irregular.
+  - hpo: HP:0003115
+    plain: An ECG (EKG) heart tracing that was not typical
+    from_a_report: true
+  - hpo: HP:0001638
+    plain: Heart muscle disease (cardiomyopathy)
+    description: The heart muscle is enlarged, thickened, stiff, or weak.
+  - hpo: HP:0001279
+    plain: Fainting
+  - hpo: HP:0001278
+    plain: Dizziness or fainting when standing up
+  - hpo: HP:0002617
+    plain: Widened or bulging blood vessel (aneurysm)
+  - hpo: HP:0005294
+    plain: Tear in the wall of a large blood vessel (dissection)
+  - hpo: HP:0000822
+    plain: High blood pressure
+  - hpo: HP:0003124
+    plain: High cholesterol
+  - hpo: HP:0001297
+    plain: Stroke

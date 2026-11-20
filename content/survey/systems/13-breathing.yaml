@@ -1,0 +1,52 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: breathing
+title: Lungs and breathing
+question: '{HasHad} problems with the lungs or breathing?'
+examples: 'For example: asthma, shortness of breath, trouble breathing when lying flat, pauses in breathing during sleep, or frequent pneumonia.'
+items:
+  - hpo: HP:0002099
+    plain: Asthma
+  - hpo: HP:0002094
+    plain: Shortness of breath
+    more_specific:
+      - hpo: HP:0002875
+        plain: Shortness of breath with activity
+  - hpo: HP:0012764
+    plain: Shortness of breath when lying flat
+  - hpo: HP:0010535
+    plain: Pauses in breathing during sleep (sleep apnea)
+  - hpo: HP:0002791
+    plain: Shallow or slow breathing
+    description: Doctors may call this hypoventilation.
+    from_a_report: true
+  - hpo: HP:0002093
+    plain: Not getting enough oxygen in, or carbon dioxide out
+    more_specific:
+      - hpo: HP:0002747
+        plain: Breathing trouble caused by weak breathing muscles
+  - hpo: HP:0009113
+    plain: Weak diaphragm
+    description: The main breathing muscle.
+  - hpo: HP:0000776
+    plain: Hole in the diaphragm at birth
+  - hpo: HP:0002091
+    plain: Lungs that cannot fully expand
+    from_a_report: true
+  - hpo: HP:0002793
+    plain: Unusual breathing pattern
+    more_specific:
+      - hpo: HP:0002104
+        plain: Pauses in breathing while awake
+      - hpo: HP:0002883
+        plain: Breathing too fast or deep (hyperventilation)
+  - hpo: HP:0006532
+    plain: Repeated pneumonia
+  - hpo: HP:0002087
+    plain: Problems with the voice box, windpipe, or airways
+    more_specific:
+      - hpo: HP:0001601
+        plain: Soft voice box tissue (laryngomalacia)
+      - hpo: HP:0002779
+        plain: Soft windpipe (tracheomalacia)

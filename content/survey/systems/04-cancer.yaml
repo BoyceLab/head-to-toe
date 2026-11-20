@@ -1,0 +1,62 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: cancer
+title: Cancer and tumors
+question: '{HasHad} cancer or a tumor that needed a doctor''s care?'
+examples: 'For example: breast, colon, or blood cancer, or a growth that was removed and checked.'
+items:
+  - hpo: HP:0003002
+    plain: Breast cancer
+  - hpo: HP:0100615
+    plain: Ovarian cancer
+    show_when: female
+  - hpo: HP:0010784
+    plain: Uterine cancer
+    show_when: female
+  - hpo: HP:0030079
+    plain: Cervical cancer
+    show_when: female
+  - hpo: HP:0012125
+    plain: Prostate cancer
+    show_when: male
+  - hpo: HP:0010788
+    plain: Testicular cancer
+    show_when: male
+  - hpo: HP:0100526
+    plain: Lung cancer
+  - hpo: HP:0003003
+    plain: Colon or rectal cancer, including polyps
+  - hpo: HP:0012126
+    plain: Stomach cancer
+  - hpo: HP:0002894
+    plain: Pancreatic cancer
+  - hpo: HP:0002896
+    plain: Liver cancer
+  - hpo: HP:0009726
+    plain: Kidney cancer
+  - hpo: HP:0009725
+    plain: Bladder cancer
+  - hpo: HP:0100031
+    plain: Thyroid cancer
+  - hpo: HP:0002861
+    plain: Melanoma skin cancer
+  - hpo: HP:0008069
+    plain: Other skin cancer
+  - hpo: HP:0100006
+    plain: Brain or spinal cord tumor
+  - hpo: HP:0004377
+    plain: Blood cancer
+    more_specific:
+      - hpo: HP:0001909
+        plain: Leukemia
+      - hpo: HP:0002665
+        plain: Lymphoma
+  - hpo: HP:0100242
+    plain: Sarcoma (cancer of bone or connective tissue)
+    more_specific:
+      - hpo: HP:0002669
+        plain: Bone cancer (osteosarcoma)
+  - hpo: HP:0001067
+    plain: Neurofibromas
+    description: Soft bumps on or under the skin that grow from nerve tissue.

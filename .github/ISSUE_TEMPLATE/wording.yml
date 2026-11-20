@@ -1,0 +1,41 @@
+name: Suggest clearer wording
+description: Propose plain wording for a question, an item, or a help line.
+labels: [wording]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you. You do not need to edit any files; a maintainer will turn this into a change.
+  - type: input
+    id: where
+    attributes:
+      label: Where is the wording?
+      description: The page and item, for example "Muscles and strength, Muscle twitching under the skin".
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current wording
+    validations:
+      required: true
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested wording
+    validations:
+      required: true
+  - type: dropdown
+    id: reader
+    attributes:
+      label: Who would read it?
+      multiple: true
+      options:
+        - A person answering about themselves
+        - A parent or guardian answering about a child
+        - A caregiver or family member answering about an adult
+        - A family member answering after a death
+        - A coordinator or researcher
+  - type: textarea
+    id: why
+    attributes:
+      label: What does the change make clearer?

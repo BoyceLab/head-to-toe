@@ -1,0 +1,85 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: eyes
+title: Eyes and vision
+question: '{HasHad} problems with the eyes or vision?'
+examples: 'For example: vision loss, cataracts, a lazy eye, eyes that shake, droopy eyelids, or eyes that burn or feel dry. Do not include ordinary nearsightedness or farsightedness here unless it is strong.'
+items:
+  - hpo: HP:0000496
+    plain: Eye movement problems
+    more_specific:
+      - hpo: HP:0000486
+        plain: Eyes that do not line up (lazy eye)
+        description: Doctors may call this strabismus.
+      - hpo: HP:0000639
+        plain: Eyes that shake or wobble
+        description: Doctors may call this nystagmus.
+      - hpo: HP:0000602
+        plain: Trouble moving the eyes in some directions
+  - hpo: HP:0000508
+    plain: Droopy upper eyelid
+  - hpo: HP:0000505
+    plain: Vision loss
+    more_specific:
+      - hpo: HP:0000618
+        plain: Blindness
+      - hpo: HP:0100704
+        plain: Vision loss that comes from the brain rather than the eye
+      - hpo: HP:0000662
+        plain: Poor vision at night
+      - hpo: HP:0000551
+        plain: Trouble telling colors apart
+  - hpo: HP:0000613
+    plain: Sensitivity to light
+  - hpo: HP:0000545
+    plain: Strong nearsightedness
+    description: Things in the distance look blurry.
+  - hpo: HP:0000540
+    plain: Strong farsightedness
+    description: Things up close look blurry.
+  - hpo: HP:0000518
+    plain: Cataract
+    description: Clouding of the lens.
+  - hpo: HP:0001083
+    plain: Lens that moved out of place
+  - hpo: HP:0000501
+    plain: Glaucoma
+    description: High pressure inside the eye.
+  - hpo: HP:0000648
+    plain: Optic nerve damage or thinning
+    description: Doctors may call this optic atrophy.
+  - hpo: HP:0000479
+    plain: Retina problems
+    description: The layer at the back of the eye.
+    more_specific:
+      - hpo: HP:0000541
+        plain: Retinal detachment
+      - hpo: HP:0000556
+        plain: Retinal degeneration
+      - hpo: HP:0000608
+        plain: Macular degeneration
+  - hpo: HP:0100887
+    plain: Eye that is very small or did not develop
+    more_specific:
+      - hpo: HP:0000568
+        plain: Very small eye
+  - hpo: HP:0000525
+    plain: Iris differences
+    description: The colored part of the eye.
+    more_specific:
+      - hpo: HP:0001100
+        plain: Each eye a different color
+      - hpo: HP:0009737
+        plain: Small spots on the iris
+        description: Doctors may call these Lisch nodules.
+  - hpo: HP:0000589
+    plain: A gap or notch in part of the eye
+    description: Can look like a keyhole-shaped pupil. Doctors may call this coloboma.
+  - hpo: HP:0001097
+    plain: Dry eyes
+  - hpo: HP:6000420
+    plain: Burning feeling in the eyes
+    description: Some people describe this as acid tears.
+  - hpo: HP:0200026
+    plain: Eye pain

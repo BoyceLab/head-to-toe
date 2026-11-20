@@ -1,0 +1,28 @@
+# Site and build settings. Change repo_url to the repository's address after you create it.
+site_title: Head-to-toe health survey, redesigned
+repo_url: https://github.com/BoyceLab/head-to-toe-survey
+
+# Human Phenotype Ontology release used for labels, validation, funnel counts, and search.
+# To move to a newer release, change this tag, run the build, and review what the checks report.
+hpo_release: v2026-09-01
+
+# Wording rules checked on every pull request. Each pattern is a Python regular expression,
+# matched without regard to case, against the survey content, examples, and design notes.
+# The transcription of the original survey in content/original is exempt.
+style_rules:
+  - pattern: "—"
+    message: Replace the em dash with a comma, colon, semicolon, or a rewritten sentence.
+  - pattern: "–"
+    message: Replace the en dash with "to" for ranges, or rewrite the sentence.
+  - pattern: "\\bdatasets?\\b"
+    message: Write "data set" as two words.
+  - pattern: "\\bdata is\\b"
+    message: Write "data are".
+  - pattern: "\\brare-disease\\b"
+    message: Write "rare disease" without a hyphen.
+  - pattern: "\\breal-world\\b"
+    message: Write "real world" without a hyphen.
+  - pattern: "\\b(centre|colour|behaviour|practise|artefact|organis\\w*|licence)\\b"
+    message: Use American spelling.
+  - pattern: "\\bshows? up\\b"
+    message: Say what is meant directly, for example "appears" or "is part of".

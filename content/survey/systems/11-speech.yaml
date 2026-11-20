@@ -1,0 +1,38 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: speech
+title: Speech and swallowing
+question: '{HasHad} problems with speech, voice, or swallowing?'
+examples: 'For example: slurred speech, late talking, choking on food or drink, drooling, or a nasal or hoarse voice.'
+items:
+  - hpo: HP:0000750
+    plain: Slow to start talking
+    show_when: childhood
+  - hpo: HP:0001344
+    plain: Never developed speech
+    show_when: childhood
+  - hpo: HP:0001260
+    plain: Slurred or slow speech
+    description: Doctors may call this dysarthria.
+  - hpo: HP:0002381
+    plain: Trouble finding or understanding words after speech had developed
+    description: Doctors may call this aphasia.
+  - hpo: HP:0001611
+    plain: Nasal-sounding voice
+  - hpo: HP:0001609
+    plain: Hoarse voice
+  - hpo: HP:0002015
+    plain: Trouble swallowing
+    more_specific:
+      - hpo: HP:0200136
+        plain: Food or drink going down the wrong way, or choking
+      - hpo: HP:0002835
+        plain: Food or liquid getting into the lungs (aspiration)
+        from_a_report: true
+  - hpo: HP:0002307
+    plain: Drooling or too much saliva
+  - hpo: HP:0001308
+    plain: Twitching of the tongue
+  - hpo: HP:0012473
+    plain: Thinning of the tongue

@@ -1,0 +1,955 @@
+# Maps every answer row of the original Health Survey to the redesign.
+# original: the answer label exactly as transcribed in health-survey-2018.yaml
+# change: one of the keys under change_types
+# redesign: HPO terms in the redesign that take the row's place (empty when dropped)
+# note: optional, one or two plain sentences
+change_types:
+  same: Same term, plain wording
+  split: Same term, now with more specific choices
+  refined: More precise term
+  replaced: General term replaced by specific items
+  corrected: Term corrected
+  retired: Retired term replaced
+  merged: Duplicate removed; asked once
+  moved: Moved to another section
+  dropped: Dropped
+  answer: Answer option handled differently
+sections:
+  - section: birth
+    rows:
+      - original: Amniotic fluid issue
+        change: split
+        redesign:
+          - HP:0001560
+      - original: Decreased fetal movement
+        change: same
+        redesign:
+          - HP:0001558
+      - original: Delivery complication
+        change: same
+        redesign:
+          - HP:0001787
+      - original: Maternal health problem
+        change: replaced
+        question_for_reviewers: The original description names CMV infection. Should infections during pregnancy be asked too?
+        redesign:
+          - HP:0009800
+          - HP:0008071
+        note: The printed identifier is now labeled Pregnancy history. The redesign asks about diabetes and high blood pressure in the mother directly.
+      - original: Placental issue
+        change: same
+        redesign:
+          - HP:0100767
+      - original: Pregnancy exposure
+        change: same
+        redesign:
+          - HP:0011438
+      - original: Prematurity
+        change: same
+        redesign:
+          - HP:0001622
+      - original: Umbilical cord issue
+        change: same
+        redesign:
+          - HP:0010881
+  - section: growth
+    rows:
+      - original: General overgrowth
+        change: same
+        redesign:
+          - HP:0001548
+      - original: Obesity
+        change: same
+        redesign:
+          - HP:0001513
+      - original: Uneven growth
+        change: same
+        redesign:
+          - HP:0001528
+      - original: Short stature
+        change: same
+        redesign:
+          - HP:0004322
+      - original: Undergrowth
+        change: same
+        redesign:
+          - HP:0001508
+      - original: Growth hormone deficiency
+        change: merged
+        redesign:
+          - HP:0034323
+        note: Asked once, in Hormones and glands. The printed identifier is now labeled Decreased response to growth hormone stimulation test.
+      - original: Growth hormone excess
+        change: moved
+        redesign:
+          - HP:0000845
+        note: Asked in Hormones and glands.
+      - original: Tall stature
+        change: same
+        redesign:
+          - HP:0000098
+  - section: hormones
+    rows:
+      - original: Type 2 diabetes
+        change: same
+        redesign:
+          - HP:0005978
+      - original: Type 1 diabetes
+        change: same
+        redesign:
+          - HP:0100651
+      - original: Delayed puberty
+        change: same
+        redesign:
+          - HP:0000823
+      - original: Diabetes insipidus
+        change: same
+        redesign:
+          - HP:0000873
+      - original: Growth hormone deficiency
+        change: merged
+        redesign:
+          - HP:0034323
+        note: Asked once here, with a term for low growth hormone.
+      - original: Early puberty
+        change: same
+        redesign:
+          - HP:0000826
+      - original: Hypogonadism
+        change: same
+        redesign:
+          - HP:0000135
+      - original: Adrenal hyperplasia
+        change: same
+        redesign:
+          - HP:0008221
+      - original: Hyperthyroidism
+        change: corrected
+        redesign:
+          - HP:0000836
+        note: Printed with HP:0000853, which is Goiter.
+      - original: Hypothyroidism
+        change: corrected
+        redesign:
+          - HP:0000821
+        note: Printed with HP:0000836, which is Hyperthyroidism.
+      - original: Goiter
+        change: corrected
+        redesign:
+          - HP:0000853
+        note: Printed with HP:0000836 under a Hypothyroidism label.
+      - original: Parathyroid issue
+        change: split
+        redesign:
+          - HP:0011767
+  - section: cancer
+    rows:
+      - original: Breast Cancer
+        change: same
+        redesign:
+          - HP:0003002
+      - original: Ovarian Cancer
+        change: same
+        redesign:
+          - HP:0100615
+      - original: Uterine cancer
+        change: same
+        redesign:
+          - HP:0010784
+      - original: Cervix
+        change: same
+        redesign:
+          - HP:0030079
+      - original: Prostate
+        change: refined
+        redesign:
+          - HP:0012125
+        note: Uses Prostate cancer rather than Prostate neoplasm, to match a question about cancer.
+      - original: Lung
+        change: same
+        redesign:
+          - HP:0100526
+      - original: Colon and rectum (including polyps)
+        change: same
+        redesign:
+          - HP:0003003
+      - original: Pancreas
+        change: same
+        redesign:
+          - HP:0002894
+      - original: Bladder
+        change: same
+        redesign:
+          - HP:0009725
+      - original: Kidney
+        change: same
+        redesign:
+          - HP:0009726
+      - original: Thyroid
+        change: same
+        redesign:
+          - HP:0100031
+      - original: Melanoma of skin
+        change: same
+        redesign:
+          - HP:0002861
+      - original: Non-melanoma of skin
+        change: same
+        redesign:
+          - HP:0008069
+      - original: Brain or spine
+        change: same
+        redesign:
+          - HP:0100006
+      - original: Blood (including leukemia and lymphoma)
+        change: corrected
+        redesign:
+          - HP:0004377
+        note: Printed with a general blood term that is not a cancer term. Leukemia and lymphoma are specific choices beneath it.
+      - original: Unsure
+        change: answer
+        redesign: []
+        note: Not sure is available on every item.
+      - original: Other
+        change: answer
+        redesign: []
+        note: Replaced by the plain-language search and the free-text box on the Anything else page.
+  - section: head
+    rows:
+      - original: Chin
+        change: split
+        redesign:
+          - HP:0000306
+      - original: Cleft lip and/or cleft palate
+        change: split
+        redesign:
+          - HP:0000202
+      - original: General face shape
+        change: split
+        redesign:
+          - HP:0001999
+      - original: Hair
+        change: split
+        redesign:
+          - HP:0001595
+      - original: Inside of the mouth
+        change: replaced
+        redesign:
+          - HP:0000218
+          - HP:0000153
+        note: Replaced by specific items, such as a high, narrow roof of the mouth.
+      - original: Lips or outside of the mouth
+        change: split
+        redesign:
+          - HP:0000153
+      - original: Neck
+        change: split
+        redesign:
+          - HP:0000464
+      - original: Nose
+        change: split
+        redesign:
+          - HP:0000366
+      - original: Skull
+        change: split
+        redesign:
+          - HP:0000929
+      - original: Throat/swallowing difficulties
+        change: moved
+        redesign:
+          - HP:0002015
+        note: Moved to the new Speech and swallowing section, with choking as a specific choice.
+  - section: eyes
+    rows:
+      - original: Eye movement issues
+        change: split
+        redesign:
+          - HP:0000496
+      - original: Difference in eye size
+        change: split
+        redesign:
+          - HP:0100887
+      - original: Unusual Iris
+        change: split
+        redesign:
+          - HP:0000525
+      - original: Coloboma
+        change: same
+        redesign:
+          - HP:0000589
+      - original: Lens issue
+        change: replaced
+        redesign:
+          - HP:0000518
+          - HP:0001083
+        note: Asked as cataract and as a lens that moved out of place.
+      - original: Major vision issues
+        change: replaced
+        redesign:
+          - HP:0000505
+        note: Asked as vision loss, with more specific choices beneath it.
+      - original: Farsightedness
+        change: corrected
+        question_for_reviewers: Should ordinary farsightedness be asked at all, or only strong farsightedness, as in the redesign?
+        redesign:
+          - HP:0000540
+        note: Printed with HP:0000545, which is Myopia.
+      - original: Nearsightedness
+        change: corrected
+        question_for_reviewers: Should ordinary nearsightedness be asked at all, or only strong nearsightedness, as in the redesign?
+        redesign:
+          - HP:0000545
+        note: Printed with HP:0000540, which is Hypermetropia.
+      - original: Optic nerve issues
+        change: replaced
+        redesign:
+          - HP:0000648
+        note: Asked as optic nerve damage or thinning.
+      - original: Retina issues
+        change: split
+        redesign:
+          - HP:0000479
+      - original: Ptosis
+        change: same
+        redesign:
+          - HP:0000508
+  - section: ears
+    rows:
+      - original: Ear shape difference
+        change: refined
+        redesign:
+          - HP:0000356
+        note: Uses the outer ear term, with specific shape and position choices beneath it.
+      - original: Conductive hearing loss
+        change: same
+        redesign:
+          - HP:0000405
+      - original: Sensorineural hearing loss (SNHL)
+        change: same
+        redesign:
+          - HP:0000407
+      - original: Mixed hearing loss
+        change: same
+        redesign:
+          - HP:0000410
+      - original: Hearing loss, unsure which type
+        change: split
+        redesign:
+          - HP:0000365
+      - original: Ringing in the ears
+        change: same
+        redesign:
+          - HP:0000360
+      - original: Hyperacusis
+        change: same
+        redesign:
+          - HP:0010780
+      - original: Dizziness
+        change: same
+        redesign:
+          - HP:0002321
+  - section: brain
+    rows:
+      - original: Brain and/or spinal cord issue
+        change: replaced
+        redesign:
+          - HP:0012443
+          - HP:0002143
+        note: The printed term covers the whole nervous system. The redesign asks about brain scans and spinal cord scans separately.
+      - original: Cerebral palsy (CP)
+        change: same
+        redesign:
+          - HP:0100021
+      - original: Cognitive impairment
+        change: same
+        redesign:
+          - HP:0100543
+      - original: Coordination issues
+        change: replaced
+        redesign:
+          - HP:0001251
+        note: Asked as unsteady walking or poor balance.
+      - original: EEG abnormality
+        change: same
+        redesign:
+          - HP:0002353
+      - original: Encephalopathy
+        change: same
+        redesign:
+          - HP:0001298
+      - original: Hypertonia
+        change: split
+        redesign:
+          - HP:0001276
+      - original: Hypotonia
+        change: corrected
+        redesign:
+          - HP:0001252
+        note: HP:0001290 is Generalized hypotonia. The redesign uses Hypotonia, with trunk and generalized hypotonia beneath it.
+      - original: Memory impairment
+        change: same
+        redesign:
+          - HP:0002354
+      - original: Unusual movements
+        change: split
+        redesign:
+          - HP:0100022
+      - original: Parkinsonism
+        change: same
+        redesign:
+          - HP:0001300
+      - original: Seizures
+        change: same
+        redesign:
+          - HP:0001250
+  - section: behavior
+    rows:
+      - original: Autism spectrum disorder (ASD)
+        change: same
+        redesign:
+          - HP:0000729
+      - original: Bipolar disorder
+        change: same
+        redesign:
+          - HP:0007302
+      - original: Schizophrenia
+        change: same
+        redesign:
+          - HP:0100753
+      - original: Repetitive or self-injurious behavior
+        change: split
+        redesign:
+          - HP:0000733
+          - HP:0100716
+        note: Asked as two items, since repetitive movements and self-injury are different findings.
+      - original: Aggressive/violent behavior
+        change: retired
+        redesign:
+          - HP:0000718
+        note: HP:0006919 is obsolete in the current release.
+      - original: Anxiety
+        change: same
+        redesign:
+          - HP:0000739
+      - original: Depression
+        change: same
+        redesign:
+          - HP:0000716
+      - original: Delusions
+        change: same
+        redesign:
+          - HP:0000746
+      - original: Hallucinations
+        change: same
+        redesign:
+          - HP:0000738
+      - original: Obsessive compulsive disorder (OCD)
+        change: same
+        redesign:
+          - HP:0000722
+      - original: Psychosis
+        change: same
+        redesign:
+          - HP:0000709
+      - original: Short attention span
+        change: same
+        redesign:
+          - HP:0000736
+  - section: skin
+    rows:
+      - original: Atrophic scars
+        change: same
+        redesign:
+          - HP:0001075
+      - original: '"Café-au-lait" spots'
+        change: split
+        redesign:
+          - HP:0000957
+        note: Asked as one birthmark first, with more than a few as a specific choice.
+      - original: Hyperpigmentation
+        change: same
+        redesign:
+          - HP:0000953
+      - original: Hypopigmentation
+        change: split
+        redesign:
+          - HP:0001010
+      - original: Decreased sweating
+        change: same
+        redesign:
+          - HP:0000966
+      - original: Increased sweating
+        change: same
+        redesign:
+          - HP:0000975
+      - original: Skin fragility
+        change: same
+        redesign:
+          - HP:0001030
+      - original: Skin sensitivity
+        change: same
+        redesign:
+          - HP:0000992
+      - original: Thick skin
+        change: same
+        redesign:
+          - HP:0001072
+      - original: Hyperelastic skin
+        change: same
+        redesign:
+          - HP:0000974
+      - original: Hypoelastic skin
+        change: same
+        redesign:
+          - HP:0000973
+  - section: bones
+    rows:
+      - original: Arm and/or leg bone differences since birth
+        change: same
+        redesign:
+          - HP:0002813
+      - original: Curvature of the spine
+        change: split
+        redesign:
+          - HP:0010674
+      - original: Flexible joints
+        change: same
+        redesign:
+          - HP:0001382
+      - original: Frequent broken bones
+        change: same
+        redesign:
+          - HP:0002659
+      - original: Finger and/or toe differences
+        change: split
+        redesign:
+          - HP:0011297
+      - original: Hand differences
+        change: split
+        redesign:
+          - HP:0001155
+      - original: Foot differences
+        change: split
+        redesign:
+          - HP:0001760
+      - original: Hip dysplasia
+        change: same
+        redesign:
+          - HP:0001385
+      - original: Pectus carinatum
+        change: same
+        redesign:
+          - HP:0000768
+      - original: Pectus excavatum
+        change: same
+        redesign:
+          - HP:0000767
+      - original: Skeletal dysplasia
+        change: same
+        redesign:
+          - HP:0002652
+  - section: muscles
+    rows:
+      - original: Facial muscle issue
+        change: replaced
+        redesign:
+          - HP:0010628
+          - HP:0000602
+        note: Asked as weakness of the face. Trouble moving the eyes is asked in Eyes and vision.
+      - original: Issue with muscle function
+        change: replaced
+        redesign:
+          - HP:0001324
+          - HP:0002380
+          - HP:0003394
+          - HP:0003552
+        note: The printed description was copied from the facial muscle row. The redesign asks about weakness, twitching, cramps, and stiffness.
+      - original: Issue with internal muscle structure
+        change: split
+        redesign:
+          - HP:0011805
+      - original: Issue with nerves connected to muscles
+        change: replaced
+        redesign:
+          - HP:0003457
+          - HP:0009830
+        note: Asked as an EMG that was not typical and as nerve damage in the arms or legs.
+      - original: Muscle issues in the arms and/or legs
+        change: replaced
+        redesign:
+          - HP:0003484
+          - HP:0007340
+          - HP:0003202
+        note: Asked as weakness of the arms or legs and as thinning muscles.
+      - original: Muscle issues in the chest, back, and/or shoulders
+        change: replaced
+        redesign:
+          - HP:0003701
+        note: Asked as weakness near the trunk.
+      - original: Neck muscle issue
+        change: corrected
+        redesign:
+          - HP:0000473
+          - HP:0000467
+        note: Printed with HP:0003011, a general musculature term. Torticollis and neck weakness are asked separately.
+  - section: heart
+    rows:
+      - original: Aneurysm
+        change: same
+        redesign:
+          - HP:0002617
+      - original: Arrhythmia
+        change: same
+        redesign:
+          - HP:0011675
+      - original: Abnormal EKG (ECG)
+        change: same
+        redesign:
+          - HP:0003115
+      - original: Arterial dissection
+        change: same
+        redesign:
+          - HP:0005294
+      - original: Cardiomyopathy
+        change: same
+        redesign:
+          - HP:0001638
+      - original: Fainting
+        change: corrected
+        redesign:
+          - HP:0001279
+        note: Printed with HP:0001626, the top-level cardiovascular term.
+      - original: Heart defect
+        change: retired
+        redesign:
+          - HP:0001627
+        note: HP:0002564 is obsolete in the current release.
+      - original: High blood pressure
+        change: same
+        redesign:
+          - HP:0000822
+      - original: High cholesterol
+        change: same
+        redesign:
+          - HP:0003124
+      - original: Stroke
+        change: same
+        redesign:
+          - HP:0001297
+  - section: breathing
+    rows:
+      - original: Asthma
+        change: same
+        redesign:
+          - HP:0002099
+      - original: Chronic lung issues
+        change: replaced
+        redesign:
+          - HP:0002094
+          - HP:0006532
+          - HP:0002091
+        note: The printed term covers the whole respiratory system.
+      - original: Decreased lung function
+        change: retired
+        redesign:
+          - HP:0002094
+          - HP:0002093
+        note: HP:0005952 is obsolete in the current release. Specific breathing findings are asked instead.
+      - original: Diaphragm issues
+        change: replaced
+        redesign:
+          - HP:0009113
+          - HP:0000776
+        note: Asked as a weak diaphragm and as a hole in the diaphragm at birth.
+      - original: Respiratory insufficiency
+        change: split
+        redesign:
+          - HP:0002093
+      - original: Restrictive lung disease
+        change: same
+        redesign:
+          - HP:0002091
+      - original: Unusual breathing patterns
+        change: split
+        redesign:
+          - HP:0002793
+      - original: Upper respiratory tract issues
+        change: split
+        redesign:
+          - HP:0002087
+  - section: digestion
+    rows:
+      - original: Feeding difficulties
+        change: same
+        redesign:
+          - HP:0011968
+      - original: Esophagus
+        change: replaced
+        redesign:
+          - HP:0002020
+        note: Asked as reflux.
+      - original: Stomach
+        change: replaced
+        redesign:
+          - HP:0002578
+          - HP:0002021
+        note: Asked as slow stomach emptying and as narrowing at the stomach outlet.
+      - original: Pancreas
+        change: replaced
+        redesign:
+          - HP:0001733
+        note: Asked as an inflamed pancreas.
+      - original: Liver
+        change: split
+        redesign:
+          - HP:0001392
+      - original: Dysmotility
+        change: same
+        redesign:
+          - HP:0002579
+      - original: Intestines
+        change: replaced
+        redesign:
+          - HP:0002019
+          - HP:0002014
+          - HP:0002024
+          - HP:0002566
+          - HP:0002037
+        note: Asked as specific bowel findings.
+      - original: Soiling/defecation
+        change: corrected
+        redesign:
+          - HP:0002607
+        note: Printed as 0002250 with no HP prefix, a large intestine structure term.
+      - original: Anus
+        change: same
+        redesign:
+          - HP:0004378
+  - section: kidneys
+    rows:
+      - original: Bladder
+        change: split
+        redesign:
+          - HP:0000014
+      - original: Abnormal internal or external sex organ
+        change: same
+        redesign:
+          - HP:0012244
+      - original: Kidney function issue
+        change: corrected
+        redesign:
+          - HP:0012211
+        note: Printed with HP:0008221, which is Adrenal hyperplasia.
+      - original: Kidney structure issue
+        change: split
+        redesign:
+          - HP:0012210
+      - original: Female sex organ disorder
+        change: same
+        redesign:
+          - HP:0010460
+      - original: Genitalia function
+        change: replaced
+        redesign:
+          - HP:0000789
+          - HP:0008209
+        note: Asked as infertility and as ovaries that stopped working early.
+      - original: Male sex organ disorder
+        change: split
+        redesign:
+          - HP:0010461
+      - original: Urethra issue
+        change: replaced
+        question_for_reviewers: Are there urethra findings that should be asked directly rather than through the search?
+        redesign:
+          - HP:0000047
+        note: Hypospadias is asked under male genitals. Other urethra findings can be added through the search.
+      - original: Ureter issue
+        change: replaced
+        redesign:
+          - HP:0000076
+        note: Asked as urine flowing back toward the kidneys.
+      - original: Urine ("pee") issues
+        change: split
+        redesign:
+          - HP:0003110
+  - section: immune
+    rows:
+      - original: Autoimmune disorder
+        change: same
+        redesign:
+          - HP:0002960
+      - original: Immunodeficiency
+        change: same
+        redesign:
+          - HP:0002721
+      - original: Increased inflammatory response
+        change: same
+        redesign:
+          - HP:0012647
+      - original: Recurrent infections
+        change: same
+        redesign:
+          - HP:0002719
+      - original: Rheumatoid arthritis
+        change: same
+        redesign:
+          - HP:0001370
+  - section: blood
+    rows:
+      - original: Blood clot
+        change: same
+        redesign:
+          - HP:0001977
+      - original: Blood clotting
+        change: same
+        redesign:
+          - HP:0001928
+      - original: Easy bleeding
+        change: same
+        redesign:
+          - HP:0011889
+      - original: Easy bruising
+        change: same
+        redesign:
+          - HP:0000978
+      - original: Persistent bleeding
+        change: same
+        redesign:
+          - HP:0001934
+      - original: Extramedullary hematopoiesis
+        change: same
+        redesign:
+          - HP:0001978
+      - original: Frequent nosebleeds
+        change: same
+        redesign:
+          - HP:0000421
+      - original: Platelets
+        change: split
+        redesign:
+          - HP:0001872
+      - original: Red blood cells
+        change: split
+        redesign:
+          - HP:0001877
+      - original: White blood cells
+        change: split
+        redesign:
+          - HP:0001881
+  - section: mouth
+    rows:
+      - original: Gum disease
+        change: same
+        redesign:
+          - HP:0000704
+      - original: Gingivitis
+        change: same
+        redesign:
+          - HP:0000230
+      - original: Oral Herpes
+        change: same
+        redesign:
+          - HP:0410028
+      - original: Spontaneous tooth fracture
+        change: same
+        redesign:
+          - HP:0025124
+      - original: Unusual number of teeth
+        change: same
+        redesign:
+          - HP:0006483
+      - original: Malformed teeth
+        change: same
+        redesign:
+          - HP:0006482
+      - original: Abnormality of primary teeth
+        change: same
+        redesign:
+          - HP:0006481
+      - original: Abnormality of the dental root
+        change: dropped
+        question_for_reviewers: Should this stay as an item, given that families may know it only from a dental report?
+        redesign: []
+        note: Usually found on dental X-rays. Dropped from the list; the plain-language search can still add it.
+      - original: Abnormality of dental pulp
+        change: dropped
+        question_for_reviewers: Should this stay as an item, given that families may know it only from a dental report?
+        redesign: []
+        note: Usually found by a dentist. Dropped from the list; the plain-language search can still add it.
+      - original: Over/under bite
+        change: same
+        redesign:
+          - HP:0000692
+      - original: None of the above
+        change: answer
+        redesign: []
+        note: Replaced by None of the remaining items apply, which records each remaining item as No.
+      - original: Prefer not to answer
+        change: answer
+        question_for_reviewers: Should a prefer-not-to-answer choice be offered on every item?
+        redesign: []
+        note: Not offered at item level in the redesign. Not sure is available on every item; a prefer-not-to-answer choice could be added back.
+
+# Questions outside the detail pages, and features of the survey as a whole, keyed by the item ids
+# label, if given, replaces the change type's wording on the annotation page.
+# the annotation page uses. intro.* follow the order of the opening questions; end.* the closing questions.
+other_items:
+  - id: intro.gender-sex
+    label: Split into two questions
+    change: corrected
+    note: Asked as sex recorded at birth, then an optional gender identity question, after asking who is answering.
+  - id: intro.testing-had
+    label: Kept, reworded
+    change: same
+    note: Kept, with Not sure in place of Unsure.
+  - id: intro.testing-type
+    label: Branches added
+    change: split
+    note: Adds a repeat expansion test and mitochondrial DNA testing, then asks which sample was tested, what the result said, the gene if known, and about reanalysis.
+  - id: intro.testing-reason
+    label: Options separated
+    change: corrected
+    note: Separates family history without symptoms from being proactive while healthy, and adds family planning.
+  - id: intro.testing-copy
+    label: Kept, reworded
+    change: same
+    note: Kept, with a note that a coordinator can help request a copy.
+  - id: end.referral
+    label: Kept, reworded
+    change: same
+    note: Kept with generic categories, and search engines combined into one choice.
+  - id: end.membership
+    label: Kept, reworded
+    change: same
+    note: Kept, with an optional name.
+  - id: end.group
+    label: Replaced by generic categories
+    change: replaced
+    note: The list of named organizations is replaced by generic categories; a program using the survey would list its own partners.
+  - id: end.comments
+    label: Kept, reworded
+    change: same
+    note: Kept as a free-text box, after a plain-language search for anything not listed.
+  - id: wide.screen-unsure
+    label: Changed across the survey
+    change: corrected
+    note: In the original only Yes opened a detail page. In the redesign Yes and Not sure both do.
+  - id: wide.select-all
+    label: Changed across the survey
+    change: corrected
+    note: Detail pages were select-all-that-apply lists, so an unchecked item could mean absent, unknown, or skipped. The redesign asks Yes, No, or Not sure for every item and stores No as an excluded finding.
+  - id: wide.timing-grid
+    label: Changed across the survey
+    change: replaced
+    note: Each checked item asked age at first symptoms and age at diagnosis in single years. The redesign asks one age band, mapped to an HPO onset term, and who noticed or confirmed the feature.
+    question_for_reviewers: Is the loss of single-year ages and of age at diagnosis acceptable for the uses you have in mind?
+  - id: wide.other-box
+    label: Changed across the survey
+    change: replaced
+    note: Each detail page ended with a free-text box. The redesign offers a plain-language search of HPO terms near the end of the survey, then one free-text box.
+  - id: wide.yourself
+    label: Changed across the survey
+    change: corrected
+    note: Every question is written to the person answering about themselves. The redesign asks who is answering, and the wording follows.
+

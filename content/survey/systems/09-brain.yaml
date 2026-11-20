@@ -1,0 +1,89 @@
+# Body-system section of the head-to-toe screen.
+# Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
+# the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
+key: brain
+title: Brain and nerves
+question: '{HasHad} problems with the brain or nerves?'
+examples: 'For example: seizures, developmental delay, learning problems, low or high muscle tone, unusual movements, numbness, or a brain scan that was not typical.'
+items:
+  - hpo: HP:0001250
+    plain: Seizures
+    description: Also called convulsions or fits, including staring spells. Answering yes opens the epilepsy questions.
+    opens_module: epilepsy
+  - hpo: HP:0001263
+    plain: Slow to reach milestones like sitting, walking, or talking
+    show_when: childhood
+  - hpo: HP:0002376
+    plain: Lost skills that had been learned
+  - hpo: HP:0001249
+    plain: Intellectual disability
+  - hpo: HP:0001328
+    plain: Specific learning disability
+    description: 'For example: dyslexia.'
+  - hpo: HP:0100543
+    plain: New trouble thinking, reasoning, or deciding
+    show_when: adult
+  - hpo: HP:0002354
+    plain: Memory problems
+  - hpo: HP:0001252
+    plain: Low muscle tone, floppy
+    more_specific:
+      - hpo: HP:0008936
+        plain: Low muscle tone in the trunk
+      - hpo: HP:0001290
+        plain: Low muscle tone throughout the body
+  - hpo: HP:0001276
+    plain: High muscle tone, tight or stiff muscles
+    more_specific:
+      - hpo: HP:0001257
+        plain: Stiffness that increases with fast movement
+        description: Doctors may call this spasticity.
+      - hpo: HP:0002063
+        plain: Stiffness through the whole range of movement
+        description: Doctors may call this rigidity.
+  - hpo: HP:0001251
+    plain: Unsteady walking or poor balance
+    description: Doctors may call this ataxia.
+  - hpo: HP:0100022
+    plain: Unusual movements that are hard to control
+    more_specific:
+      - hpo: HP:0001337
+        plain: Shaking (tremor)
+      - hpo: HP:0001332
+        plain: Twisting or held postures (dystonia)
+      - hpo: HP:0002072
+        plain: Dance-like, flowing movements (chorea)
+      - hpo: HP:0001336
+        plain: Sudden jerks (myoclonus)
+      - hpo: HP:0100033
+        plain: Tics
+  - hpo: HP:0001300
+    plain: Slow movement with stiffness or shaking (parkinsonism)
+  - hpo: HP:0003401
+    plain: Numbness, tingling, or pins and needles
+  - hpo: HP:0009830
+    plain: Nerve damage in the arms or legs (peripheral neuropathy)
+    from_a_report: true
+  - hpo: HP:0002315
+    plain: Frequent headaches
+    more_specific:
+      - hpo: HP:0002076
+        plain: Migraine
+  - hpo: HP:0002360
+    plain: Sleep problems
+  - hpo: HP:0100021
+    plain: A diagnosis of cerebral palsy
+  - hpo: HP:0001298
+    plain: Encephalopathy
+    description: A doctor described changes in how the brain works overall.
+    from_a_report: true
+  - hpo: HP:0012443
+    plain: A brain MRI or CT scan that was not typical
+    from_a_report: true
+  - hpo: HP:0002143
+    plain: A spinal cord difference seen on a scan
+    from_a_report: true
+  - hpo: HP:0002353
+    plain: An EEG that was not typical
+    description: A test of the brain's electrical activity.
+    from_a_report: true
