@@ -27,6 +27,14 @@ jobs:
           path: .cache/hpo
           key: hpo-${{ steps.hpo.outputs.tag }}
       - run: python scripts/fetch_hpo.py
+      - name: Read the pinned ECTO release
+        id: ecto
+        run: echo "tag=$(python -c "import yaml; print(yaml.safe_load(open('config.yaml')).get('ecto_release',''))")" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: .cache/ecto
+          key: ecto-${{ steps.ecto.outputs.tag }}
+      - run: python scripts/fetch_ecto.py
       - name: Check and build
         run: python scripts/build.py
       - name: Attach the built site as a preview

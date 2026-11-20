@@ -12,10 +12,12 @@ const RESP = {
 };
 function blank(){ return {resp:'',age:'',sex:'',gender:'',routes:[],dxNamed:'',dxName:'',dxMondo:null,
   t:{had:'',types:[],sample:[],reason:[],result:'',gene:'',copy:'',reanalysis:'',interest:''},
-  screen:{}, ans:{}, ctx:{}, ctxd:{}, dyn:{}, open:{}, fam:{}, consang:'', extra:[], freeText:'', referral:[], member:'', memberName:'', fx:{} }; }
+  screen:{}, ans:{}, ctx:{}, ctxd:{}, dyn:{}, open:{}, fam:{}, consang:'', extra:[], freeText:'', referral:[], member:'', memberName:'', fx:{},
+  exp:{places:[{}], worked:'', jobs:[], mil:{served:'', branch:[], x:{}}, act:{}, smoke:{status:'', second:''}, other:[]} }; }
 let S = blank();
 let cur = 'about';
-let SEARCH = null, DRILL = null, OMOP = null, MONDO = null;
+let SEARCH = null, DRILL = null, OMOP = null, MONDO = null, ECTO = null;
+const E = B.exposures;
 
 /* ---------- helpers ---------- */
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -82,12 +84,18 @@ function stages(){
   B.systems.forEach(s=>{ const v=S.screen[s.k]; if(v==='yes'||v==='unsure') L.push({id:'sys-'+s.k, g:'Head to toe', t:s.t, r:()=>rSystem(s)}); });
   if(epiOn()) B.seizures.forEach(m=>L.push({id:'seizure-'+m.k.slice(3), g:'Seizure follow-up', t:m.t, r:()=>rModule(m)}));
   L.push({id:'family', g:'Family history', t:'Family history', r:rFamily});
+  if(E){
+    L.push({id:'exp-places', g:'Exposures', t:'Places lived', r:rPlaces});
+    if(shows(E.work.when)) L.push({id:'exp-work', g:'Exposures', t:'Jobs', r:rJobs});
+    if(shows(E.military.when)) L.push({id:'exp-military', g:'Exposures', t:'Military service', r:rMilitary});
+    L.push({id:'exp-activities', g:'Exposures', t:'Activities and habits', r:rActivities});
+  }
   L.push({id:'more', g:'Anything else', t:'Anything else', r:rMore});
   L.push({id:'review', g:'Review', t:'Review and export', r:rReview});
   L.push({id:'design-notes', g:'Design notes', t:'Design notes', r:rNotes});
   return L;
 }
-const GROUPS = ['About','About you','Head to toe','Seizure follow-up','Family history','Anything else','Review','Design notes'];
+const GROUPS = ['About','About you','Head to toe','Seizure follow-up','Family history','Exposures','Anything else','Review','Design notes'];
 
 function go(id, keepScroll){
   const L = stages(); if(!L.find(s=>s.id===id)) id = L[0].id;
@@ -229,6 +237,7 @@ function rAbout(){
   <ul class="list">
     <li>Every feature is answered Yes, No, or Not sure.</li>
     <li>Timing choices follow the person's age: months for babies and toddlers, years for children, and broad life stages for adults.</li>
+    <li>Places lived, jobs, military service, and activities are asked with ages, and coded to ECTO, an ontology of environmental exposures.</li>
     <li>Nothing you enter leaves this page.</li>
   </ul>
   <div class="rowbtns"><button type="button" class="btn primary" data-go="you">Start</button></div>
@@ -332,6 +341,117 @@ function rFamily(){
   });
   return h+'</div>';
 }
+/* ---------- exposures (content/survey/exposures.yaml) ---------- */
+const ectoTag = c => c.e ? ' <span class="cv code muted">'+c.e[0]+' '+esc(c.e[1])+'</span>' : ' <span class="cv code muted">no ECTO class yet</span>';
+function ageRange(path, o, toLabel){
+  o = o || {};
+  return '<div class="agerange"><label>From age <input type="number" min="0" max="120" inputmode="numeric" data-text="'+path+'.from" value="'+esc(o.from||'')+'"></label>'+
+    '<label>'+(toLabel||'To age')+' <input type="number" min="0" max="120" inputmode="numeric" data-text="'+path+'.to" value="'+esc(o.to||'')+'"></label></div>';
+}
+function textIn(path, val, ph){ return '<input type="text" data-text="'+path+'" value="'+esc(val||'')+'"'+(ph?' placeholder="'+esc(ph)+'"':'')+'>'; }
+function triRow(path, label, extra, o){
+  o = o || {}; const v = o.v || '';
+  let h = '<div class="item'+(v?' ans-'+v:'')+'"><div><div class="lab">'+esc(tk(label))+extra+'</div></div><div class="tri" role="group" aria-label="'+esc(tk(label))+'">'+
+    ['yes','no','unsure'].map(x=>'<button type="button" data-expv="'+path+'" data-v="'+x+'" aria-pressed="'+(v===x)+'">'+({yes:'Yes',no:'No',unsure:'Not sure'})[x]+'</button>').join('')+'</div>';
+  if(v==='yes') h += '<div class="more">'+ageRange(path, o, 'To age (blank if still)')+'</div>';
+  return h+'</div>';
+}
+function rPlaces(){
+  const P = E.places, L = S.exp.places;
+  let h = '<p>'+esc(tk(P.intro))+' A study using this survey would collect full addresses separately, so they could be linked to environmental data without being stored with the health answers.</p>';
+  L.forEach((pl,i)=>{
+    const b = 'exp.places.'+i;
+    h += '<div class="card exp"><div class="exphead"><h3>'+(i===0?'First place':'Place '+(i+1))+'</h3>'+(L.length>1?'<button type="button" class="btn quiet" data-exprm="places:'+i+'">Remove</button>':'')+'</div>';
+    h += q('Ages '+tk('{you}')+' lived there', ageRange(b, pl, 'To age (blank if still there)'));
+    h += q('State or province, and country', '<div class="agerange">'+textIn(b+'.area', pl.area, 'State or province')+textIn(b+'.country', pl.country, 'Country')+'</div>');
+    h += q('Setting', choiceGroup(b+'.setting', P.settings, pl.setting));
+    h += q('Drinking water at home', choiceGroup(b+'.water', P.water, pl.water));
+    h += q('Within about a mile (1.5 km) of home, was there any of these?', choiceGroup(b+'.near', P.nearby.map(c=>[c.k, c.p]), pl.near||[], true), 'Choose any that apply.');
+    h += '</div>';
+  });
+  return h + '<div class="rowbtns"><button type="button" class="btn" data-expadd="places">Add another place</button></div>';
+}
+function rJobs(){
+  const W = E.work;
+  let h = '<p>'+esc(tk(W.intro))+'</p>';
+  h += q(tk('{HasHad} a job, including part-time or farm work?'), choiceGroup('exp.worked',['Yes','No','Not sure'], S.exp.worked));
+  if(S.exp.worked!=='Yes') return h;
+  if(!S.exp.jobs.length) S.exp.jobs.push({});
+  const tasks = W.tasks.filter(c=>shows(c.when));
+  S.exp.jobs.forEach((jb,i)=>{
+    const b = 'exp.jobs.'+i;
+    h += '<div class="card exp"><div class="exphead"><h3>'+(i===0?'First job':'Job '+(i+1))+'</h3>'+(S.exp.jobs.length>1?'<button type="button" class="btn quiet" data-exprm="jobs:'+i+'">Remove</button>':'')+'</div>';
+    h += q('Job title or kind of work', textIn(b+'.title', jb.title, 'For example: farm worker, welder, nurse'));
+    h += q('Ages in this job', ageRange(b, jb, 'To age (blank if still)'));
+    h += q('At this job, '+tk('{you}')+' did or worked near', choiceGroup(b+'.tasks', tasks.map(c=>[c.k, c.p]), jb.tasks||[], true), 'Choose any that apply.');
+    h += q('Anything else used or worked near (optional)', textIn(b+'.otherText', jb.otherText));
+    h += '</div>';
+  });
+  return h + '<div class="rowbtns"><button type="button" class="btn" data-expadd="jobs">Add another job</button></div>';
+}
+function rMilitary(){
+  const M = E.military, m = S.exp.mil;
+  let h = '<p>'+esc(tk(M.intro))+'</p>';
+  h += q(tk('{HasHad} military service?'), choiceGroup('exp.mil.served',['Yes','No','Not sure','Prefer not to answer'], m.served));
+  if(m.served!=='Yes') return h;
+  h += q('Branch', choiceGroup('exp.mil.branch', M.branches, m.branch||[], true), 'Choose any that apply.');
+  h += q('Ages in service', ageRange('exp.mil', m, 'To age (blank if still serving)'));
+  h += q('Bases, ships, and deployments', '<textarea data-text="exp.mil.where" placeholder="Name each place and the ages or years">'+esc(m.where||'')+'</textarea>', 'A study would link these places to known exposures, as was done for the water at Camp Lejeune.');
+  h += '<h3>During service</h3><div class="items">'+M.exposures.filter(c=>shows(c.when)).map(c=>triRow('exp.mil.x.'+c.k, c.p, ectoTag(c), m.x[c.k])).join('')+'</div>';
+  return h;
+}
+function rActivities(){
+  const A = E.activities, sm = S.exp.smoke;
+  let h = '<p>'+esc(tk(A.intro))+'</p><div class="items">'+A.items.filter(c=>shows(c.when)).map(c=>triRow('exp.act.'+c.k, c.p, ectoTag(c), S.exp.act[c.k])).join('')+'</div>';
+  h += '<h3>Smoking</h3>';
+  h += q(tk('{HasHad} a habit of smoking cigarettes, cigars, or a pipe?'), choiceGroup('exp.smoke.status', E.smoking.status, sm.status));
+  if(sm.status==='Used to' || sm.status==='Still do') h += q('Ages', ageRange('exp.smoke', sm, sm.status==='Still do'?'To age (blank if still)':'To age'));
+  h += q(tk(E.smoking.secondhand), choiceGroup('exp.smoke.second',['Yes','No','Not sure'], sm.second));
+  if(B.ecto && B.ecto.search){
+    h += '<h3>Something else</h3><p>'+tk('If {you} had another exposure, search for it. The search covers exposure terms in ECTO, the Environmental Conditions, Treatments and Exposures Ontology.')+'</p>';
+    h += '<div class="searchrow"><input type="text" id="ectoSrch" data-ectosearch="1" placeholder="Try: mercury, mold, radon, asbestos" autocomplete="off"><span class="status" id="ectoStatus"></span></div><div id="ectoRes" class="results"></div>';
+  }
+  if(S.exp.other.length) h += '<div class="items">'+S.exp.other.map((x,i)=>'<div class="item ans-yes"><div><div class="lab">'+esc(x.l.replace(/^exposure to /i,'').replace(/^./,c=>c.toUpperCase()))+' <span class="cv code muted">'+x.id+' '+esc(x.l)+'</span></div><div class="more">'+ageRange('exp.other.'+i, x, 'To age (blank if still)')+'</div></div><div><button type="button" class="btn quiet" data-rmecto="'+i+'">Remove</button></div></div>').join('')+'</div>';
+  return h;
+}
+function loadEcto(){
+  if(ECTO) return; ECTO=[];
+  fetch('ecto.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ ECTO=j.map(([id,l,syn])=>({id,l,k:(l+' '+(syn||'')).toLowerCase()})); runEcto(); }).catch(()=>{ const s=document.getElementById('ectoStatus'); if(s) s.textContent='The exposure list could not be loaded here.'; });
+}
+function runEcto(){
+  const inp=document.getElementById('ectoSrch'), out=document.getElementById('ectoRes'); if(!inp||!out||!ECTO) return;
+  const qv=inp.value.trim().toLowerCase(); if(qv.length<3){ out.innerHTML=''; return; }
+  const words=qv.split(/\s+/).map(w=>w.length>3 && /[^s]s$/.test(w) ? w.slice(0,-1) : w);
+  const hits=ECTO.filter(x=>words.every(w=>x.k.indexOf(w)>=0)).sort((a,b)=>a.l.length-b.l.length).slice(0,10);
+  out.innerHTML = hits.length ? '<div class="items">'+hits.map(x=>{ const added=S.exp.other.some(o=>o.id===x.id); return '<div class="item"><div><div class="lab">'+esc(x.l.replace(/^exposure to /i,'').replace(/^./,c=>c.toUpperCase()))+'</div><div class="cvb"><span class="code">'+x.id+' '+esc(x.l)+'</span></div></div><div><button type="button" class="btn" data-addecto="'+x.id+'" data-l="'+esc(x.l)+'"'+(added?' disabled':'')+'>'+(added?'Added':'Add')+'</button></div></div>'; }).join('')+'</div>' : '<p class="muted">No match in ECTO. Try other words, or describe it in the free-text box on the next page.</p>';
+}
+/* Exposure answers as a record: places, then every Yes or Not sure exposure, shaped after the Beacon v2
+   exposure fields (exposureCode, ageAtExposure, duration) and coded to ECTO where a class exists. */
+function expRecord(){
+  if(!E) return null;
+  const age = a => (a!==undefined && a!=='' && !isNaN(+a)) ? {iso8601duration:'P'+(+a)+'Y'} : undefined;
+  const dur = (f,t) => (f!==undefined&&f!==''&&t!==undefined&&t!==''&&+t>=+f) ? 'P'+(+t-+f)+'Y' : undefined;
+  const out = [], add = (c, ctx, ans, o, extra) => { if(!ans) return; out.push(Object.assign({context:ctx, plain:c.p, answer:ans, exposureCode:c.e?{id:c.e[0],label:c.e[1]}:undefined,
+    ageAtExposure:age(o.from), ageAtEnd:age(o.to), duration:dur(o.from,o.to), source:'reported in survey'}, extra||{})); };
+  const ansOf = v => ({yes:'Yes',no:'No',unsure:'Not sure'})[v];
+  const places = S.exp.places.filter(p=>Object.keys(p).some(k=>p[k] && (!Array.isArray(p[k])||p[k].length))).map(p=>{
+    (p.near||[]).forEach(k=>{ const c=E.places.nearby.find(x=>x.k===k); if(c) add(c,'near home','Yes',p,{place:[p.area,p.country].filter(Boolean).join(', ')||undefined}); });
+    return {ageStart:age(p.from), ageEnd:age(p.to), area:p.area||undefined, country:p.country||undefined, setting:p.setting||undefined, waterSource:p.water||undefined,
+      nearby:(p.near||[]).map(k=>(E.places.nearby.find(x=>x.k===k)||{p:k}).p)};
+  });
+  if(S.exp.worked==='Yes') S.exp.jobs.forEach(j=>(j.tasks||[]).forEach(k=>{ const c=E.work.tasks.find(x=>x.k===k); if(c) add(c,'work','Yes',j,{jobTitle:j.title||undefined}); }));
+  if(S.exp.mil.served==='Yes') E.military.exposures.forEach(c=>{ const o=S.exp.mil.x[c.k]||{}; add(c,'military service',ansOf(o.v),o.v==='yes'?o:{}); });
+  E.activities.items.forEach(c=>{ const o=S.exp.act[c.k]||{}; add(c,'activity',ansOf(o.v),o.v==='yes'?o:{}); });
+  S.exp.other.forEach(x=>add({p:x.l.replace(/^exposure to /i,'').replace(/^./,c=>c.toUpperCase()), e:[x.id,x.l]},'searched','Yes',x));
+  const sm=S.exp.smoke;
+  if(sm.status==='Used to'||sm.status==='Still do'||sm.status==='Not sure') add({p:'Tobacco smoking', e:E.smoking.e},'smoking',sm.status==='Not sure'?'Not sure':'Yes',sm.status==='Not sure'?{}:sm);
+  if(sm.status==='Never') add({p:'Tobacco smoking', e:E.smoking.e},'smoking','No',{});
+  if(sm.second) add({p:E.smoking.secondhand},'smoking',sm.second,{});
+  return {ectoRelease:(B.ecto||{}).release, places, exposures:out,
+    jobs:S.exp.worked==='Yes'?S.exp.jobs.map(j=>({title:j.title||undefined, ageStart:age(j.from), ageEnd:age(j.to), otherText:j.otherText||undefined})):[], worked:S.exp.worked||undefined,
+    military:S.exp.mil.served?{served:S.exp.mil.served, branch:S.exp.mil.branch, ageStart:age(S.exp.mil.from), ageEnd:age(S.exp.mil.to), places:S.exp.mil.where||undefined}:undefined,
+    smoking:sm.status||sm.second?{status:sm.status||undefined, ageStart:age(sm.from), ageEnd:age(sm.to), livedWithSmoker:sm.second||undefined}:undefined};
+}
 function rMore(){
   let h = '<p>'+tk('If {you} {have_has} a feature that was not listed, search for it in everyday words. The search covers the plain-language synonyms in the Human Phenotype Ontology.')+'</p>';
   h += '<div class="searchrow"><input type="text" id="srch" data-search="1" placeholder="Try: toe walking, bushy eyebrows, burning tongue" autocomplete="off"><span class="status" id="srchStatus"></span></div><div id="srchRes" class="results"></div>';
@@ -391,7 +511,7 @@ function phenopacket(){
   const extras={respondent:S.resp, ageBand:S.age, genderIdentity:S.gender||undefined, diagnosisNamed:S.dxNamed, diagnosisName:S.dxName||undefined,
     geneticTesting:S.t, bodySystemScreen:S.screen, notSure:F.unsure.map(h=>({id:h,label:clinOf(h),plain:nameOf(h)})),
     contextFields:S.ctx, contextDetails:S.ctxd, consanguinity:S.consang, familyHistory:Object.fromEntries(Object.entries(S.fam).map(([k,v])=>[ (B.family.find(f=>f[0]===k)||[k,k])[1], v])),
-    freeText:S.freeText||undefined, referral:S.referral, organizationMember:S.member};
+    freeText:S.freeText||undefined, referral:S.referral, organizationMember:S.member, exposureHistory:expRecord()||undefined};
   return {phenopacket:pp, surveyContext:extras};
 }
 
@@ -407,6 +527,9 @@ function omopRows(){
       target_concept_id:t[0]||0,target_concept_name:t[1]||'',target_domain_id:t[2]||'',target_vocabulary_id:t[3]||'',value_as_concept_id:t[4]||'',type_concept_id:32865}));
   };
   F.present.forEach(p=>add(p.h,'Yes',p)); F.no.forEach(h=>add(h,'No')); F.unsure.forEach(h=>add(h,'Not sure'));
+  const X=expRecord();
+  (X?X.exposures:[]).forEach(e=>rows.push({record:'exposure',source_vocabulary:e.exposureCode?'ECTO':'',source_code:e.exposureCode?e.exposureCode.id:'',source_name:e.exposureCode?e.exposureCode.label:e.plain,source_concept_id:'',answer:e.answer,
+    status:e.context,started:e.ageAtExposure?'age '+e.ageAtExposure.iso8601duration.slice(1,-1):'',mapping:e.exposureCode?'No standard concept (ECTO is not an OHDSI vocabulary)':'No ECTO class yet',mapped_through:'',target_concept_id:0,target_concept_name:'',target_domain_id:'',target_vocabulary_id:'',value_as_concept_id:'',type_concept_id:32865}));
   if(S.dxNamed==='Yes' && (S.dxMondo||S.dxName)) rows.unshift({record:'diagnosis',source_vocabulary:S.dxMondo?'Mondo':'',source_code:S.dxMondo?S.dxMondo.id:'',source_name:S.dxMondo?S.dxMondo.name:S.dxName,source_concept_id:S.dxMondo?S.dxMondo.cid:'',answer:'Yes',status:'',started:'',
     mapping:S.dxMondo?'No standard concept':'Typed name, not matched',mapped_through:'',target_concept_id:0,target_concept_name:'',target_domain_id:'',target_vocabulary_id:'',value_as_concept_id:'',type_concept_id:32865});
   return rows;
@@ -419,11 +542,11 @@ function rOmop(){
   let h='<h3 id="omop-h">OMOP rows</h3>';
   if(!rel.athena_release || OMOP.failed) return h+'<p class="small muted">This build has no OMOP mapping file, so there is nothing to export in this form.</p>';
   if(OMOP.loading) return h+'<p class="small muted">Loading the mapping.</p>';
-  const rows=omopRows(), f=rows.filter(r=>r.record==='finding');
-  h+='<p class="small">Each answer as a row for the OMOP Common Data Model (CDM). The HPO term is the source code and the OMOP standard concept is beside it, from Athena release '+esc(rel.athena_release)+'. Target concept 0 means no standard concept was found. A broader concept keeps less detail than the HPO term, so keep the source code when loading. No and Not sure answers are listed for completeness; the CDM has no agreed place for a finding that is absent.</p>';
+  const rows=omopRows(), f=rows.filter(r=>r.record==='finding'||r.record==='exposure');
+  h+='<p class="small">Each answer as a row for the OMOP Common Data Model (CDM). The HPO term is the source code and the OMOP standard concept is beside it, from Athena release '+esc(rel.athena_release)+'. Target concept 0 means no standard concept was found. A broader concept keeps less detail than the HPO term, so keep the source code when loading. No and Not sure answers are listed for completeness; the CDM has no agreed place for a finding that is absent. Exposures are listed with their ECTO code as the source code and target concept 0, because ECTO is not in the OHDSI vocabularies; places lived are left out, because the core CDM has no table for residential history.</p>';
   if(!f.length) return h+'<p class="muted">No findings answered yet.</p>';
   h+='<div class="rowbtns"><button type="button" class="btn" data-omopcsv="1">Download OMOP rows (CSV)</button><button type="button" class="btn quiet" data-copy="omopOut">Copy</button><span class="status" id="omopStatus"></span></div>';
-  h+='<details><summary>Preview of the findings and their standard concepts</summary><div class="in"><table><thead><tr><th>Answer</th><th>HPO term</th><th>OMOP standard concept</th><th>Domain</th><th>How it was matched</th></tr></thead><tbody>'+f.map(r=>'<tr><td>'+r.answer+'</td><td>'+esc(r.source_name)+' <span class="code muted">'+r.source_code+'</span></td><td>'+(r.target_concept_id?esc(r.target_concept_name)+' <span class="code muted">'+r.target_concept_id+'</span>':'<span class="muted">None</span>')+'</td><td>'+esc(r.target_domain_id)+'</td><td>'+esc(r.mapping)+(r.mapped_through?' <span class="muted small">through '+esc(r.mapped_through)+'</span>':'')+'</td></tr>').join('')+'</tbody></table></div></details>';
+  h+='<details><summary>Preview of the findings and their standard concepts</summary><div class="in"><table><thead><tr><th>Answer</th><th>Source term</th><th>OMOP standard concept</th><th>Domain</th><th>How it was matched</th></tr></thead><tbody>'+f.map(r=>'<tr><td>'+r.answer+'</td><td>'+esc(r.source_name)+' <span class="code muted">'+r.source_code+'</span></td><td>'+(r.target_concept_id?esc(r.target_concept_name)+' <span class="code muted">'+r.target_concept_id+'</span>':'<span class="muted">None</span>')+'</td><td>'+esc(r.target_domain_id)+'</td><td>'+esc(r.mapping)+(r.mapped_through?' <span class="muted small">through '+esc(r.mapped_through)+'</span>':'')+'</td></tr>').join('')+'</tbody></table></div></details>';
   h+='<pre class="out" id="omopOut" hidden>'+esc(omopCsv())+'</pre>';
   return h;
 }
@@ -458,9 +581,18 @@ function rReview(){
     h += '<div class="card sum"><h3>Seizure history and treatment</h3>'+(lines.length||freq.length?'<ul class="list">'+lines.concat(freq).map(x=>'<li>'+esc(tk(x))+'</li>').join('')+'</ul>':'<p class="muted">Not answered.</p>')+'</div>';
   }
   h += '<div class="grid2"><div class="card sum"><h3>Genetic testing</h3>'+(tl.length?'<ul class="list">'+tl.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<p class="muted">Not answered.</p>')+'</div><div class="card sum"><h3>Family history</h3>'+(fl.length?'<ul class="list">'+fl.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<p class="muted">Nothing reported.</p>')+'</div></div>';
+  // exposures
+  const X = expRecord();
+  if(X){
+    const el=[]; const yrs=(a,b)=>(a?' (ages '+a.iso8601duration.slice(1,-1)+(b?' to '+b.iso8601duration.slice(1,-1):' on')+')':'');
+    X.places.forEach(p=>el.push('Lived in '+([p.area,p.country].filter(Boolean).join(', ')||'a place not named')+yrs(p.ageStart,p.ageEnd)+(p.waterSource?'; water: '+p.waterSource.toLowerCase():'')+(p.nearby.length?'; near: '+p.nearby.join('; ').toLowerCase():'')));
+    X.exposures.filter(e=>e.context!=='near home' && e.context!=='smoking' && e.answer!=='No').forEach(e=>el.push(e.plain+(e.answer==='Not sure'?' (not sure)':'')+yrs(e.ageAtExposure,e.ageAtEnd)+(e.jobTitle?', as '+e.jobTitle:'')+(e.exposureCode?' <span class="cv code muted">'+e.exposureCode.id+' '+esc(e.exposureCode.label)+'</span>':'')));
+    if(X.smoking && X.smoking.status) el.push('Smoking: '+X.smoking.status.toLowerCase()+yrs(X.smoking.ageStart,X.smoking.ageEnd));
+    h += '<div class="card sum"><h3>Exposure history</h3>'+(el.length?'<ul class="list">'+el.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'<p class="muted">Not answered.</p>')+'</div>';
+  }
   // export
   const rec = JSON.stringify(phenopacket(), null, 2);
-  h += '<h3>Phenopacket</h3><p class="small">The record is shaped like a GA4GH Phenopacket (schema version 2). Findings answered No are marked <span class="code">"excluded": true</span>. Answers that are not HPO terms, such as testing history and family history, travel beside it as survey context. Download the record to load it into another tool that reads Phenopackets. If the download is blocked, use Copy.</p>';
+  h += '<h3>Phenopacket</h3><p class="small">The record is shaped like a GA4GH Phenopacket (schema version 2). Findings answered No are marked <span class="code">"excluded": true</span>. Answers that are not HPO terms, such as testing history and family history, travel beside it as survey context. Phenopackets version 2 has no exposure element, so the exposure history travels there too, coded to ECTO and shaped after the exposure fields in Beacon version 2 (exposure code, age at exposure, duration). Download the record to load it into another tool that reads Phenopackets. If the download is blocked, use Copy.</p>';
   h += '<div class="rowbtns"><button type="button" class="btn" data-dlrec="1">Download the record (JSON)</button><button type="button" class="btn quiet" data-copy="rec">Copy the record</button><span class="status" id="copyStatus"></span></div><pre class="out" id="rec">'+esc(rec)+'</pre>';
   h += rOmop();
   return h;
@@ -488,6 +620,8 @@ function rNotes(){
   let h='<p>'+esc(N.intro||'')+'</p>';
   h+='<details open id="changes"><summary>What changed from the original</summary><div class="in"><table><tbody>'+(N.changes||[]).map(c=>'<tr><td><strong>'+esc(c.name)+'</strong></td><td>'+esc(c.text)+'</td></tr>').join('')+'</tbody></table></div></details>';
   h+='<details id="fixes"><summary>Corrections to the original HPO terms, checked against release '+B.hpo_version+'</summary><div class="in"><table><thead><tr><th>Original answer</th><th>Original term</th><th>Problem</th><th>Term used here</th></tr></thead><tbody>'+(N.fixes||[]).map(r=>'<tr><td>'+esc(r.original)+'</td><td class="small">'+esc(r.printed_term)+'</td><td>'+esc(r.problem)+'</td><td class="small">'+esc(r.redesign)+'</td></tr>').join('')+'</tbody></table></div></details>';
+  if(E){ const un=[].concat(E.places.nearby,E.work.tasks,E.military.exposures,E.activities.items,[{p:E.smoking.secondhand}]).filter(c=>!c.e).map(c=>c.p);
+    h+='<details id="ecto-requests"><summary>Exposure choices with no ECTO class yet, release '+esc((B.ecto||{}).release||'')+'</summary><div class="in"><p class="small">These are kept in the record in plain words. Each is a candidate for a term request to ECTO.</p><ul class="list">'+un.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></details>'; }
   h+='<details id="open"><summary>Open questions</summary><div class="in"><ul class="list">'+(N.open_questions||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></details>';
   h+='<details id="sources"><summary>Sources</summary><div class="in"><ul class="list small">'+(N.sources||[]).map(s=>'<li>'+(s.url?'<a href="'+esc(s.url)+'">'+esc(s.title)+'</a>':esc(s.title))+'</li>').join('')+'</ul></div></details>';
   return h;
@@ -505,6 +639,11 @@ document.addEventListener('click', e=>{
   if(d.none){ d.none.split(',').forEach(h=>{ const it=IDX[h]&&IDX[h].it; if(it && !shows(it.when)) return; if(!S.ans[h]||!S.ans[h].v) S.ans[h]={v:'no', where:d.where}; }); render(true); return; }
   if(d.fam){ const f=S.fam[d.fam]=S.fam[d.fam]||{}; f.v = f.v===d.v ? '' : d.v; render(true); return; }
   if(d.set){ const p=d.set; if(d.multi){ let arr=getPath(p); if(!Array.isArray(arr)){ arr=[]; setPath(p,arr); } toggleIn(arr,d.v); if(p==='routes'){ const nos='No symptoms; a family history or a known genetic variant'; if(arr.indexOf('alsfh')>=0 && arr.indexOf('als')<0 && !S.ctx.als_status) S.ctx.als_status=nos; if(arr.indexOf('alsfh')<0 && S.ctx.als_status===nos) delete S.ctx.als_status; } } else { setPath(p, getPath(p)===d.v ? '' : d.v); } render(true); return; }
+  if(d.expv){ const o=getPath(d.expv)||{}; o.v = o.v===d.v ? '' : d.v; setPath(d.expv,o); render(true); return; }
+  if(d.expadd){ S.exp[d.expadd].push({}); render(true); return; }
+  if(d.exprm){ const [k,i]=d.exprm.split(':'); S.exp[k].splice(+i,1); render(true); return; }
+  if(d.addecto){ if(!S.exp.other.some(x=>x.id===d.addecto)) S.exp.other.push({id:d.addecto,l:d.l}); render(true); setTimeout(()=>{ loadEcto(); runEcto(); },0); return; }
+  if(d.rmecto!==undefined){ S.exp.other.splice(+d.rmecto,1); render(true); return; }
   if(d.mondo){ S.dxMondo={id:d.mondo,name:d.name,cid:d.cid}; if(!S.dxName.trim()) S.dxName=d.name; render(true); return; }
   if(d.rmmondo){ S.dxMondo=null; render(true); return; }
   if(d.omopcsv){ downloadOmop(); return; }
@@ -528,6 +667,7 @@ document.addEventListener('input', e=>{
   const t=e.target, d=t.dataset;
   if(d.text){ setPath(d.text, t.value); if(d.mondosearch) runMondo(); return; }
   if(d.search){ runSearch(); }
+  if(d.ectosearch){ loadEcto(); runEcto(); }
 });
 document.getElementById('prevBtn').onclick=()=>{ const L=stages(); const i=L.findIndex(s=>s.id===cur); if(i>0) go(L[i-1].id); };
 document.getElementById('nextBtn').onclick=()=>{ const L=stages(); const i=L.findIndex(s=>s.id===cur); if(i<L.length-1) go(L[i+1].id); };

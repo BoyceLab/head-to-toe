@@ -57,6 +57,7 @@ function stages(){
   B.systems.forEach(s=>L.push({id:'sys-'+s.k,g:'Body systems',t:s.t,r:()=>rSystem(s)}));
   L.push({id:'detail',g:'New pages',t:'More specific choices and timing',r:rDetail});
   L.push({id:'family',g:'New pages',t:'Family history',r:rFamily});
+  if(B.exposures) L.push({id:'exposures',g:'New pages',t:'Exposure history',r:rExposures});
   L.push({id:'end',g:'End of survey',t:'Closing questions and the record',r:rEnd});
   if(SZ) SZ.pages.forEach(pg=>L.push({id:'sz-'+pg.key,g:'Seizure survey',t:pg.title,r:()=>rSzPage(pg)}));
   return L;
@@ -170,6 +171,17 @@ function rDetail(){
 function rFamily(){
   return pair('<p class="none">Not in the original. Family history appeared only as a reason for testing.</p>',
     '<p><strong>Are the biological parents related to each other by blood?</strong></p><p>Then, for each condition, Yes, No, or Not sure, with which relatives and which side of the family:</p>'+opts((B.family||[]).map(f=>f[1])))+'<p class="small">'+chip('new','New in the redesign')+'</p>';
+}
+function rExposures(){
+  const X=B.exposures, code=c=>c.e?' <span class="code muted small">'+c.e[0]+'</span>':'';
+  const list=a=>'<ul class="list small">'+a.map(c=>'<li>'+esc(c.p)+code(c)+'</li>').join('')+'</ul>';
+  return pair('<p class="none">Not in the original, apart from one answer on the pregnancy page: <em>Pregnancy exposure</em>, such as alcohol, cigarettes, street drugs, chemicals, or radiation.</p>',
+    '<p><strong>Places lived</strong>: ages, state or province and country, setting, drinking water source, and what was nearby:</p>'+list(X.places.nearby)+
+    '<p><strong>Jobs</strong> (age 12 and up): title, ages, and tasks:</p>'+list(X.work.tasks)+
+    '<p><strong>Military service</strong> (adults): branch, ages, bases and deployments, and exposures during service:</p>'+list(X.military.exposures)+
+    '<p><strong>Activities and habits</strong>, with ages for each Yes, and smoking:</p>'+list(X.activities.items)+
+    '<p>A search across ECTO exposure classes covers anything else. Each choice is coded to ECTO (release '+esc((B.ecto||{}).release||'')+') where a class exists; the code follows each choice above.</p>')+
+    '<p class="small">'+chip('new','New in the redesign')+' Phenopackets version 2 has no exposure element, so the exposure history is exported beside the Phenopacket.</p>';
 }
 function rEnd(){
   return pair((O.end||[]).map(x=>'<p><strong>'+esc(x.question)+'</strong></p>'+opts(x.options)).join(''),

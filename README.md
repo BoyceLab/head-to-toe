@@ -21,6 +21,7 @@ Every feature can be answered Yes, No, or Not sure. A Yes opens more specific ch
 |---|---|
 | `content/survey/systems/` | One file per body-system page of the head-to-toe screen, in page order |
 | `content/survey/followups/` | Follow-up questions shown when Seizures is answered Yes |
+| `content/survey/exposures.yaml` | The exposure history pages: choices for places lived, jobs, military service, activities, and smoking, each coded to ECTO where a class exists |
 | `content/survey/search-aids.yaml` | Plain labels and search words for HPO terms that have no good layperson synonym, used by the search and by the more specific choices |
 | `content/survey/family.yaml`, `onset.yaml` | Family history conditions, and the timing choices offered to each age band |
 | `content/review/` | The decision choices and reviewer roles for the annotation page, and its notes and open questions |
@@ -95,6 +96,14 @@ The pages read `drill.json` and `search.json` from beside them, so open them thr
 ## Moving to a newer HPO release
 
 Change `hpo_release` in `config.yaml` to the new tag (for example `v2026-12-01`), run `make check`, and fix what it reports. Retired terms report their replacement where HPO names one. Record the move in [CHANGELOG.md](CHANGELOG.md).
+
+## Exposure codes from ECTO
+
+Exposure choices in `content/survey/exposures.yaml` are coded to ECTO, the [Environmental Conditions, Treatments and Exposures Ontology](https://github.com/EnvironmentOntology/environmental-exposure-ontology). The release is pinned as `ecto_release` in `config.yaml`, and `scripts/fetch_ecto.py` downloads it into `.cache/ecto/`. On every pull request the build checks that each code is in that release, is not obsolete, and has the label written in the content file, and it builds the exposure search from ECTO's "exposure to" classes.
+
+ECTO is optional for the build. If the download fails, codes are checked for form only, a note says so, and the exposure search is left out. To add the file by hand, save `ecto.obo` for the pinned release as `.cache/ecto/<release>/ecto.obo`.
+
+To code a choice, add `ecto: {id: "ECTO:0000000", label: exposure to ...}` with the label exactly as ECTO gives it. A choice with no fitting class keeps its plain wording, and the Design notes page lists it as a candidate term request.
 
 ## Links to OMOP and Mondo
 

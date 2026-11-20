@@ -183,6 +183,43 @@ sections:
         rationale: A coded diagnosis can be linked to gene and phenotype records without a person reading free text. The typed name is kept because a list will not hold every diagnosis.
         basis: judgment
 
+  - title: Exposure history
+    changes:
+      - change: Places lived, jobs, military service, and activities
+        original: The only exposure question was one answer on the pregnancy page, Pregnancy exposure.
+        proposed: A section asks for each place lived, with ages, state or province and country, drinking water source,
+          and what was nearby; each job with its tasks; military branch, bases, deployments, and exposures during service;
+          activities such as firing ranges, lead casting, and garden spraying; and smoking. Every Yes has an age range.
+        rationale: Linking answers to environmental data, or placing an exposure before or after a biological sample,
+          needs the period of each exposure. An answer with no ages can show only that an exposure happened.
+        basis: judgment
+      - change: Exposure choices coded to ECTO
+        original: No exposure codes.
+        proposed: Each exposure choice is coded to a class in ECTO, the Environmental Conditions, Treatments and Exposures
+          Ontology, checked against a pinned release on every pull request. A search across ECTO exposure classes covers
+          anything else. Choices with no fitting class are kept in plain words and listed as candidate term requests.
+        rationale: ECTO is an Open Biological and Biomedical Ontology Foundry ontology for exposure events, built for
+          uses that include coding patient-reported survey data, and its terms are used in Mondo's disease axioms.
+        basis: source
+        sources: [ecto2023]
+      - change: Places asked only as state or province and country
+        original: Not asked.
+        proposed: The survey asks for state or province and country. It says that a study would collect full addresses
+          separately, so they could be linked to environmental data without being stored with the health answers.
+        rationale: A town, county, or street address is an identifier under the HIPAA Safe Harbor de-identification
+          method, which lists geographic subdivisions smaller than a state.
+        basis: source
+        sources: [hhs]
+      - change: Exposure history exported beside the Phenopacket and as OMOP rows
+        original: No export.
+        proposed: The record carries the exposure history beside the Phenopacket, shaped after the exposure fields in
+          Beacon version 2 (exposure code, age at exposure, duration). The OMOP rows list each exposure with its ECTO code
+          as the source code and target concept 0.
+        rationale: Phenopackets version 2 has no exposure element, and ECTO is not among the vocabularies in the Athena
+          release used for the OMOP mapping, so no standard concept can be assigned yet.
+        basis: analysis
+        sources: [phenopackets, athena]
+
 sources:
   savatt2018:
     title: "Savatt JM, et al. ClinGen's GenomeConnect registry enables patient-centered data sharing. Human Mutation. 2018. The Health Survey is its supplementary information."
@@ -219,6 +256,12 @@ sources:
   hpo:
     title: Human Phenotype Ontology, the release pinned in config.yaml, with its disease annotations.
     url: https://github.com/obophenotype/human-phenotype-ontology/releases
+  ecto2023:
+    title: "Chan LE, Thessen AE, Duncan WD, et al. The Environmental Conditions, Treatments, and Exposures Ontology (ECTO): connecting toxicology and exposure to human health and beyond. Journal of Biomedical Semantics. 2023."
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC9951428/
+  phenopackets:
+    title: "GA4GH Phenopacket schema, version 2.0 documentation: the schema's building blocks."
+    url: https://phenopacket-schema.readthedocs.io/en/2.0.0/schema.html
   athena:
     title: "OHDSI Athena standardized vocabularies. The release used is recorded in content/mappings/release.yaml."
     url: https://athena.ohdsi.org

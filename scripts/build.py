@@ -19,6 +19,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import checks  # noqa: E402
 import content  # noqa: E402
 import hpo  # noqa: E402
+import obo  # noqa: E402
 import review_items  # noqa: E402
 import csv  # noqa: E402
 import datetime  # noqa: E402
@@ -93,6 +94,17 @@ def search_index(onto, labels, plain, used=None, aids=None):
     return rows
 
 
+def ecto_index(ecto):
+    """ECTO exposure classes for the exposure search: [id, label, synonyms]. Only classes whose label starts
+    with 'exposure to', so the search offers exposure events rather than materials or settings."""
+    rows = []
+    for tid, t in sorted(ecto.terms.items()):
+        if not tid.startswith("ECTO:") or t["obs"] or not t["name"].lower().startswith("exposure to"):
+            continue
+        rows.append([tid, t["name"], "|".join(x for x in t["syn"][:4] if x.lower() != t["name"].lower())])
+    return rows
+
+
 NOTICE = ""
 
 
@@ -119,8 +131,11 @@ def main():
         sys.exit(f"HPO files are missing from {hdir}. Run: python scripts/fetch_hpo.py")
     onto = hpo.Ontology(hdir / "hp.obo")
     files = content.load_all()
+    ecto_tag = str(config.get("ecto_release") or "")
+    ecto_path = ROOT / ".cache" / "ecto" / ecto_tag / "ecto.obo"
+    ecto = obo.Obo(ecto_path) if ecto_tag and ecto_path.exists() else None
 
-    report = checks.run(files, onto, config)
+    report = checks.run(files, onto, config, ecto)
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     lines = [f"### Content checks against HPO release {onto.version}", ""]
     lines += [f"- Error: {e}" for e in report.errors] or ["- No errors."]
@@ -170,6 +185,7 @@ def main():
                 current[h] = t["name"] + (" (obsolete)" if t["obs"] else "")
 
     mapping_release = content.load_mapping()[2]
+    bank["ecto"] = {"release": (ecto.version if ecto else ecto_tag), "search": bool(ecto)}
     bank.update(labels=labels, hpo_version=onto.version, hpoa_version=hpoa_version, mapping=mapping_release,
                 config={"repo_url": config.get("repo_url", ""), "site_title": config.get("site_title", "")})
 
@@ -231,6 +247,8 @@ def main():
         for tid, rows in by_term.items()}}
     (out / "omop.json").write_text(json.dumps(omop, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     (out / "mondo.json").write_text(json.dumps(mondo, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
+    if ecto:
+        (out / "ecto.json").write_text(json.dumps(ecto_index(ecto), separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     (out / ".nojekyll").write_text("")
     print(f"Built {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out} with HPO {onto.version}, annotations {hpoa_version}: "
           f"{len(plain)} survey terms, {len(drill)} terms reachable through more specific choices.")

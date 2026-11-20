@@ -1,0 +1,141 @@
+# Exposure history: where the person has lived and worked, military service, and activities.
+#
+# Each coded choice names an ECTO class (Environmental Conditions, Treatments and Exposures Ontology),
+# pinned by ecto_release in config.yaml. The build checks every id against that release when the file is
+# available, including that the label matches. A choice with no ecto has no fitting ECTO class yet; it is
+# kept in the record in plain words and listed on the Design notes page as a candidate term request.
+#
+# Ages are whole years. Places are asked only as state or province and country, because a town, county, or
+# street address is an identifier under the HIPAA de-identification rules. A study using this survey would
+# collect full addresses separately, so they can be linked to environmental data without being stored with
+# the health answers.
+
+places:
+  intro: >-
+    Start with where {you} {were_was} born, then add each place {you} lived for a year or more. Give the state or
+    province and the country, not the town or street address.
+  settings: [City, Suburb, Small town, Rural area or farm, Not sure]
+  water: [Public water supply, Private well, Not sure]
+  nearby:
+    - key: sprayed
+      plain: Farm fields, orchards, or golf courses that were sprayed
+      ecto: {id: "ECTO:0000530", label: exposure to pesticide}
+    - key: industry
+      plain: A factory, smelter, or other industrial site
+    - key: waste
+      plain: A landfill or hazardous waste site
+    - key: bloom
+      plain: A lake, pond, or reservoir with algae blooms
+      ecto: {id: "ECTO:8000033", label: "exposure to accumulation of toxins from algal bloom process"}
+    - key: highway
+      plain: A busy highway or major road
+      ecto: {id: "ECTO:8000036", label: exposure to air pollution}
+
+work:
+  show_when: teen
+  intro: >-
+    List each job {you} held for six months or more, including farm work and work in a family business. For each,
+    choose anything {you} did or worked near.
+  tasks:
+    - key: pesticides
+      plain: Mixed or applied pesticides, insecticides, or fungicides
+      ecto: {id: "ECTO:0000530", label: exposure to pesticide}
+    - key: herbicides
+      plain: Mixed or applied weed killers
+      ecto: {id: "ECTO:0000515", label: exposure to herbicide}
+    - key: solvents
+      plain: Used solvents, degreasers, paint thinners, or dry cleaning chemicals
+      ecto: {id: "ECTO:9000107", label: exposure to solvent}
+    - key: tce
+      plain: Degreased metal parts, for example with trichloroethylene
+      ecto: {id: "ECTO:9000530", label: exposure to trichloroethene}
+    - key: fuels
+      plain: Repaired vehicles or engines, or worked with gasoline, diesel, or other fuels
+      ecto: {id: "ECTO:9001699", label: exposure to fuel}
+    - key: welding
+      plain: Welding
+      ecto: {id: "ECTO:7000129", label: exposure to welding fume}
+    - key: lead
+      plain: Soldering, smelting, or battery or radiator work
+      ecto: {id: "ECTO:9000945", label: exposure to lead}
+    - key: paint
+      plain: Removed or sanded old paint
+      ecto: {id: "ECTO:9000945", label: exposure to lead}
+    - key: range
+      plain: Worked at a firing range or as a firearms instructor
+      ecto: {id: "ECTO:9000945", label: exposure to lead}
+    - key: formaldehyde
+      plain: Embalming, pathology, anatomy labs, or other work with formaldehyde
+      ecto: {id: "ECTO:0000439", label: exposure to formaldehyde}
+    - key: pvc
+      plain: Making PVC or other plastics
+      ecto: {id: "ECTO:9001302", label: exposure to chloroethene}
+    - key: rayon
+      plain: Making rayon, cellophane, or rubber
+      ecto: {id: "ECTO:9001013", label: exposure to carbon disulfide}
+    - key: munitions
+      plain: Making munitions or explosives
+      ecto: {id: "ECTO:9001097", label: "exposure to 2,4-dinitrotoluene"}
+    - key: electrical
+      plain: Electrical work, or work near power lines or transformers
+    - key: farm
+      plain: Farm work, including raising livestock or poultry
+      ecto: {id: "ECTO:1000034", label: exposure to farm}
+
+military:
+  show_when: adult
+  intro: Military service in any country, including the National Guard and reserves.
+  branches: [Army, Navy, Air Force, Marine Corps, Coast Guard, Space Force, National Guard or reserves, Another country's military]
+  exposures:
+    - key: burnpits
+      plain: Smoke from burn pits or open-air burning of waste
+      ecto: {id: "ECTO:7000059", label: exposure to smoke}
+    - key: herbicide
+      plain: Agent Orange or other herbicides
+      ecto: {id: "ECTO:0000515", label: exposure to herbicide}
+    - key: water
+      plain: Contaminated drinking water at a base, such as Camp Lejeune
+      ecto: {id: "ECTO:7000119", label: exposure to contaminated water}
+    - key: fuel
+      plain: Jet fuel or other fuels
+      ecto: {id: "ECTO:9001699", label: exposure to fuel}
+    - key: solvents
+      plain: Solvents or degreasers
+      ecto: {id: "ECTO:9000107", label: exposure to solvent}
+    - key: lead
+      plain: Firing ranges or munitions handling
+      ecto: {id: "ECTO:9000945", label: exposure to lead}
+    - key: blast
+      plain: Blasts or explosions nearby
+
+activities:
+  intro: >-
+    Activities at home or for fun. Choose Yes for anything {you} did regularly, then give the ages.
+  items:
+    - key: range
+      plain: Shooting at a firing range, indoors or outdoors
+      ecto: {id: "ECTO:9000945", label: exposure to lead}
+    - key: casting
+      plain: Casting lead, such as fishing weights or bullets, or soldering stained glass
+      ecto: {id: "ECTO:9000945", label: exposure to lead}
+    - key: oldpaint
+      plain: Scraping or sanding paint in a home built before 1978
+      ecto: {id: "ECTO:9000945", label: exposure to lead}
+    - key: gardenspray
+      plain: Using bug sprays or weed killers on a lawn, garden, or farm
+      ecto: {id: "ECTO:0000530", label: exposure to pesticide}
+    - key: refinish
+      plain: Refinishing furniture, or using paint strippers or thinners
+      ecto: {id: "ECTO:9000107", label: exposure to solvent}
+    - key: bloomwater
+      plain: Swimming, fishing, or boating in a lake or pond with algae blooms
+      ecto: {id: "ECTO:8000033", label: "exposure to accumulation of toxins from algal bloom process"}
+    - key: localfish
+      plain: Eating fish or shellfish caught locally, at least once a month
+    - key: contact
+      plain: Contact sports or other activities with repeated hits to the head
+
+smoking:
+  status: [Never, Used to, Still do, Not sure]
+  ecto: {id: "ECTO:6000029", label: exposure to tobacco smoking}
+  secondhand: Lived with someone who smoked indoors

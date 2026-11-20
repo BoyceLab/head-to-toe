@@ -10,6 +10,11 @@ notice: >-
 # To move to a newer release, change this tag, run the build, and review what the checks report.
 hpo_release: v2026-09-01
 
+# ECTO (Environmental Conditions, Treatments and Exposures Ontology) release used to check the exposure codes
+# in content/survey/exposures.yaml and to build the exposure search. Optional: without the file, codes are
+# checked for form only.
+ecto_release: "2026-07-28"
+
 # Wording rules checked on every pull request. Each pattern is a Python regular expression,
 # matched without regard to case, against the survey content, examples, and design notes.
 # The transcription of the original survey in content/original is exempt.

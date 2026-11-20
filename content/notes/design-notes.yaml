@@ -36,6 +36,10 @@ changes:
   - name: Genetic testing and family history
     text: The testing page adds the result, the sample tested, and reanalysis. Family history asks conditions, relatives,
       and side of the family.
+  - name: Exposure history, coded to ECTO
+    text: Places lived, jobs, military service, and activities, each with ages, and each choice coded to ECTO where a class
+      exists. Places are asked only as state or province and country; a study would collect full addresses separately.
+      The original asked about exposure only during pregnancy.
   - name: A standard record
     text: The review page builds a record shaped like a GA4GH Phenopacket, with onset and excluded findings. No
       names are asked.

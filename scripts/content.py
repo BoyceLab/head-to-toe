@@ -75,6 +75,7 @@ def bank(files):
         "relatives": fam["relatives"],
         "seizure_frequency": sz.get("frequency_options", []),
         "notes": files["content/notes/design-notes.yaml"],
+        "exposures": exposures(files),
     }
 
 
@@ -111,3 +112,43 @@ def search_aids(files):
     """HPO id -> {"plain": str, "search": [str]} from content/survey/search-aids.yaml."""
     f = files.get("content/survey/search-aids.yaml") or {}
     return {a["hpo"]: {"plain": a.get("plain", ""), "search": a.get("search") or []} for a in f.get("aids") or []}
+
+
+def _choice(c):
+    o = {"k": c["key"], "p": c["plain"]}
+    if c.get("ecto"):
+        o["e"] = [c["ecto"]["id"], c["ecto"]["label"]]
+    if c.get("show_when"):
+        o["when"] = c["show_when"]
+    return o
+
+
+def exposures(files):
+    """content/survey/exposures.yaml in the compact form the survey page reads."""
+    f = files.get("content/survey/exposures.yaml")
+    if not f:
+        return None
+    pl, wk, ml, ac = f["places"], f["work"], f["military"], f["activities"]
+    return {
+        "places": {"intro": pl["intro"], "settings": pl["settings"], "water": pl["water"], "nearby": [_choice(c) for c in pl["nearby"]]},
+        "work": {"when": wk.get("show_when"), "intro": wk["intro"], "tasks": [_choice(c) for c in wk["tasks"]]},
+        "military": {"when": ml.get("show_when"), "intro": ml["intro"], "branches": ml["branches"], "exposures": [_choice(c) for c in ml["exposures"]]},
+        "activities": {"intro": ac["intro"], "items": [_choice(c) for c in ac["items"]]},
+        "smoking": {"status": f["smoking"]["status"], "secondhand": f["smoking"]["secondhand"],
+                    "e": [f["smoking"]["ecto"]["id"], f["smoking"]["ecto"]["label"]] if f["smoking"].get("ecto") else None},
+    }
+
+
+def walk_exposure_choices(f):
+    """Yield (where, choice) for every choice in content/survey/exposures.yaml."""
+    for c in (f.get("places") or {}).get("nearby") or []:
+        yield "places.nearby", c
+    for c in (f.get("work") or {}).get("tasks") or []:
+        yield "work.tasks", c
+    for c in (f.get("military") or {}).get("exposures") or []:
+        yield "military.exposures", c
+    for c in (f.get("activities") or {}).get("items") or []:
+        yield "activities.items", c
+    sm = f.get("smoking") or {}
+    yield "smoking", {"key": "smoking", "plain": "Tobacco smoking", "ecto": sm.get("ecto")}
+    yield "smoking", {"key": "secondhand", "plain": sm.get("secondhand", "")}

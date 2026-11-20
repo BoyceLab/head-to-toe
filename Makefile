@@ -5,6 +5,7 @@ PY ?= python3
 
 fetch:   ## Download the pinned HPO release files into .cache/hpo
 	$(PY) scripts/fetch_hpo.py
+	$(PY) scripts/fetch_ecto.py
 
 check: fetch   ## Validate content against the pinned HPO release and the wording rules
 	$(PY) scripts/build.py --check-only

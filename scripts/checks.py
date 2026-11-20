@@ -99,7 +99,7 @@ def check_tokens(r, where, text):
             r.error(where, f"placeholder {{{tok}}} is not one of {sorted(TOKENS)}.")
 
 
-def run(files, onto, config):
+def run(files, onto, config, ecto=None):
     r = Report()
     rules = [(re.compile(x["pattern"], re.I), x["message"]) for x in config.get("style_rules", [])]
     system_keys, bank_terms = set(), set()
@@ -236,7 +236,50 @@ def run(files, onto, config):
     check_proposed_changes(r, files)
     check_mapping(r, files, onto, bank_terms)
     check_search_aids(r, files, onto)
+    check_exposures(r, files, ecto)
     return r
+
+
+ECTO_ID = re.compile(r"^ECTO:\d{7}$")
+
+
+def check_exposures(r, files, ecto):
+    """content/survey/exposures.yaml: structure, and every ECTO code against the pinned release when it is
+    available. Without the release file, codes are checked for form only, and a note says so."""
+    import content as _content
+    path = "content/survey/exposures.yaml"
+    f = files.get(path)
+    if not f:
+        return
+    for k in ("places", "work", "military", "activities", "smoking"):
+        if not f.get(k):
+            r.error(path, f"missing {k}.")
+    if ecto is None:
+        r.warn(path, "the ECTO release file is not available, so ECTO codes were checked for form only. Run scripts/fetch_ecto.py.")
+    keys = {}
+    for where, c in _content.walk_exposure_choices(f):
+        w = f"{path} {where} {c.get('key')}"
+        if not c.get("key") or not c.get("plain"):
+            r.error(w, "each choice needs a key and plain wording.")
+        if c.get("key") in keys.setdefault(where, set()):
+            r.error(w, "key is used twice in this list.")
+        keys[where].add(c.get("key"))
+        if c.get("show_when") and c["show_when"] not in ("childhood", "school", "teen", "adult", "female", "male", "femaleteen"):
+            r.error(w, "show_when must be childhood, school, teen, adult, female, male, or femaleteen.")
+        e = c.get("ecto")
+        if not e:
+            continue
+        if not isinstance(e, dict) or not ECTO_ID.match(str(e.get("id", ""))) or not e.get("label"):
+            r.error(w, "ecto must have an id like ECTO:0000530 and a label.")
+            continue
+        if ecto is not None:
+            t = ecto.terms.get(e["id"])
+            if not t:
+                r.error(w, f"{e['id']} is not in ECTO release {ecto.version}.")
+            elif t["obs"]:
+                r.error(w, f"{e['id']} is obsolete in ECTO release {ecto.version}" + (f"; use {t['rep']}." if t["rep"] else "."))
+            elif t["name"].lower() != str(e["label"]).lower():
+                r.error(w, f"label '{e['label']}' does not match ECTO, which calls {e['id']} '{t['name']}'.")
 
 
 def check_search_aids(r, files, onto):

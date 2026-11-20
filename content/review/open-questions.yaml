@@ -34,6 +34,11 @@ questions:
       for them?
   - id: not-sure-follow-up
     question: How should a coordinator follow up on Not sure answers and on general answers that could be more specific?
+  - id: exposure-depth
+    question: The redesign adds an exposure history (places lived, jobs, military service, and activities) coded to ECTO.
+      Does it belong in this survey, and is it too long or too short?
+    context: The original asked about exposure only during pregnancy. Exposure answers with ages can be linked to
+      environmental data and placed before or after a biological sample.
   - id: seizure-comparability
     question: How should answers already collected with version 1.3 of the Seizure Survey be converted, so they
       can be combined with answers to the redesign?

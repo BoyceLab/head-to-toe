@@ -2,6 +2,8 @@
 
 ## 0.2.0 (November 2026)
 
+- Exposure history pages: places lived, jobs, military service, activities, and smoking, each with ages and coded to ECTO (release 2026-07-28), with a search across ECTO exposure classes. Exported beside the Phenopacket and as OMOP rows.
+
 - Mapping from every selectable HPO term to an OMOP standard concept, built from Athena release v5.0 29-AUG-26, with a note on pull requests for survey terms that have no row or no concept.
 - OMOP rows export on the review page, beside the Phenopacket.
 - Silent, captioned walk-through video of the review process on the home page, with a transcript.

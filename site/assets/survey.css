@@ -149,3 +149,10 @@ td.code,th.code{white-space:nowrap}
 .notice{background:var(--unsure-soft);border-bottom:2px solid var(--unsure);color:var(--ink);font-size:.9rem;padding:7px 0}
 .notice .wrap{font-weight:700}
 @media print{.notice{border:1px solid #000}}
+/* exposures */
+.agerange{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.agerange label{display:flex;gap:6px;align-items:center;font-size:.95rem}
+.agerange input[type=number]{width:5.5em;border:1px solid var(--line);background:var(--card);border-radius:6px;padding:6px 9px}
+.exphead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.exphead h3{margin:0}
+.card.exp .q{margin:10px 0}
