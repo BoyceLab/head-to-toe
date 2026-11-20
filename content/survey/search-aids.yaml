@@ -1,0 +1,367 @@
+# Plain-language labels and search words for HPO terms that HPO gives no layperson synonym, or
+# whose layperson synonym reads poorly. The survey uses them in two places: the search on the
+# "Anything else" page, and as the plain wording of a more specific choice when the survey's own
+# content has none. Wording written in content/survey/systems always wins over these.
+#
+# First drafted as plain labels and search prompts for the ALS Phenotype Funnel, version 4
+# (Danielle Boyce). They are search aids, not clinical equivalents. Add or change entries by pull
+# request; each hpo must be a current, non-obsolete term under Phenotypic abnormality.
+aids:
+- hpo: HP:0000011
+  plain: Bladder dysfunction caused by nerve problems
+  search:
+  - urinary problems
+- hpo: HP:0000012
+  plain: Sudden strong need to urinate
+- hpo: HP:0000020
+  plain: Loss of bladder control
+- hpo: HP:0000029
+  plain: Smaller testes
+  search:
+  - small testicles
+  - testicular shrinkage
+- hpo: HP:0000044
+  plain: Low sex hormones with low pituitary signals
+  search:
+  - low LH
+  - low FSH
+  - hypogonadotropic
+- hpo: HP:0000124
+  plain: Kidney tubule dysfunction
+  search:
+  - renal tubular problems
+- hpo: HP:0000365
+  plain: Difficulty hearing
+  search:
+  - hearing loss
+  - deafness
+  - hard of hearing
+- hpo: HP:0000407
+  plain: Hearing loss involving the inner ear or hearing nerve
+  search:
+  - sensorineural
+  - nerve deafness
+- hpo: HP:0000508
+  plain: Drooping eyelids
+  search:
+  - droopy eyelid
+- hpo: HP:0000511
+  plain: Difficulty looking up or down
+  search:
+  - vertical gaze
+- hpo: HP:0000514
+  plain: Slowed saccades (rapid eye shifts)
+  search:
+  - slow saccades
+- hpo: HP:0000518
+  plain: Clouding of the lens of the eye
+  search:
+  - cataracts
+  - cloudy lens
+- hpo: HP:0000522
+  plain: Absent tear production (alacrima)
+  search:
+  - no tears
+  - reduced tears
+  - dry eyes
+- hpo: HP:0000544
+  plain: Reduced eye movement
+  search:
+  - eyes do not move normally
+- hpo: HP:0000580
+  plain: Pigment changes in the retina
+  search:
+  - retinal degeneration
+  - night vision
+- hpo: HP:0000602
+  plain: Weak or paralyzed eye movements
+  search:
+  - eyes cannot move
+- hpo: HP:0000639
+  plain: Involuntary back and forth eye movements
+  search:
+  - eyes shaking
+- hpo: HP:0000648
+  plain: Thinning or damage of the optic nerve
+  search:
+  - optic nerve
+- hpo: HP:0000651
+  plain: Double vision
+- hpo: HP:0000657
+  plain: Difficulty starting eye movements
+- hpo: HP:0000709
+  search:
+  - hallucinations
+  - delusions
+- hpo: HP:0000726
+  plain: Dementia diagnosed by a clinician
+  search:
+  - declining memory
+- hpo: HP:0000734
+  plain: Acting without usual social restraint
+  search:
+  - inappropriate comments
+  - impulsive behavior
+- hpo: HP:0000738
+  plain: Seeing or hearing things others do not
+  search:
+  - seeing things
+  - hearing voices
+- hpo: HP:0000741
+  plain: Less interest or motivation
+  search:
+  - unmotivated
+  - loss of interest
+- hpo: HP:0000751
+  plain: A change in personality
+  search:
+  - personality
+  - not themselves
+- hpo: HP:0000763
+  plain: Damage to nerves that carry feeling
+  search:
+  - sensory nerve
+  - numbness
+  - tingling
+- hpo: HP:0000771
+  plain: Breast tissue enlargement in males
+  search:
+  - enlarged breasts
+  - male breasts
+- hpo: HP:0000846
+  plain: Adrenal glands do not make enough hormones
+  search:
+  - adrenal hormones
+  - cortisol
+  - Addison
+- hpo: HP:0000953
+  plain: Darker areas of skin
+  search:
+  - hyperpigmentation
+  - skin darkening
+- hpo: HP:0000966
+  plain: Reduced sweating
+  search:
+  - does not sweat
+  - little sweating
+- hpo: HP:0000972
+  plain: Thickened skin on palms and soles
+  search:
+  - hard palms
+  - thick soles
+  - palmoplantar keratosis
+- hpo: HP:0000975
+  plain: Excessive sweating
+  search:
+  - sweats too much
+  - heavy sweating
+- hpo: HP:0001250
+  plain: Seizures
+  search:
+  - epilepsy
+  - convulsions
+- hpo: HP:0001251
+  plain: Impaired coordination
+  search:
+  - uncoordinated
+  - balance
+- hpo: HP:0001260
+  plain: Slurred or unclear speech
+  search:
+  - slurred speech
+- hpo: HP:0001278
+  plain: Blood pressure drops on standing
+  search:
+  - orthostatic
+  - dizzy standing
+  - faint standing
+- hpo: HP:0001300
+  plain: Parkinson-like movement problems
+  search:
+  - stiff slow movement
+- hpo: HP:0001332
+  plain: Involuntary twisting or abnormal postures
+  search:
+  - twisting
+- hpo: HP:0001336
+  plain: Brief involuntary muscle jerks
+  search:
+  - sudden jerks
+- hpo: HP:0001337
+  plain: Shaking or trembling
+  search:
+  - shaking
+- hpo: HP:0001397
+  plain: Fat accumulation in the liver
+  search:
+  - fatty liver
+- hpo: HP:0001596
+  plain: Hair loss
+  search:
+  - balding
+- hpo: HP:0001605
+  search:
+  - voice box paralysis
+  - breathy voice
+  - stridor
+- hpo: HP:0001638
+  plain: Disease of the heart muscle
+  search:
+  - weak heart muscle
+- hpo: HP:0001744
+  plain: Enlarged spleen
+  search:
+  - big spleen
+- hpo: HP:0001761
+  plain: High arches of the feet
+  search:
+  - high arched feet
+- hpo: HP:0001824
+  plain: Unintentional weight loss
+  search:
+  - losing weight
+- hpo: HP:0001873
+  plain: Low platelet count
+  search:
+  - low platelets
+- hpo: HP:0002014
+  plain: Frequent loose stools
+  search:
+  - diarrhoea
+- hpo: HP:0002015
+  plain: Difficulty swallowing
+  search:
+  - swallowing
+  - choking
+- hpo: HP:0002019
+  search:
+  - hard stools
+  - trouble passing stool
+- hpo: HP:0002028
+  plain: Long-lasting diarrhea
+  search:
+  - chronic diarrhoea
+  - loose stools
+- hpo: HP:0002066
+  plain: Unsteady walking from impaired coordination
+  search:
+  - unsteady gait
+  - walking balance
+- hpo: HP:0002072
+  plain: Involuntary dance-like movements
+  search:
+  - jerky movements
+- hpo: HP:0002145
+  plain: Frontotemporal dementia diagnosed by a clinician
+  search:
+  - FTD
+  - frontotemporal degeneration
+- hpo: HP:0002193
+  plain: Uncontrolled laughing or crying
+  search:
+  - laughing
+  - crying
+- hpo: HP:0002292
+  plain: Balding at the front of the scalp
+  search:
+  - receding hairline
+- hpo: HP:0002352
+  plain: Brain white matter changes
+  search:
+  - white matter disease
+- hpo: HP:0002380
+  plain: Small muscle twitches under the skin
+  search:
+  - twitching
+- hpo: HP:0002571
+  plain: Achalasia diagnosed in the food pipe
+  search:
+  - food stuck
+  - food pipe
+  - swallowing problem
+  - esophagus
+  - oesophagus
+- hpo: HP:0002650
+  plain: Sideways curve of the spine
+  search:
+  - curved spine
+- hpo: HP:0002653
+  plain: Pain in the bones
+  search:
+  - aching bones
+- hpo: HP:0002719
+  plain: Repeated infections
+  search:
+  - frequent infections
+- hpo: HP:0002756
+  plain: Fracture from abnormal bone weakness
+  search:
+  - pathological fracture
+- hpo: HP:0002804
+  plain: Multiple joint contractures from birth
+  search:
+  - arthrogryposis
+  - congenital contractures
+- hpo: HP:0003236
+  plain: Raised creatine kinase in blood
+  search:
+  - high CK
+  - creatine phosphokinase
+  - CPK
+- hpo: HP:0003473
+  plain: Weakness that worsens with repeated activity
+- hpo: HP:0003805
+  plain: Rimmed vacuoles on muscle biopsy
+  search:
+  - muscle biopsy vacuoles
+- hpo: HP:0007110
+  plain: Reduced breathing drive from the brain
+- hpo: HP:0008064
+  plain: Dry scaly skin from ichthyosis
+  search:
+  - fish scale skin
+- hpo: HP:0008209
+  plain: Ovaries stop working earlier than expected
+  search:
+  - early menopause
+  - premature ovarian failure
+- hpo: HP:0009125
+  plain: Abnormal loss or distribution of body fat
+  search:
+  - loss of fat
+- hpo: HP:0010874
+  plain: Fatty lumps in tendons
+  search:
+  - tendon lumps
+  - xanthomas
+- hpo: HP:0012185
+  plain: Carpal tunnel syndrome
+  search:
+  - median nerve compression
+  - wrist numbness
+- hpo: HP:0031546
+  plain: Heart electrical conduction problem
+  search:
+  - heart block
+  - conduction defect
+- hpo: HP:0033725
+  plain: Thin connection between brain hemispheres
+  search:
+  - brain MRI
+- hpo: HP:0034159
+  plain: Paget-type bone lesion
+  search:
+  - Paget's
+  - Paget disease
+  - Pagets
+- hpo: HP:0034315
+  plain: Persistent cough
+  search:
+  - longstanding dry cough
+- hpo: HP:0100543
+  plain: Problems with thinking or learning
+  search:
+  - thinking
+  - cognitive
+  - memory
+  - reasoning

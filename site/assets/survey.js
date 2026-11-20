@@ -232,11 +232,11 @@ function rAbout(){
     <li>Nothing you enter leaves this page.</li>
   </ul>
   <div class="rowbtns"><button type="button" class="btn primary" data-go="you">Start</button></div>
-  <details id="walkthrough"><summary>Watch a walk-through of the proposed review process (silent, with captions, under two minutes)</summary><div class="in">
-    <p class="small">The video has no sound. Captions are on screen, and the same text is in the transcript beneath it. It follows an invented reviewer through the <a href="annotate.html">review page</a>.</p>
-    <video controls preload="none" poster="assets/review-walkthrough-poster.jpg" style="width:100%;max-width:960px;border:1px solid var(--line);border-radius:6px" aria-label="Silent walk-through of the review process, with captions on screen"><source src="assets/review-walkthrough.mp4" type="video/mp4"></video>
+  <div class="card" id="walkthrough">
+    <p>This video walks through the proposed review process, following an invented reviewer through the <a href="annotate.html">review page</a>. It has no sound; captions are on screen and the same text is in the transcript beneath it.</p>
+    <video controls preload="metadata" poster="assets/review-walkthrough-poster.jpg" style="width:100%;max-width:960px;border:1px solid var(--line);border-radius:6px" aria-label="Silent walk-through of the review process, with captions on screen"><source src="assets/review-walkthrough.mp4" type="video/mp4"></video>
     <details><summary>Transcript</summary><div class="in"><ol class="small"><li>Reviewing the original head-to-toe surveys. A walk-through of the proposed review process for the GenomeConnect Health Survey and Seizure Survey. This video has no sound. Captions are on screen.</li><li>The site has a redesigned survey, a before and after comparison, a summary of changes, and a page for reviewing the original surveys.</li><li>Reviewers work on the review page. It lists every item of the original Health Survey and Seizure Survey, one section at a time.</li><li>Start with your name or initials and your role. This walk-through uses an invented reviewer, Jane Doe.</li><li>Each section of the original survey is one page. The bar at the top moves between sections.</li><li>Each item shows the original wording and the HPO term as printed. The proposed redesign is beside it.</li><li>Choose a decision: keep all of it, keep some of it, reject it, or not sure. A comment can say which part to keep.</li><li>Switch off the proposed redesign to judge the original survey without it.</li><li>One button keeps every remaining item in a section, so time goes to the items a reviewer would change.</li><li>The Seizure Survey is reviewed the same way.</li><li>Open questions about the whole redesign have their own page, with room for each reviewer&#x27;s view.</li><li>Answers stay in the reviewer&#x27;s browser. When finished, download the review as a CSV or JSON file and send it to the review lead.</li><li>Combining the reviews. The review lead uploads every reviewer&#x27;s file to a Google Colab notebook in the repository. The notebook reports the consensus for each item, how closely reviewers agree, and every comment. It also writes a version with reviewer names replaced by codes. The review lead combines the files in a Colab notebook.</li><li>The Before and after page shows each original answer beside its replacement.</li><li>The Summary of changes page gives the reason and the source for each proposed change.</li><li>After the review. Agreed changes are proposed as pull requests to the repository. Every pull request is checked against the pinned HPO release before it is merged. Links to every page are at the top of the home page.</li></ol></div></details>
-  </div></details>
+  </div>
   <p class="small muted">Switch on <strong>Show clinical terms</strong> at the top to see the HPO term behind each answer. <a href="#design-notes" data-go="design-notes">Design notes</a> list what changed from the original.</p>`;
 }
 function rYou(){
@@ -460,8 +460,8 @@ function rReview(){
   h += '<div class="grid2"><div class="card sum"><h3>Genetic testing</h3>'+(tl.length?'<ul class="list">'+tl.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<p class="muted">Not answered.</p>')+'</div><div class="card sum"><h3>Family history</h3>'+(fl.length?'<ul class="list">'+fl.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<p class="muted">Nothing reported.</p>')+'</div></div>';
   // export
   const rec = JSON.stringify(phenopacket(), null, 2);
-  h += '<h3>Phenopacket</h3><p class="small">The record is shaped like a GA4GH Phenopacket (schema version 2). Findings answered No are marked <span class="code">"excluded": true</span>. Answers that are not HPO terms, such as testing history and family history, travel beside it as survey context. Downloads are blocked in this viewer, so use Copy.</p>';
-  h += '<div class="rowbtns"><button type="button" class="btn" data-copy="rec">Copy the record</button><span class="status" id="copyStatus"></span></div><pre class="out" id="rec">'+esc(rec)+'</pre>';
+  h += '<h3>Phenopacket</h3><p class="small">The record is shaped like a GA4GH Phenopacket (schema version 2). Findings answered No are marked <span class="code">"excluded": true</span>. Answers that are not HPO terms, such as testing history and family history, travel beside it as survey context. Download the record to load it into another tool that reads Phenopackets. If the download is blocked, use Copy.</p>';
+  h += '<div class="rowbtns"><button type="button" class="btn" data-dlrec="1">Download the record (JSON)</button><button type="button" class="btn quiet" data-copy="rec">Copy the record</button><span class="status" id="copyStatus"></span></div><pre class="out" id="rec">'+esc(rec)+'</pre>';
   h += rOmop();
   return h;
 }
@@ -471,13 +471,13 @@ function rReview(){
 function loadSearch(){
   if(SEARCH) return;
   const st=document.getElementById('srchStatus'); if(st) st.textContent='Loading the term list…';
-  fetch('search.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ SEARCH=j.map(([h,l,lay])=>({h,l,lay:lay?lay.split('|'):[],k:(l+' '+lay).toLowerCase()})); const s=document.getElementById('srchStatus'); if(s) s.textContent=''; runSearch(); })
+  fetch('search.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ SEARCH=j.map(([h,l,lay,ex])=>({h,l,lay:lay?lay.split('|'):[],k:(h+' '+l+' '+(lay||'')+' '+(ex||'')).toLowerCase()})); const s=document.getElementById('srchStatus'); if(s) s.textContent=''; runSearch(); })
    .catch(()=>{ SEARCH=[]; const s=document.getElementById('srchStatus'); if(s) s.textContent='The term list could not be loaded here; use the free-text box below.'; });
 }
 function runSearch(){
   const inp=document.getElementById('srch'); const out=document.getElementById('srchRes'); if(!inp||!out||!SEARCH) return;
   const qv=inp.value.trim().toLowerCase(); if(qv.length<3){ out.innerHTML=''; return; }
-  const words=qv.split(/\s+/);
+  const words=qv.split(/\s+/).map(w=>w.length>3 && /[^s]s$/.test(w) ? w.slice(0,-1) : w);
   const hits=SEARCH.filter(x=>words.every(w=>x.k.indexOf(w)>=0)).map(x=>{ const plain=(IDX[x.h]&&IDX[x.h].it.p)||x.lay[0]||x.l; const score=(plain.toLowerCase().startsWith(qv)?0:1)+(x.lay.some(s=>s.toLowerCase().indexOf(qv)>=0)?0:1)+plain.length/200; return {x,plain,score}; }).sort((a,b)=>a.score-b.score).slice(0,12);
   out.innerHTML = hits.length ? '<div class="items" style="margin-top:8px">'+hits.map(({x,plain})=>{ const added=S.extra.some(e=>e.h===x.h)||(S.ans[x.h]||{}).v==='yes'; return '<div class="item"><div><div class="lab">'+esc(plain)+'</div>'+(plain.toLowerCase()!==x.l.toLowerCase()?'<div class="dr">Doctors may call this: '+esc(x.l)+'</div>':'')+'<div class="cvb"><span class="code">'+x.h+'</span></div></div><div><button type="button" class="btn" data-addextra="'+x.h+'" data-plain="'+esc(plain)+'" data-l="'+esc(x.l)+'"'+(added?' disabled':'')+'>'+(added?'Added':'Add as present')+'</button></div></div>'; }).join('')+'</div>' : '<p class="muted">No match. Try other everyday words, or describe it in the box below.</p>';
 }
@@ -508,6 +508,7 @@ document.addEventListener('click', e=>{
   if(d.mondo){ S.dxMondo={id:d.mondo,name:d.name,cid:d.cid}; if(!S.dxName.trim()) S.dxName=d.name; render(true); return; }
   if(d.rmmondo){ S.dxMondo=null; render(true); return; }
   if(d.omopcsv){ downloadOmop(); return; }
+  if(d.dlrec){ const st=document.getElementById('copyStatus'); try{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(phenopacket(),null,2)],{type:'application/json'})); a.download='head-to-toe-phenopacket.json'; document.body.appendChild(a); a.click(); a.remove(); st.textContent='Saved as head-to-toe-phenopacket.json.'; }catch(e){ st.textContent='The download was blocked here; use Copy.'; } return; }
   if(d.addextra){ if(!S.extra.some(x=>x.h===d.addextra)) S.extra.push({h:d.addextra,p:d.plain,l:d.l}); render(true); setTimeout(runSearch,0); return; }
   if(d.rmextra){ S.extra=S.extra.filter(x=>x.h!==d.rmextra); render(true); return; }
   if(d.copy){ const txt=document.getElementById(d.copy).textContent; const st=document.getElementById(d.copy==='omopOut'?'omopStatus':'copyStatus');
@@ -534,7 +535,7 @@ document.getElementById('toTop').onclick=e=>{ e.preventDefault(); window.scrollT
 const ct=document.getElementById('coordToggle');
 ct.onchange=()=>{ document.body.classList.toggle('coord', ct.checked); try{ localStorage.setItem('h2t-coord', ct.checked?'1':''); }catch(e){} render(true); };
 try{ if(localStorage.getItem('h2t-coord')==='1'){ ct.checked=true; document.body.classList.add('coord'); } }catch(e){}
-window.addEventListener('hashchange', ()=>{ const id=location.hash.slice(1); if(id && id!==cur) go(id); });
+window.addEventListener('hashchange', ()=>{ const id=location.hash.slice(1); if(id==='walkthrough'){ if(cur!=='about') go('about'); const v=document.getElementById('walkthrough'); if(v) v.scrollIntoView({block:'start'}); return; } if(id && id!==cur) go(id); });
 window.addEventListener('beforeprint', ()=>document.querySelectorAll('details').forEach(x=>x.open=true));
 (function(){ const r=(B.config||{}).repo_url; const a=document.getElementById('repoLink'); if(r&&a){ a.href=r+'/issues/new/choose'; a.hidden=false; } })();
-go(location.hash.slice(1) || 'about');
+(function(){ const h=location.hash.slice(1); if(h==='walkthrough'){ go('about'); const v=document.getElementById('walkthrough'); if(v) setTimeout(()=>v.scrollIntoView({block:'start'}),50); } else go(h || 'about'); })();

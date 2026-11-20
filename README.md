@@ -21,6 +21,7 @@ Every feature can be answered Yes, No, or Not sure. A Yes opens more specific ch
 |---|---|
 | `content/survey/systems/` | One file per body-system page of the head-to-toe screen, in page order |
 | `content/survey/followups/` | Follow-up questions shown when Seizures is answered Yes |
+| `content/survey/search-aids.yaml` | Plain labels and search words for HPO terms that have no good layperson synonym, used by the search and by the more specific choices |
 | `content/survey/family.yaml`, `onset.yaml` | Family history conditions, and the timing choices offered to each age band |
 | `content/review/` | The decision choices and reviewer roles for the annotation page, and its notes and open questions |
 | `notebooks/combine_reviews.ipynb` | The Colab notebook that combines reviewers' files, with invented sample files in `notebooks/sample_reviews/` |

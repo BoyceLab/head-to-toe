@@ -84,9 +84,10 @@ def survey_terms(files, onto, hdir):
             for h in (q.get("hpo_if") or {}).values():
                 used.setdefault(h, "survey")
     dis_terms, _, _ = hpo.load_annotations(hdir / "phenotype.hpoa", onto)
-    for t in build.drill_index(onto, dis_terms, plain):
+    aids = content.search_aids(files)
+    for t in build.drill_index(onto, dis_terms, plain, aids=aids):
         used.setdefault(t, "drill")
-    for row in build.search_index(onto, {}, plain):
+    for row in build.search_index(onto, {}, plain, set().union(*dis_terms.values()), aids):
         used.setdefault(row[0], "search")
     return used
 

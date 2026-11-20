@@ -235,7 +235,23 @@ def run(files, onto, config):
     check_review(r, files)
     check_proposed_changes(r, files)
     check_mapping(r, files, onto, bank_terms)
+    check_search_aids(r, files, onto)
     return r
+
+
+def check_search_aids(r, files, onto):
+    path = "content/survey/search-aids.yaml"
+    seen = set()
+    for a in (files.get(path) or {}).get("aids") or []:
+        w = f"{path} {a.get('hpo')}"
+        if a.get("hpo") in seen:
+            r.error(w, "appears twice.")
+        seen.add(a.get("hpo"))
+        check_term(r, w, a.get("hpo"), onto)
+        if not a.get("plain") and not a.get("search"):
+            r.error(w, "needs a plain label, search words, or both.")
+        if a.get("search") is not None and not isinstance(a.get("search"), list):
+            r.error(w, "search must be a list.")
 
 
 MATCHES = {"athena_map", "name_match", "broader", "reviewed", "none"}

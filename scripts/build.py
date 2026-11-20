@@ -30,12 +30,13 @@ SITE = ROOT / "site"
 GROUPING = re.compile(r"^(Abnormal|Abnormality|Aplasia/Hypoplasia|Morphological|Functional)\b", re.I)
 
 
-def drill_index(onto, dis_terms, plain, max_children=30, max_depth=4):
+def drill_index(onto, dis_terms, plain, max_children=30, max_depth=4, aids=None):
     """More specific choices for every survey term, taken from HPO.
 
     For each term in the survey, list its child terms that are used in at least one disease annotation,
     most used first, and repeat for those children. Each entry is [plain wording, HPO label, child ids];
-    plain wording is the survey's own wording, or HPO's first layperson synonym, or empty when HPO has none.
+    plain wording is the survey's own wording, then the label in content/survey/search-aids.yaml, then HPO's
+    first layperson synonym, or empty when none of these has one.
     """
     use = {}
     for terms in dis_terms.values():
@@ -63,20 +64,32 @@ def drill_index(onto, dis_terms, plain, max_children=30, max_depth=4):
                     kids.append(k)
             kids = sorted(kids, key=lambda k: (-use[k], onto.terms[k]["name"]))[:max_children]
         lay = next((x for x in t["lay"] if x.lower() != t["name"].lower()), "")
-        out[tid] = [plain.get(tid, lay), t["name"], kids]
+        aid = ((aids or {}).get(tid) or {}).get("plain", "")
+        out[tid] = [plain.get(tid) or aid or lay, t["name"], kids]
         frontier.extend((k, depth + 1) for k in kids)
     return out
 
 
-def search_index(onto, labels, plain):
+def search_index(onto, labels, plain, used=None, aids=None):
+    """Terms for the search on the "Anything else" page: [id, HPO label, plain wordings, other search words].
+
+    Includes every current term under Phenotypic abnormality that has a layperson synonym, survey wording,
+    a search aid, or at least one disease annotation (used). Plain wordings are shown to the person;
+    other search words (search aids and HPO exact synonyms) only help a match.
+    """
     keep = onto.descendants(hpo.PHENOTYPIC_ABNORMALITY)
+    used, aids = used or set(), aids or {}
     rows = []
     for tid in sorted(keep):
         t = onto.terms[tid]
-        if t["obs"] or not (t["lay"] or tid in plain):
+        if t["obs"] or not (t["lay"] or tid in plain or tid in aids or tid in used):
             continue
-        lay = [s for s in t["lay"] if s.lower() != t["name"].lower()][:4]
-        rows.append([tid, t["name"], "|".join(lay)])
+        name = t["name"].lower()
+        shown = [aids[tid]["plain"]] if aids.get(tid, {}).get("plain") else []
+        shown += [x for x in t["lay"] if x.lower() != name and x not in shown]
+        extra = list((aids.get(tid) or {}).get("search", []))
+        extra += [x for x in t["exact"] if x.lower() != name and x not in shown and x not in extra]
+        rows.append([tid, t["name"], "|".join(shown[:4]), "|".join(extra[:4])])
     return rows
 
 
@@ -137,7 +150,9 @@ def main():
     for m in bank["seizures"]:
         for q in m.get("context", []):
             extra |= set((q.get("hpo_if") or {}).values())
-    drill = drill_index(onto, dis_terms, plain)
+    aids = content.search_aids(files)
+    used = set().union(*dis_terms.values()) if dis_terms else set()
+    drill = drill_index(onto, dis_terms, plain, aids=aids)
 
     cw = files["content/original/crosswalk.yaml"]
     orig = files["content/original/health-survey-2018.yaml"]
@@ -207,7 +222,7 @@ def main():
                "seizure_rows": seizure_rows, "hpo_version": onto.version}
     (out / "changes.html").write_text(embed("changes.html", "/*CHANGES*/", changes), encoding="utf-8")
     (out / "drill.json").write_text(json.dumps(drill, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
-    (out / "search.json").write_text(json.dumps(search_index(onto, labels, plain), separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
+    (out / "search.json").write_text(json.dumps(search_index(onto, labels, plain, used, aids), separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     by_term, mondo, release = content.load_mapping()
     omop = {"release": release, "terms": {
         tid: [rows[0]["hpo_concept_id"], rows[0]["match"], rows[0]["via_hpo_id"],

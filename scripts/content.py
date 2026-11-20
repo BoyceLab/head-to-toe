@@ -105,3 +105,9 @@ def load_mapping():
     if (MAPPINGS / "release.yaml").exists():
         release = read(MAPPINGS / "release.yaml") or {}
     return by_term, mondo, release
+
+
+def search_aids(files):
+    """HPO id -> {"plain": str, "search": [str]} from content/survey/search-aids.yaml."""
+    f = files.get("content/survey/search-aids.yaml") or {}
+    return {a["hpo"]: {"plain": a.get("plain", ""), "search": a.get("search") or []} for a in f.get("aids") or []}

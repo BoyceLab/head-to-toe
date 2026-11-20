@@ -6,6 +6,9 @@
 - OMOP rows export on the review page, beside the Phenopacket.
 - Silent, captioned walk-through video of the review process on the home page, with a transcript.
 - `scripts/narrow_example.py` shows how a list of findings narrows the genes in the HPO disease annotations.
+- Search on the Anything else page covers every HPO term used in a disease annotation, not only terms with layperson synonyms, and matches simple plurals.
+- `content/survey/search-aids.yaml` adds plain labels and search words, first drafted for the ALS Phenotype Funnel; they also give plain wording to more specific choices that had none.
+- Download the record as a Phenopacket JSON file from the review page.
 - Mondo name lookup on the diagnosis question; the chosen term is recorded as the disease in the Phenopacket.
 
 ## 0.1.0 (November 2026)
