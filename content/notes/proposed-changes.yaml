@@ -171,6 +171,17 @@ sections:
         proposed: It uses generic categories; a program using the survey would list its own partners.
         rationale: A template that names organizations dates quickly and favors the groups listed.
         basis: judgment
+      - change: OMOP standard concepts beside each HPO term
+        original: Answers were stored as HPO terms only.
+        proposed: Every HPO term a person can choose has a row in a mapping file that names an OMOP standard concept, with a label saying whether it came from Athena's own link, a name match, or a broader parent term. The review page exports the answers as rows with the HPO term as the source code.
+        rationale: Many research networks store data in the OMOP Common Data Model, where analyses run on standard concepts. Keeping the HPO term as the source code preserves the detail that a broader standard concept loses.
+        basis: analysis
+        sources: [athena, omopmap]
+      - change: Diagnosis matched to a Mondo term
+        original: The diagnosis was typed as free text.
+        proposed: The typed name stays, and matching Mondo disease names appear as the person types so one can be chosen. The Phenopacket then records the Mondo term as the disease.
+        rationale: A coded diagnosis can be linked to gene and phenotype records without a person reading free text. The typed name is kept because a list will not hold every diagnosis.
+        basis: judgment
 
 sources:
   savatt2018:
@@ -208,5 +219,10 @@ sources:
   hpo:
     title: Human Phenotype Ontology, the release pinned in config.yaml, with its disease annotations.
     url: https://github.com/obophenotype/human-phenotype-ontology/releases
+  athena:
+    title: "OHDSI Athena standardized vocabularies. The release used is recorded in content/mappings/release.yaml."
+    url: https://athena.ohdsi.org
+  omopmap:
+    title: "Analysis in this repository: scripts/build_omop_mapping.py writes content/mappings/hpo-omop.csv from an Athena download. Counts are a snapshot of the releases named in content/mappings/release.yaml."
   coverage:
     title: "Analysis in this repository: scripts/coverage_example.py compares what the original survey and this survey can record for a set of HPO disease records. Counts are a snapshot of the pinned release."

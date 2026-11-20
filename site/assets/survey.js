@@ -10,12 +10,12 @@ const RESP = {
   care:{you:'the person you care for',You:'The person you care for',your:'their',HasHad:'Has the person you care for had',have_has:'has',were_was:'was',is_are:'is',Is_Are:'Is'},
   bereaved:{you:'your family member',You:'Your family member',your:"your family member's",HasHad:'Did your family member have',have_has:'had',were_was:'was',is_are:'was',Is_Are:'Was'}
 };
-function blank(){ return {resp:'',age:'',sex:'',gender:'',routes:[],dxNamed:'',dxName:'',
+function blank(){ return {resp:'',age:'',sex:'',gender:'',routes:[],dxNamed:'',dxName:'',dxMondo:null,
   t:{had:'',types:[],sample:[],reason:[],result:'',gene:'',copy:'',reanalysis:'',interest:''},
   screen:{}, ans:{}, ctx:{}, ctxd:{}, dyn:{}, open:{}, fam:{}, consang:'', extra:[], freeText:'', referral:[], member:'', memberName:'', fx:{} }; }
 let S = blank();
 let cur = 'about';
-let SEARCH = null, DRILL = null;
+let SEARCH = null, DRILL = null, OMOP = null, MONDO = null;
 
 /* ---------- helpers ---------- */
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -135,6 +135,22 @@ function onsetSelect(id, val, dataAttrs, placeholder){
 function loadDrill(){
   fetch('drill.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ DRILL=j; render(true); }).catch(()=>{ DRILL={}; });
 }
+function loadOmop(){
+  if(OMOP) return; OMOP={terms:{},loading:true};
+  fetch('omop.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ OMOP=j; if(cur==='review') render(true); }).catch(()=>{ OMOP={terms:{},failed:true}; if(cur==='review') render(true); });
+}
+function loadMondo(){
+  if(MONDO) return; MONDO=[];
+  fetch('mondo.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(j=>{ MONDO=j.map(([id,n,c])=>({id,n,c,k:n.toLowerCase()})); runMondo(); }).catch(()=>{ MONDO=[]; });
+}
+/* Suggestions from Mondo for the diagnosis name. The typed name is always kept; choosing a suggestion adds a code beside it. */
+function runMondo(){
+  const inp=document.getElementById('dxName'), out=document.getElementById('dxRes'); if(!inp||!out||!MONDO) return;
+  const qv=inp.value.trim().toLowerCase(); if(qv.length<3 || (S.dxMondo && S.dxMondo.name.toLowerCase()===qv)){ out.innerHTML=''; return; }
+  const words=qv.split(/\s+/);
+  const hits=MONDO.filter(x=>words.every(w=>x.k.indexOf(w)>=0)).sort((a,b)=>(a.k.startsWith(qv)?0:1)-(b.k.startsWith(qv)?0:1) || a.n.length-b.n.length).slice(0,8);
+  out.innerHTML = hits.length ? '<div class="small muted" style="margin-top:6px">If one of these is the same diagnosis, choose it. If none fits, leave the name as typed.</div><div class="items">'+hits.map(x=>'<div class="item"><div><div class="lab">'+esc(x.n)+'</div><div class="cvb"><span class="code">'+x.id+'</span></div></div><div><button type="button" class="btn" data-mondo="'+x.id+'" data-name="'+esc(x.n)+'" data-cid="'+x.c+'">Choose</button></div></div>').join('')+'</div>' : '';
+}
 function drillName(k){ const e=(DRILL||{})[k]; return IDX[k] ? IDX[k].it.p : e ? (e[0]||e[1]) : (LAB[k]||k); }
 /* More specific choices from HPO for a Yes item: one row for the item, then one for each chosen term beneath it. */
 function drillRows(root, where){
@@ -230,7 +246,11 @@ function rYou(){
 }
 function rReason(){
   let h = q('Has a doctor named a diagnosis?', choiceGroup('dxNamed',['Yes','Not yet','Not sure'], S.dxNamed));
-  if(S.dxNamed==='Yes') h += q('What is the diagnosis called?', '<input type="text" id="dxName" data-text="dxName" value="'+esc(S.dxName)+'">');
+  if(S.dxNamed==='Yes'){
+    h += q('What is the diagnosis called?', '<input type="text" id="dxName" data-text="dxName" data-mondosearch="1" autocomplete="off" value="'+esc(S.dxName)+'"><div id="dxRes" class="results"></div>', 'Type the name as the doctor wrote it. Matching names from the Mondo disease list appear as you type.');
+    if(S.dxMondo) h += '<div class="items"><div class="item ans-yes"><div><div class="lab">Matched to: '+esc(S.dxMondo.name)+'</div><div class="cvb"><span class="code">'+S.dxMondo.id+'</span></div></div><div><button type="button" class="btn quiet" data-rmmondo="1">Remove the match</button></div></div></div>';
+    loadMondo();
+  }
   return h;
 }
 function rTesting(){
@@ -361,6 +381,8 @@ function phenopacket(){
   const pp={id:'survey-record-1', subject:subj, phenotypicFeatures:pf,
     metaData:{created:new Date().toISOString(), createdBy:'Head-to-toe survey prototype', phenopacketSchemaVersion:'2.0',
       resources:[{id:'hp',name:'Human Phenotype Ontology',url:'http://purl.obolibrary.org/obo/hp.owl',version:B.hpo_version,namespacePrefix:'HP',iriPrefix:'http://purl.obolibrary.org/obo/HP_'}]}};
+  if(S.dxNamed==='Yes' && S.dxMondo){ pp.diseases=[{term:{id:S.dxMondo.id,label:S.dxMondo.name}}];
+    pp.metaData.resources.push({id:'mondo',name:'Mondo Disease Ontology',url:'http://purl.obolibrary.org/obo/mondo.owl',version:((B.mapping||{}).vocabulary_versions||{}).Mondo||'',namespacePrefix:'MONDO',iriPrefix:'http://purl.obolibrary.org/obo/MONDO_'}); }
   const extras={respondent:S.resp, ageBand:S.age, genderIdentity:S.gender||undefined, diagnosisNamed:S.dxNamed, diagnosisName:S.dxName||undefined,
     geneticTesting:S.t, bodySystemScreen:S.screen, notSure:F.unsure.map(h=>({id:h,label:clinOf(h),plain:nameOf(h)})),
     contextFields:S.ctx, contextDetails:S.ctxd, consanguinity:S.consang, familyHistory:Object.fromEntries(Object.entries(S.fam).map(([k,v])=>[ (B.family.find(f=>f[0]===k)||[k,k])[1], v])),
@@ -368,6 +390,38 @@ function phenopacket(){
   return {phenopacket:pp, surveyContext:extras};
 }
 
+/* ---------- OMOP rows ---------- */
+const OMOP_COLS=['record','source_vocabulary','source_code','source_name','source_concept_id','answer','status','started','mapping','mapped_through','target_concept_id','target_concept_name','target_domain_id','target_vocabulary_id','value_as_concept_id','type_concept_id'];
+const MATCH_LABEL={athena_map:'Athena map',name_match:'Name match, needs review',broader:'Broader concept',reviewed:'Reviewed choice',none:'No standard concept'};
+function omopRows(){
+  const F=features(), rows=[], T=(OMOP||{}).terms||{};
+  const add=(h,answer,p)=>{
+    const m=T[h]; const on=p&&ONSET[p.onset]; const tg=(m&&m[3].length)?m[3]:[[]];
+    tg.forEach(t=>rows.push({record:'finding',source_vocabulary:'HPO',source_code:h,source_name:clinOf(h),source_concept_id:m?m[0]:'',answer,
+      status:p&&p.now?p.now:'',started:on?on.p:'',mapping:m?MATCH_LABEL[m[1]]:'Not in the mapping file',mapped_through:m&&m[2]?m[2]+' '+(LAB[m[2]]||''):'',
+      target_concept_id:t[0]||0,target_concept_name:t[1]||'',target_domain_id:t[2]||'',target_vocabulary_id:t[3]||'',value_as_concept_id:t[4]||'',type_concept_id:32865}));
+  };
+  F.present.forEach(p=>add(p.h,'Yes',p)); F.no.forEach(h=>add(h,'No')); F.unsure.forEach(h=>add(h,'Not sure'));
+  if(S.dxNamed==='Yes' && (S.dxMondo||S.dxName)) rows.unshift({record:'diagnosis',source_vocabulary:S.dxMondo?'Mondo':'',source_code:S.dxMondo?S.dxMondo.id:'',source_name:S.dxMondo?S.dxMondo.name:S.dxName,source_concept_id:S.dxMondo?S.dxMondo.cid:'',answer:'Yes',status:'',started:'',
+    mapping:S.dxMondo?'No standard concept':'Typed name, not matched',mapped_through:'',target_concept_id:0,target_concept_name:'',target_domain_id:'',target_vocabulary_id:'',value_as_concept_id:'',type_concept_id:32865});
+  return rows;
+}
+function omopCsv(){ const cell=v=>{ v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }; return [OMOP_COLS.join(',')].concat(omopRows().map(r=>OMOP_COLS.map(c=>cell(r[c])).join(','))).join('\n'); }
+function downloadOmop(){ const st=document.getElementById('omopStatus'); try{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['\ufeff'+omopCsv()],{type:'text/csv'})); a.download='head-to-toe-omop-rows.csv'; document.body.appendChild(a); a.click(); a.remove(); st.textContent='Saved as head-to-toe-omop-rows.csv.'; }catch(e){ st.textContent='The download was blocked here; use Copy.'; } }
+function rOmop(){
+  loadOmop();
+  const rel=B.mapping||{};
+  let h='<h3 id="omop-h">OMOP rows</h3>';
+  if(!rel.athena_release || OMOP.failed) return h+'<p class="small muted">This build has no OMOP mapping file, so there is nothing to export in this form.</p>';
+  if(OMOP.loading) return h+'<p class="small muted">Loading the mapping.</p>';
+  const rows=omopRows(), f=rows.filter(r=>r.record==='finding');
+  h+='<p class="small">Each answer as a row for the OMOP Common Data Model (CDM). The HPO term is the source code and the OMOP standard concept is beside it, from Athena release '+esc(rel.athena_release)+'. Target concept 0 means no standard concept was found. A broader concept keeps less detail than the HPO term, so keep the source code when loading. No and Not sure answers are listed for completeness; the CDM has no agreed place for a finding that is absent.</p>';
+  if(!f.length) return h+'<p class="muted">No findings answered yet.</p>';
+  h+='<div class="rowbtns"><button type="button" class="btn" data-omopcsv="1">Download OMOP rows (CSV)</button><button type="button" class="btn quiet" data-copy="omopOut">Copy</button><span class="status" id="omopStatus"></span></div>';
+  h+='<details><summary>Preview of the findings and their standard concepts</summary><div class="in"><table><thead><tr><th>Answer</th><th>HPO term</th><th>OMOP standard concept</th><th>Domain</th><th>How it was matched</th></tr></thead><tbody>'+f.map(r=>'<tr><td>'+r.answer+'</td><td>'+esc(r.source_name)+' <span class="code muted">'+r.source_code+'</span></td><td>'+(r.target_concept_id?esc(r.target_concept_name)+' <span class="code muted">'+r.target_concept_id+'</span>':'<span class="muted">None</span>')+'</td><td>'+esc(r.target_domain_id)+'</td><td>'+esc(r.mapping)+(r.mapped_through?' <span class="muted small">through '+esc(r.mapped_through)+'</span>':'')+'</td></tr>').join('')+'</tbody></table></div></details>';
+  h+='<pre class="out" id="omopOut" hidden>'+esc(omopCsv())+'</pre>';
+  return h;
+}
 function rReview(){
   const F=features();
   const by = list => { const g={}; list.forEach(x=>{ const h=x.h||x; const s=sysOf(h); (g[s]=g[s]||[]).push(x); }); return g; };
@@ -401,8 +455,9 @@ function rReview(){
   h += '<div class="grid2"><div class="card sum"><h3>Genetic testing</h3>'+(tl.length?'<ul class="list">'+tl.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<p class="muted">Not answered.</p>')+'</div><div class="card sum"><h3>Family history</h3>'+(fl.length?'<ul class="list">'+fl.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<p class="muted">Nothing reported.</p>')+'</div></div>';
   // export
   const rec = JSON.stringify(phenopacket(), null, 2);
-  h += '<h3>Export</h3><p class="small">The record is shaped like a GA4GH Phenopacket (schema version 2). Findings answered No are marked <span class="code">"excluded": true</span>. Answers that are not HPO terms, such as testing history and family history, travel beside it as survey context. Downloads are blocked in this viewer, so use Copy.</p>';
+  h += '<h3>Phenopacket</h3><p class="small">The record is shaped like a GA4GH Phenopacket (schema version 2). Findings answered No are marked <span class="code">"excluded": true</span>. Answers that are not HPO terms, such as testing history and family history, travel beside it as survey context. Downloads are blocked in this viewer, so use Copy.</p>';
   h += '<div class="rowbtns"><button type="button" class="btn" data-copy="rec">Copy the record</button><span class="status" id="copyStatus"></span></div><pre class="out" id="rec">'+esc(rec)+'</pre>';
+  h += rOmop();
   return h;
 }
 
@@ -445,10 +500,13 @@ document.addEventListener('click', e=>{
   if(d.none){ d.none.split(',').forEach(h=>{ const it=IDX[h]&&IDX[h].it; if(it && !shows(it.when)) return; if(!S.ans[h]||!S.ans[h].v) S.ans[h]={v:'no', where:d.where}; }); render(true); return; }
   if(d.fam){ const f=S.fam[d.fam]=S.fam[d.fam]||{}; f.v = f.v===d.v ? '' : d.v; render(true); return; }
   if(d.set){ const p=d.set; if(d.multi){ let arr=getPath(p); if(!Array.isArray(arr)){ arr=[]; setPath(p,arr); } toggleIn(arr,d.v); if(p==='routes'){ const nos='No symptoms; a family history or a known genetic variant'; if(arr.indexOf('alsfh')>=0 && arr.indexOf('als')<0 && !S.ctx.als_status) S.ctx.als_status=nos; if(arr.indexOf('alsfh')<0 && S.ctx.als_status===nos) delete S.ctx.als_status; } } else { setPath(p, getPath(p)===d.v ? '' : d.v); } render(true); return; }
+  if(d.mondo){ S.dxMondo={id:d.mondo,name:d.name,cid:d.cid}; if(!S.dxName.trim()) S.dxName=d.name; render(true); return; }
+  if(d.rmmondo){ S.dxMondo=null; render(true); return; }
+  if(d.omopcsv){ downloadOmop(); return; }
   if(d.addextra){ if(!S.extra.some(x=>x.h===d.addextra)) S.extra.push({h:d.addextra,p:d.plain,l:d.l}); render(true); setTimeout(runSearch,0); return; }
   if(d.rmextra){ S.extra=S.extra.filter(x=>x.h!==d.rmextra); render(true); return; }
-  if(d.copy){ const txt=document.getElementById(d.copy).textContent; const st=document.getElementById('copyStatus');
-    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{ st.textContent='Copied.'; }).catch(()=>{ const r=document.createRange(); r.selectNodeContents(document.getElementById(d.copy)); const s=getSelection(); s.removeAllRanges(); s.addRange(r); st.textContent='Copy was blocked here; the record is selected, so press Ctrl+C or Command+C.'; }); return; }
+  if(d.copy){ const txt=document.getElementById(d.copy).textContent; const st=document.getElementById(d.copy==='omopOut'?'omopStatus':'copyStatus');
+    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{ st.textContent='Copied.'; }).catch(()=>{ const el=document.getElementById(d.copy); el.hidden=false; const r=document.createRange(); r.selectNodeContents(el); const s=getSelection(); s.removeAllRanges(); s.addRange(r); st.textContent='Copy was blocked here; the record is selected, so press Ctrl+C or Command+C.'; }); return; }
 });
 document.addEventListener('change', e=>{
   const t=e.target, d=t.dataset;
@@ -462,7 +520,7 @@ document.addEventListener('change', e=>{
 });
 document.addEventListener('input', e=>{
   const t=e.target, d=t.dataset;
-  if(d.text){ setPath(d.text, t.value); return; }
+  if(d.text){ setPath(d.text, t.value); if(d.mondosearch) runMondo(); return; }
   if(d.search){ runSearch(); }
 });
 document.getElementById('prevBtn').onclick=()=>{ const L=stages(); const i=L.findIndex(s=>s.id===cur); if(i>0) go(L[i-1].id); };

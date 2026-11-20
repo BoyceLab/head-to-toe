@@ -3,3 +3,13 @@ _site/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Athena vocabulary downloads and extracts. These are large and are not ours to redistribute.
+athena/
+h2t_extract/
+CONCEPT*.csv
+VOCABULARY.csv
+RELATIONSHIP.csv
+DRUG_STRENGTH.csv
+DOMAIN.csv
+CONCEPT_CLASS.csv

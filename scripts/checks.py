@@ -234,7 +234,40 @@ def run(files, onto, config):
     check_seizure_crosswalk(r, files, bank_terms)
     check_review(r, files)
     check_proposed_changes(r, files)
+    check_mapping(r, files, onto, bank_terms)
     return r
+
+
+MATCHES = {"athena_map", "name_match", "broader", "reviewed", "none"}
+
+
+def check_mapping(r, files, onto, bank_terms):
+    """The HPO to OMOP mapping in content/mappings. Problems here are notes, not errors, because a
+    contributor who adds a survey term cannot be expected to hold an Athena vocabulary download."""
+    import content as _content
+    path = "content/mappings/hpo-omop.csv"
+    by_term, _, release = _content.load_mapping()
+    if not by_term:
+        r.warn(path, "no mapping file yet. Run scripts/build_omop_mapping.py to create it.")
+        return
+    for tid, rows in by_term.items():
+        for row in rows:
+            if row["match"] not in MATCHES:
+                r.error(path, f"{tid}: match must be one of {sorted(MATCHES)}.")
+            if row["match"] != "none" and not row["omop_concept_id"].isdigit():
+                r.error(path, f"{tid}: a row whose match is {row['match']} needs an OMOP concept id.")
+    missing = sorted(t for t in bank_terms if t and t not in by_term)
+    for t in missing:
+        r.warn(path, f"{t} ({onto.label(t)}) is in the survey and has no row. A maintainer needs to run scripts/build_omop_mapping.py.")
+    unmapped = sorted(t for t in bank_terms if t in by_term and by_term[t][0]["match"] == "none")
+    for t in unmapped:
+        r.warn(path, f"{t} ({onto.label(t)}) has no OMOP standard concept. Choose one in content/mappings/overrides.yaml, or leave it and the OMOP export will list it as unmapped.")
+    for o in (files.get("content/mappings/overrides.yaml") or {}).get("overrides") or []:
+        w = f"content/mappings/overrides.yaml {o.get('hpo_id')}"
+        if check_term(r, w, o.get("hpo_id"), onto) and not o.get("note"):
+            r.error(w, "needs a note that says who decided and on what basis.")
+    if release.get("survey_hpo_release") and release["survey_hpo_release"] != onto.version:
+        r.warn(path, f"built with HPO {release['survey_hpo_release']}; the survey now uses {onto.version}. Run scripts/build_omop_mapping.py again.")
 
 
 def check_proposed_changes(r, files):

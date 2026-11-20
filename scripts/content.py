@@ -1,4 +1,5 @@
 """Load the YAML content files and convert them to the compact form the pages use."""
+import csv
 import pathlib
 import yaml
 
@@ -82,3 +83,25 @@ def walk_items(items, parent=None):
     for it in items or []:
         yield it, parent
         yield from walk_items(it.get("more_specific"), it)
+
+
+MAPPINGS = CONTENT / "mappings"
+
+
+def load_mapping():
+    """The HPO to OMOP mapping, the Mondo term list, and the release they came from.
+
+    Returns (rows by HPO id, Mondo rows, release). Each is empty when the files are absent, so the
+    survey still builds for someone who has not run scripts/build_omop_mapping.py.
+    """
+    by_term, mondo, release = {}, [], {}
+    if (MAPPINGS / "hpo-omop.csv").exists():
+        with open(MAPPINGS / "hpo-omop.csv", encoding="utf-8", newline="") as fh:
+            for r in csv.DictReader(fh):
+                by_term.setdefault(r["hpo_id"], []).append(r)
+    if (MAPPINGS / "mondo-terms.csv").exists():
+        with open(MAPPINGS / "mondo-terms.csv", encoding="utf-8", newline="") as fh:
+            mondo = [[r["mondo_id"], r["name"], r["athena_concept_id"]] for r in csv.DictReader(fh)]
+    if (MAPPINGS / "release.yaml").exists():
+        release = read(MAPPINGS / "release.yaml") or {}
+    return by_term, mondo, release

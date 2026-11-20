@@ -1,6 +1,6 @@
 # Site and build settings. Change repo_url to the repository's address after you create it.
 site_title: Head-to-toe health survey, redesigned
-repo_url: https://github.com/BoyceLab/head-to-toe-survey
+repo_url: https://github.com/BoyceLab/head-to-toe
 
 # Notice shown at the top of every page. Edit it here; leave it empty to remove the banner.
 notice: >-

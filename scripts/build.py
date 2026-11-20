@@ -154,7 +154,8 @@ def main():
                 t = onto.terms[h]
                 current[h] = t["name"] + (" (obsolete)" if t["obs"] else "")
 
-    bank.update(labels=labels, hpo_version=onto.version, hpoa_version=hpoa_version,
+    mapping_release = content.load_mapping()[2]
+    bank.update(labels=labels, hpo_version=onto.version, hpoa_version=hpoa_version, mapping=mapping_release,
                 config={"repo_url": config.get("repo_url", ""), "site_title": config.get("site_title", "")})
 
     out = pathlib.Path(args.out)
@@ -207,6 +208,14 @@ def main():
     (out / "changes.html").write_text(embed("changes.html", "/*CHANGES*/", changes), encoding="utf-8")
     (out / "drill.json").write_text(json.dumps(drill, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     (out / "search.json").write_text(json.dumps(search_index(onto, labels, plain), separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
+    by_term, mondo, release = content.load_mapping()
+    omop = {"release": release, "terms": {
+        tid: [rows[0]["hpo_concept_id"], rows[0]["match"], rows[0]["via_hpo_id"],
+              [[r["omop_concept_id"], r["omop_concept_name"], r["omop_domain"], r["omop_vocabulary"], r["value_as_concept_id"]]
+               for r in rows if r["omop_concept_id"]]]
+        for tid, rows in by_term.items()}}
+    (out / "omop.json").write_text(json.dumps(omop, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
+    (out / "mondo.json").write_text(json.dumps(mondo, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     (out / ".nojekyll").write_text("")
     print(f"Built {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out} with HPO {onto.version}, annotations {hpoa_version}: "
           f"{len(plain)} survey terms, {len(drill)} terms reachable through more specific choices.")

@@ -1,0 +1,10 @@
+# Written by scripts/build_omop_mapping.py. Do not edit by hand.
+athena_release: v5.0 29-AUG-26
+generated: '2026-11-20'
+survey_hpo_release: '2026-09-01'
+vocabulary_versions:
+  HPO: HPO v2026-06-23
+  Mondo: Mondo v2026-07-06
+  SNOMED: 2026-02-01 SNOMED CT International Edition; 2026-03-01 SNOMED CT US Edition;
+    2026-04-08 SNOMED CT UK Edition
+  OMOP Extension: OMOP Extension 20260202

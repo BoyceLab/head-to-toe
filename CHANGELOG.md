@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 (November 2026)
+
+- Mapping from every selectable HPO term to an OMOP standard concept, built from Athena release v5.0 29-AUG-26, with a note on pull requests for survey terms that have no row or no concept.
+- OMOP rows export on the review page, beside the Phenopacket.
+- Mondo name lookup on the diagnosis question; the chosen term is recorded as the disease in the Phenopacket.
+
 ## 0.1.0 (November 2026)
 
 - First public version of the redesigned survey: specific features in plain language with more specific choices from HPO, timing choices that follow the person's age, and current HPO terms.

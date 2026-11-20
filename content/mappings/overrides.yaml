@@ -1,0 +1,10 @@
+# Choices a person has made that replace what scripts/build_omop_mapping.py would pick.
+# Each entry names a survey HPO term and the OMOP standard concept to use for it. Leave
+# omop_concept_id empty to record that the term has no acceptable concept. Add a note that
+# says who decided and on what basis. Run the mapping script again after editing this file.
+#
+# overrides:
+#   - hpo_id: "HP:0000000"
+#     omop_concept_id: 0
+#     note: Reviewed by (name), (date). Reason for the choice.
+overrides: []

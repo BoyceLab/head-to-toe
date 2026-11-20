@@ -17,7 +17,7 @@ class Ontology:
                 if line.startswith("data-version:"):
                     self.version = line.split("/")[-1].strip()
                 if line == "[Term]":
-                    cur = {"syn": [], "lay": [], "is_a": [], "obs": False, "rep": None, "name": ""}
+                    cur = {"syn": [], "exact": [], "lay": [], "is_a": [], "obs": False, "rep": None, "name": ""}
                     continue
                 if line.startswith("["):
                     cur = None
@@ -39,6 +39,8 @@ class Ontology:
                     m = re.match(r'synonym: "(.*)" ', line)
                     if m:
                         cur["syn"].append(m.group(1))
+                        if re.search(r'" EXACT\b', line):
+                            cur["exact"].append(m.group(1))
                         if "layperson" in line:
                             cur["lay"].append(m.group(1))
         self._anc = {}
