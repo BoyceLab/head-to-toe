@@ -1,4 +1,4 @@
-# Body-system section of the head-to-toe screen.
+# Body-system section of the head-to-toe survey.
 # Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
 # the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
 key: brain
@@ -8,15 +8,29 @@ examples: 'For example: seizures, developmental delay, learning problems, low or
 items:
   - hpo: HP:0001250
     plain: Seizures
-    description: Also called convulsions or fits, including staring spells. Answering yes opens the epilepsy questions.
-    opens_module: epilepsy
+    description: Also called convulsions or fits, including staring spells. A Yes opens follow-up questions about seizures.
+    opens_followup: seizures
   - hpo: HP:0001263
     plain: Slow to reach milestones like sitting, walking, or talking
     show_when: childhood
+    more_specific:
+      - hpo: HP:0001270
+        plain: Slow to sit, crawl, or walk
+      - hpo: HP:0000750
+        plain: Slow to start talking
   - hpo: HP:0002376
     plain: Lost skills that had been learned
   - hpo: HP:0001249
     plain: Intellectual disability
+    more_specific:
+      - hpo: HP:0001256
+        plain: Mild
+      - hpo: HP:0002342
+        plain: Moderate
+      - hpo: HP:0010864
+        plain: Severe
+      - hpo: HP:0002187
+        plain: Profound
   - hpo: HP:0001328
     plain: Specific learning disability
     description: 'For example: dyslexia.'
@@ -57,6 +71,8 @@ items:
         plain: Sudden jerks (myoclonus)
       - hpo: HP:0100033
         plain: Tics
+      - hpo: HP:0100660
+        plain: Movements that come and go and are hard to control (dyskinesia)
   - hpo: HP:0001300
     plain: Slow movement with stiffness or shaking (parkinsonism)
   - hpo: HP:0003401
@@ -64,6 +80,10 @@ items:
   - hpo: HP:0009830
     plain: Nerve damage in the arms or legs (peripheral neuropathy)
     from_a_report: true
+    more_specific:
+      - hpo: HP:0000763
+        plain: Loss of feeling from nerve damage (sensory neuropathy)
+        from_a_report: true
   - hpo: HP:0002315
     plain: Frequent headaches
     more_specific:
@@ -80,10 +100,74 @@ items:
   - hpo: HP:0012443
     plain: A brain MRI or CT scan that was not typical
     from_a_report: true
+    more_specific:
+      - hpo: HP:0032046
+        plain: Focal cortical dysplasia
+        from_a_report: true
+      - hpo: HP:0002126
+        plain: Polymicrogyria
+        from_a_report: true
+      - hpo: HP:0001339
+        plain: Lissencephaly
+        from_a_report: true
+      - hpo: HP:0002282
+        plain: Gray matter heterotopia
+        from_a_report: true
+      - hpo: HP:0009717
+        plain: Cortical tubers
+        from_a_report: true
+      - hpo: HP:0033715
+        plain: Hippocampal sclerosis
+        from_a_report: true
+      - hpo: HP:0033725
+        plain: Thin corpus callosum
+        from_a_report: true
+      - hpo: HP:0012448
+        plain: Delayed myelination
+        from_a_report: true
+      - hpo: HP:0002059
+        plain: Shrinkage of the brain (cerebral atrophy)
+        from_a_report: true
+      - hpo: HP:0001272
+        plain: Shrinkage of the cerebellum
+        from_a_report: true
+      - hpo: HP:0006892
+        plain: Shrinkage of the frontal or temporal lobes
+        from_a_report: true
   - hpo: HP:0002143
     plain: A spinal cord difference seen on a scan
     from_a_report: true
   - hpo: HP:0002353
     plain: An EEG that was not typical
     description: A test of the brain's electrical activity.
+    from_a_report: true
+    more_specific:
+      - hpo: HP:0002521
+        plain: A very disorganized EEG pattern called hypsarrhythmia
+        from_a_report: true
+      - hpo: HP:0010851
+        plain: An EEG pattern called burst suppression
+        from_a_report: true
+      - hpo: HP:0011185
+        plain: Seizure-type activity in one area
+        from_a_report: true
+      - hpo: HP:0011198
+        plain: Seizure-type activity across the whole brain
+        from_a_report: true
+      - hpo: HP:0031491
+        plain: Near-constant seizure activity during sleep (ESES or CSWS)
+        from_a_report: true
+  - hpo: HP:0001347
+    plain: Brisk reflexes
+    description: Found by a doctor during an exam.
+    from_a_report: true
+  - hpo: HP:0003487
+    plain: Toes that fan upward when the sole is stroked (Babinski sign)
+    description: Found by a doctor during an exam.
+    from_a_report: true
+  - hpo: HP:0011972
+    plain: Low sugar in the spinal fluid
+    from_a_report: true
+  - hpo: HP:0002490
+    plain: High lactate in the spinal fluid
     from_a_report: true

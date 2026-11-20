@@ -27,8 +27,8 @@ def _item(it):
         o["when"] = it["show_when"]
     if it.get("from_a_report"):
         o["lab"] = True
-    if it.get("opens_module"):
-        o["route"] = it["opens_module"]
+    if it.get("opens_followup"):
+        o["route"] = it["opens_followup"]
     if it.get("asks_frequency"):
         o["freq"] = True
     if it.get("more_specific"):
@@ -60,41 +60,19 @@ def _step(s):
     return o
 
 
-def _example(e):
-    ans = {}
-    for h, a in (e.get("answers") or {}).items():
-        x = {"v": a.get("answer")}
-        if a.get("how_often"):
-            x["freq"] = a["how_often"]
-        if a.get("onset"):
-            x["onset"] = a["onset"]
-        if a.get("source"):
-            x["src"] = a["source"]
-        ans[h] = x
-    return {
-        "key": e["key"], "title": e["title"], "resp": e.get("respondent", ""), "age": e.get("age_band", ""),
-        "sex": e.get("sex_at_birth", ""), "routes": e.get("reasons", []), "dxNamed": e.get("diagnosis_named", ""),
-        "dxName": e.get("diagnosis_name", ""), "t": e.get("genetic_testing", {}), "screen": e.get("screen", {}),
-        "ans": ans, "ctx": e.get("questions", {}), "ctxd": e.get("question_details", {}), "fam": e.get("family", {}), "consang": e.get("consanguinity", ""),
-    }
-
-
 def bank(files):
     systems = [f for p, f in files.items() if p.startswith("content/survey/systems/")]
-    mods = {f["module"]: f for p, f in files.items() if p.startswith("content/survey/modules/")}
+    sz = files["content/survey/followups/seizures.yaml"]
     fam = files["content/survey/family.yaml"]
     onset = files["content/survey/onset.yaml"]
-    examples = [f for p, f in files.items() if p.startswith("content/examples/")]
     return {
         "systems": [{"k": s["key"], "t": s["title"], "stem": s["question"], "ex": s["examples"],
                      "items": [_item(i) for i in s["items"]]} for s in systems],
-        "epilepsy": [_step(s) for s in mods["epilepsy"]["steps"]],
-        "als": [_step(s) for s in mods["als"]["steps"]],
-        "onset": [[o["plain"], o["hpo"]] for o in onset["onset_bands"]],
+        "seizures": [_step(s) for s in sz["steps"]],
+        "onset": {"options": [[o["key"], o["plain"], o["hpo"]] for o in onset["options"]], "by": onset["by_age_band"]},
         "family": [[c["key"], c["plain"]] for c in fam["conditions"]],
         "relatives": fam["relatives"],
-        "seizure_frequency": mods["epilepsy"].get("frequency_options", []),
-        "examples": {e["key"]: _example(e) for e in examples},
+        "seizure_frequency": sz.get("frequency_options", []),
         "notes": files["content/notes/design-notes.yaml"],
     }
 

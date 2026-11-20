@@ -1,20 +1,42 @@
-# Age bands offered for every Yes answer, each mapped to an HPO onset term.
-onset_bands:
-  - plain: Before birth
-    hpo: HP:0030674
-  - plain: At birth
-    hpo: HP:0003577
-  - plain: In the first month
-    hpo: HP:0003623
-  - plain: 1 to 12 months
-    hpo: HP:0003593
-  - plain: 1 to 5 years
-    hpo: HP:0011463
-  - plain: 6 to 15 years
-    hpo: HP:0003621
-  - plain: 16 to 39 years
-    hpo: HP:0011462
-  - plain: 40 to 60 years
-    hpo: HP:0003596
-  - plain: Over 60 years
-    hpo: HP:0003584
+# Choices for "When did it start?". The choices offered depend on the person's current age band:
+# months for babies and toddlers, years for children, and broad life stages for adults.
+# Every choice maps to an HPO onset term.
+options:
+  - {key: prenatal, plain: Before birth, hpo: HP:0030674}
+  - {key: birth, plain: At birth, hpo: HP:0003577}
+  - {key: birth-or-before, plain: At birth or before, hpo: HP:0003577}
+  - {key: m0, plain: In the first month, hpo: HP:0003623}
+  - {key: m1-2, plain: 1 to 2 months, hpo: HP:0003593}
+  - {key: m3-5, plain: 3 to 5 months, hpo: HP:0003593}
+  - {key: m6-8, plain: 6 to 8 months, hpo: HP:0003593}
+  - {key: m9-11, plain: 9 to 11 months, hpo: HP:0003593}
+  - {key: m1-5, plain: 1 to 5 months, hpo: HP:0003593}
+  - {key: m6-11, plain: 6 to 11 months, hpo: HP:0003593}
+  - {key: m1-11, plain: 1 to 11 months, hpo: HP:0003593}
+  - {key: under1, plain: Under 1 year, hpo: HP:0003593}
+  - {key: m12-17, plain: 12 to 17 months, hpo: HP:0011463}
+  - {key: m18-23, plain: 18 to 23 months, hpo: HP:0011463}
+  - {key: y2, plain: 2 years, hpo: HP:0011463}
+  - {key: y3, plain: 3 years, hpo: HP:0011463}
+  - {key: y4, plain: 4 years, hpo: HP:0011463}
+  - {key: y1-2, plain: 1 to 2 years, hpo: HP:0011463}
+  - {key: y3-5, plain: 3 to 5 years, hpo: HP:0011463}
+  - {key: y1-5, plain: 1 to 5 years, hpo: HP:0011463}
+  - {key: y6-11, plain: 6 to 11 years, hpo: HP:0003621}
+  - {key: y12-15, plain: 12 to 15 years, hpo: HP:0003621}
+  - {key: y6-15, plain: 6 to 15 years, hpo: HP:0003621}
+  - {key: y16-17, plain: 16 to 17 years, hpo: HP:0011462}
+  - {key: y16-39, plain: 16 to 39 years, hpo: HP:0011462}
+  - {key: y40-59, plain: 40 to 59 years, hpo: HP:0003596}
+  - {key: y60, plain: 60 years or older, hpo: HP:0003584}
+
+# Age band keys: a0 under 1 year, a1 1 to 4, a2 5 to 11, a3 12 to 17, a4 18 to 39, a5 40 to 64, a6 65 or older.
+by_age_band:
+  a0: [prenatal, birth, m0, m1-2, m3-5, m6-8, m9-11]
+  a1: [prenatal, birth, m0, m1-5, m6-11, m12-17, m18-23, y2, y3, y4]
+  a2: [prenatal, birth, m0, m1-11, y1-2, y3-5, y6-11]
+  a3: [birth-or-before, under1, y1-5, y6-11, y12-15, y16-17]
+  a4: [birth-or-before, under1, y1-5, y6-15, y16-39]
+  a5: [birth-or-before, under1, y1-5, y6-15, y16-39, y40-59]
+  a6: [birth-or-before, under1, y1-5, y6-15, y16-39, y40-59, y60]
+  unknown: [birth-or-before, under1, y1-5, y6-15, y16-39, y40-59, y60]

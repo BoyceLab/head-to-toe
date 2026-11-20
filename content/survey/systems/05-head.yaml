@@ -1,4 +1,4 @@
-# Body-system section of the head-to-toe screen.
+# Body-system section of the head-to-toe survey.
 # Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
 # the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
 key: head
@@ -29,6 +29,39 @@ items:
         plain: Flat middle of the face
       - hpo: HP:0000324
         plain: One side of the face different from the other
+  - hpo: HP:0000290
+    plain: Forehead shape
+    more_specific:
+      - hpo: HP:0000337
+        plain: Broad forehead
+      - hpo: HP:0011220
+        plain: Forehead that bulges forward
+      - hpo: HP:0000348
+        plain: High forehead
+      - hpo: HP:0000340
+        plain: Forehead that slopes back
+      - hpo: HP:0000341
+        plain: Narrow forehead
+  - hpo: HP:0000288
+    plain: The groove between the nose and upper lip
+    description: Doctors call this groove the philtrum.
+    more_specific:
+      - hpo: HP:0000343
+        plain: Long
+      - hpo: HP:0000319
+        plain: Smooth or flat
+      - hpo: HP:0000322
+        plain: Short
+  - hpo: HP:0000293
+    plain: Full cheeks
+  - hpo: HP:0045075
+    plain: Thin or sparse eyebrows
+  - hpo: HP:0000490
+    plain: Deep-set eyes
+  - hpo: HP:0000520
+    plain: Eyes that bulge forward
+  - hpo: HP:0007874
+    plain: Almond-shaped eyes
   - hpo: HP:0000574
     plain: Thick or bushy eyebrows
   - hpo: HP:0000664
@@ -72,6 +105,12 @@ items:
         plain: Wide mouth
       - hpo: HP:0000160
         plain: Small or narrow mouth
+      - hpo: HP:0000179
+        plain: Full lower lip
+      - hpo: HP:0010804
+        plain: Upper lip shaped like a tent
+      - hpo: HP:0002714
+        plain: Corners of the mouth that turn down
   - hpo: HP:0000218
     plain: High, narrow roof of the mouth
   - hpo: HP:0000306

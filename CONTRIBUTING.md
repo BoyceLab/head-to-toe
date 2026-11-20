@@ -7,7 +7,7 @@ Suggestions are welcome from families, people living with epilepsy or ALS, clini
 **Without editing files.** Open a suggestion form under **Issues > New issue**:
 
 - **Suggest clearer wording** for a question, item, or help line
-- **Suggest a feature to add** to a body-system page or a module
+- **Suggest a feature to add** to a body-system page
 - **Report a term mapping problem** when an item maps to the wrong, too general, or obsolete HPO term
 - **Share an original survey for comparison**, such as the GenomeConnect seizure survey
 
@@ -17,7 +17,7 @@ A maintainer turns each suggestion into a pull request and links it back to the 
 
 ## Survey items
 
-Each item in a body-system file or module looks like this:
+Each item in a body-system file looks like this:
 
 ```yaml
 - hpo: HP:0000365
@@ -36,14 +36,18 @@ Each item in a body-system file or module looks like this:
 | `more_specific` | no | Choices offered after a Yes. Use more specific HPO terms beneath the item's own term. |
 | `show_when` | no | Limits who sees the item. One of `childhood` (all ages; adults see "as a child"), `school` (age 5 and older), `teen` (age 12 and older), `adult`, `female`, `male`, `femaleteen`. Sex-based rules show the item whenever sex is not known or is intersex. |
 | `from_a_report` | no | `true` for findings that come from a test or a doctor, such as an MRI or EEG result. |
-| `opens_module` | no | `epilepsy` or `als`. A Yes adds that module. |
-| `asks_frequency` | no | `true` for seizure types. A Yes also asks how often it happens now, from `frequency_options` in the epilepsy module. |
+| `opens_followup` | no | `seizures`. A Yes adds the seizure follow-up questions. |
+| `asks_frequency` | no | `true` for seizure types. A Yes also asks how often it happens now, from `frequency_options` in the seizure follow-up. |
 
-A term that appears in more than one file shares one answer in the survey, so a module can repeat a body-system item on purpose. Within one file, each term appears once.
+A term that appears in more than one file shares one answer in the survey. Within one file, each term appears once.
 
-## Module questions
+The longer list of more specific choices under each Yes is not written by hand. The build takes it from HPO: the child terms of each item that are used in at least one disease annotation, shown under HPO's layperson synonym where one exists. To give one of those terms better plain wording, add it under `more_specific`.
 
-Questions that are not phenotype findings, such as treatments or seizure counts, sit under `questions` in a module step:
+`content/survey/onset.yaml` sets the choices for when a feature started, and which choices each age band sees.
+
+## Follow-up questions
+
+Questions that are not phenotype findings, such as treatments or seizure counts, sit under `questions` in a step of `content/survey/followups/seizures.yaml`:
 
 ```yaml
 - key: sz_triggers
@@ -95,16 +99,12 @@ The checks enforce the rules listed under `style_rules` in `config.yaml`. Beyond
 
 The `change` values and what the Before and after page shows for each are listed under `change_types` in the same file. When an item is added that replaces or refines an original answer, update the crosswalk in the same pull request.
 
-The seizure survey works the same way through `seizure-crosswalk.yaml`, keyed by page and question. A redesign target there can be an HPO term, `q:` followed by an epilepsy module question key, or `page:` followed by `you`, `testing`, `family`, `more`, or `review`. The checks confirm that every original question has a row.
+The seizure survey works the same way through `seizure-crosswalk.yaml`, keyed by page and question. A redesign target there can be an HPO term, `q:` followed by a seizure follow-up question key, or `page:` followed by `you`, `testing`, `family`, `more`, or `review`. The checks confirm that every original question has a row.
 
 ## Review notes and questions
 
 `content/review/open-questions.yaml` holds the notes shown at the start of the annotation page and the open questions reviewers can comment on. A question about one original item goes on that item's crosswalk row as `question_for_reviewers`, and appears under the item in a shaded box. Give each open question an `id` that does not change once reviews begin, since the combining notebook groups comments by it.
 
-## Example people
-
-`content/examples/` holds invented people who open the survey in a realistic state. Never add real participant data, even with names removed.
-
 ## Review
 
-Each pull request needs passing checks and a review from a maintainer. For changes to clinical meaning, such as a new term mapping or a new module item, the review asks for a source or a short rationale in the pull request.
+Each pull request needs passing checks and a review from a maintainer. For changes to clinical meaning, such as a new term mapping or a new item, the review asks for a source or a short rationale in the pull request.

@@ -5,9 +5,8 @@ python scripts/build.py --check-only  validate only
 Run scripts/fetch_hpo.py first (make build does both).
 """
 import argparse
-import base64
+import re
 import json
-import math
 import os
 import pathlib
 import shutil
@@ -27,44 +26,45 @@ ROOT = content.ROOT
 SITE = ROOT / "site"
 
 
-def gene_funnels(dis_terms, dis_genes, names, item_terms):
-    """Per-term disease bitsets and gene counts for the ALS and epilepsy funnels.
+GROUPING = re.compile(r"^(Abnormal|Abnormality|Aplasia/Hypoplasia|Morphological|Functional)\b", re.I)
 
-    ALS: genes linked to a disease record annotated with Amyotrophic lateral sclerosis (HP:0007354)
-    or named as ALS; the records searched are every record linked to one of those genes.
-    Epilepsy: genes linked to a record annotated with Seizure (HP:0001250) or a term beneath it.
+
+def drill_index(onto, dis_terms, plain, max_children=30, max_depth=4):
+    """More specific choices for every survey term, taken from HPO.
+
+    For each term in the survey, list its child terms that are used in at least one disease annotation,
+    most used first, and repeat for those children. Each entry is [plain wording, HPO label, child ids];
+    plain wording is the survey's own wording, or HPO's first layperson synonym, or empty when HPO has none.
     """
-    def universe(pred):
-        ds = [d for d in dis_terms if pred(d) and dis_genes.get(d)]
-        return ds, set().union(*[dis_genes[d] for d in ds]) if ds else set()
-
-    _, als_genes = universe(lambda d: "HP:0007354" in dis_terms[d]
-                           or "amyotrophic lateral sclerosis" in names.get(d, "").lower())
-    als_corpus = sorted(d for d in dis_terms if dis_genes.get(d) and dis_genes[d] & als_genes)
-    epi_corpus, epi_genes = universe(lambda d: "HP:0001250" in dis_terms[d])
-    epi_corpus = sorted(epi_corpus)
-
-    out, kept = {}, {}
-    for key, corpus, genes in (("als", als_corpus, als_genes), ("epi", epi_corpus, epi_genes)):
-        genes = sorted(genes)
-        gi = {g: i for i, g in enumerate(genes)}
-        dg = [[gi[g] for g in sorted(dis_genes[d]) if g in gi] for d in corpus]
-        bits, k = {}, {}
-        for t in sorted(item_terms):
-            idx = [i for i, d in enumerate(corpus) if t in dis_terms[d]]
-            if not idx:
-                continue
-            b = bytearray((len(corpus) + 7) // 8)
-            for i in idx:
-                b[i >> 3] |= 1 << (i & 7)
-            bits[t] = base64.b64encode(bytes(b)).decode()
-            k[t] = len({g for i in idx for g in dg[i]})
-        out[key] = {"genes": genes, "dg": dg, "n": len(corpus), "bits": bits,
-                    "multi": [i for i, g in enumerate(dg) if len(g) > 3]}
-        kept[key] = k
-        kept[key + "_n"] = len(genes)
-        kept[key + "_corpus"] = len(corpus)
-    return out, kept
+    use = {}
+    for terms in dis_terms.values():
+        for t in terms:
+            use[t] = use.get(t, 0) + 1
+    out, frontier = {}, [(t, 0) for t in sorted(plain)]
+    while frontier:
+        tid, depth = frontier.pop()
+        if tid in out:
+            continue
+        t = onto.terms[tid]
+        kids = []
+        if depth < max_depth:
+            # Grouping terms such as "Abnormality of head size" are not findings a person can choose,
+            # so each is replaced by its own children.
+            stack, seen = list(onto._kids.get(tid, [])), set()
+            while stack:
+                k = stack.pop()
+                if k in seen or onto.terms[k]["obs"] or not use.get(k):
+                    continue
+                seen.add(k)
+                if GROUPING.match(onto.terms[k]["name"]) and k not in plain:
+                    stack.extend(onto._kids.get(k, []))
+                else:
+                    kids.append(k)
+            kids = sorted(kids, key=lambda k: (-use[k], onto.terms[k]["name"]))[:max_children]
+        lay = next((x for x in t["lay"] if x.lower() != t["name"].lower()), "")
+        out[tid] = [plain.get(tid, lay), t["name"], kids]
+        frontier.extend((k, depth + 1) for k in kids)
+    return out
 
 
 def search_index(onto, labels, plain):
@@ -121,20 +121,19 @@ def main():
             collect(it.get("c", []))
     for s in bank["systems"]:
         collect(s["items"])
-    for m in bank["epilepsy"] + bank["als"]:
+    for m in bank["seizures"]:
         collect(m.get("items", []))
 
     dis_terms, names, hpoa_version = hpo.load_annotations(hdir / "phenotype.hpoa", onto)
-    dis_genes = hpo.load_gene_links(hdir / "genes_to_disease.txt")
     extra = set()
-    for m in bank["epilepsy"] + bank["als"]:
+    for m in bank["seizures"]:
         for q in m.get("context", []):
             extra |= set((q.get("hpo_if") or {}).values())
-    funnel, kept = gene_funnels(dis_terms, dis_genes, names, set(plain) | extra)
+    drill = drill_index(onto, dis_terms, plain)
 
     cw = files["content/original/crosswalk.yaml"]
     orig = files["content/original/health-survey-2018.yaml"]
-    ids = set(plain) | extra | {o[1] for o in bank["onset"]} | {"HP:0020174", "HP:0003677", "HP:0003678"}
+    ids = set(plain) | extra | {o[2] for o in bank["onset"]["options"]} | {"HP:0020174"}
     for sec in cw["sections"]:
         for row in sec["rows"]:
             ids |= set(row.get("redesign") or [])
@@ -147,7 +146,7 @@ def main():
                 t = onto.terms[h]
                 current[h] = t["name"] + (" (obsolete)" if t["obs"] else "")
 
-    bank.update(labels=labels, kept=kept, hpo_version=onto.version, hpoa_version=hpoa_version,
+    bank.update(labels=labels, hpo_version=onto.version, hpoa_version=hpoa_version,
                 config={"repo_url": config.get("repo_url", ""), "site_title": config.get("site_title", "")})
 
     out = pathlib.Path(args.out)
@@ -182,11 +181,11 @@ def main():
             w.writerow(review_items.csv_row(it, titles, review["build"], {}, {}))
         for q in review["questions"]:
             w.writerow(review_items.question_row(q, review["build"], {}))
-    (out / "funnel.json").write_text(json.dumps(funnel, separators=(",", ":")), encoding="utf-8")
+    (out / "drill.json").write_text(json.dumps(drill, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     (out / "search.json").write_text(json.dumps(search_index(onto, labels, plain), separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     (out / ".nojekyll").write_text("")
     print(f"Built {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out} with HPO {onto.version}, annotations {hpoa_version}: "
-          f"{kept['als_n']} ALS genes, {kept['epi_n']} seizure-associated genes.")
+          f"{len(plain)} survey terms, {len(drill)} terms reachable through more specific choices.")
 
 
 if __name__ == "__main__":

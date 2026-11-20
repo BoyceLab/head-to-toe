@@ -1,10 +1,10 @@
-# Body-system section of the head-to-toe screen.
+# Body-system section of the head-to-toe survey.
 # Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
 # the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
 key: skin
 title: Skin, hair, and nails
 question: '{HasHad} skin differences that a doctor looked at, or birthmarks and patches that stand out?'
-examples: 'For example: light or dark patches, streaks or swirls of color, coffee-colored birthmarks, very stretchy or fragile skin, or sweating problems.'
+examples: 'For example: light or dark patches, streaks or swirls of color, coffee-colored birthmarks, very stretchy or fragile skin, unusual fat pads, or sweating problems. Small differences are welcome here.'
 items:
   - hpo: HP:0001010
     plain: Skin lighter than expected, overall or in areas

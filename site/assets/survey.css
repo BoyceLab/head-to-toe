@@ -143,3 +143,5 @@ td.code,th.code{white-space:nowrap}
 
 .toplinks{display:flex;gap:14px;flex-wrap:wrap;font-size:.92rem;margin-left:auto;align-items:baseline}
 .toplinks a{white-space:nowrap}
+
+.linkbtn{background:none;border:none;padding:2px 0;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:.92rem}

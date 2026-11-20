@@ -1,4 +1,4 @@
-# Body-system section of the head-to-toe screen.
+# Body-system section of the head-to-toe survey.
 # Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
 # the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
 key: behavior
@@ -35,6 +35,22 @@ items:
     plain: Loss of motivation or interest (apathy)
   - hpo: HP:0000734
     plain: Acting on impulse in ways that are out of character (disinhibition)
+  - hpo: HP:5200037
+    plain: Less empathy or concern for others than before
+  - hpo: HP:0030221
+    plain: New cravings for sweets
+  - hpo: HP:0002591
+    plain: Eating much more than before
+  - hpo: HP:0000710
+    plain: Putting objects in the mouth (hyperorality)
+  - hpo: HP:0033051
+    plain: Trouble planning, organizing, or switching between tasks
+  - hpo: HP:0002193
+    plain: Laughing or crying that is hard to stop and out of proportion to feelings
+    description: Doctors may call this pseudobulbar affect.
+  - hpo: HP:0002145
+    plain: A diagnosis of frontotemporal dementia (FTD)
+    from_a_report: true
   - hpo: HP:0000712
     plain: Rapid mood swings
   - hpo: HP:0000738

@@ -3,11 +3,11 @@ import re
 
 from content import walk_items
 
-ITEM_FIELDS = {"hpo", "plain", "description", "show_when", "from_a_report", "opens_module", "more_specific", "asks_frequency"}
+ITEM_FIELDS = {"hpo", "plain", "description", "show_when", "from_a_report", "opens_followup", "more_specific", "asks_frequency"}
 # Branches of HPO that describe how a finding behaves rather than the finding itself.
 NOT_FINDINGS = {"HP:0012823": "Clinical modifier", "HP:0000005": "Mode of inheritance", "HP:0040279": "Frequency"}
 SHOW_WHEN = {"childhood", "school", "teen", "adult", "female", "male", "femaleteen"}
-MODULES = {"epilepsy", "als"}
+FOLLOWUPS = {"seizures"}
 QUESTION_TYPES = {"single", "multi", "onset", "text"}
 PER_CHOICE_TYPES = {"single", "onset"}
 ANSWERS = {"yes", "no", "unsure"}
@@ -86,8 +86,8 @@ def check_items(r, where, items, onto):
         seen[it.get("hpo")] = parent.get("hpo") if parent else "the top level"
         if it.get("show_when") and it["show_when"] not in SHOW_WHEN:
             r.error(w, f"show_when must be one of {sorted(SHOW_WHEN)}.")
-        if it.get("opens_module") and it["opens_module"] not in MODULES:
-            r.error(w, f"opens_module must be one of {sorted(MODULES)}.")
+        if it.get("opens_followup") and it["opens_followup"] not in FOLLOWUPS:
+            r.error(w, f"opens_followup must be one of {sorted(FOLLOWUPS)}.")
         for flag in ("from_a_report", "asks_frequency"):
             if flag in it and not isinstance(it[flag], bool):
                 r.error(w, f"{flag} must be true or false.")
@@ -126,9 +126,9 @@ def run(files, onto, config):
             system_keys.add(f.get("key"))
             check_items(r, path, f.get("items"), onto)
             bank_terms |= {it.get("hpo") for it, _ in walk_items(f.get("items"))}
-        elif path.startswith("content/survey/modules/"):
-            if f.get("module") not in MODULES:
-                r.error(path, f"module must be one of {sorted(MODULES)}.")
+        elif path.startswith("content/survey/followups/"):
+            if f.get("followup") not in FOLLOWUPS:
+                r.error(path, f"followup must be one of {sorted(FOLLOWUPS)}.")
             qs = {q["key"]: q for s in f.get("steps", []) for q in s.get("questions", [])}
             qkeys = set(qs)
             for s in f.get("steps", []):
@@ -141,7 +141,7 @@ def run(files, onto, config):
                         continue
                     key, _, vals = cond.partition(":")
                     if key not in qkeys:
-                        r.error(w, f"show_when '{cond}' must start with a question key in this module, then a colon and an answer.")
+                        r.error(w, f"show_when '{cond}' must start with a question key in this file, then a colon and an answer.")
                         continue
                     opts = qs[key].get("options") or []
                     for v in vals.lstrip("!").split("|"):
@@ -165,10 +165,21 @@ def run(files, onto, config):
                             r.error(qw, f"hpo_by_answer names '{ans}', which is not one of the options.")
                         check_term(r, qw, hid, onto)
         elif path == "content/survey/onset.yaml":
-            for o in f.get("onset_bands", []):
+            keys = set()
+            for o in f.get("options", []):
                 check_term(r, path, o.get("hpo"), onto)
+                if not o.get("key") or not o.get("plain") or o.get("key") in keys:
+                    r.error(path, f"each onset option needs a plain label and its own key ({o.get('key')}).")
+                keys.add(o.get("key"))
+            for band, ks in (f.get("by_age_band") or {}).items():
+                for k in ks:
+                    if k not in keys:
+                        r.error(path, f"by_age_band {band} names '{k}', which is not an option key.")
+            for band in ("a0", "a1", "a2", "a3", "a4", "a5", "a6", "unknown"):
+                if band not in (f.get("by_age_band") or {}):
+                    r.error(path, f"by_age_band needs a list for {band}.")
 
-    onsets = {o["hpo"] for o in files["content/survey/onset.yaml"]["onset_bands"]}
+    onsets = {o["key"] for o in files["content/survey/onset.yaml"]["options"]}
     for path, f in files.items():
         if not path.startswith("content/examples/"):
             continue
@@ -264,7 +275,7 @@ def check_seizure_crosswalk(r, files, bank_terms):
     if not (orig and cw):
         return
     where = "content/original/seizure-crosswalk.yaml"
-    mod = files.get("content/survey/modules/epilepsy.yaml", {})
+    mod = files.get("content/survey/followups/seizures.yaml", {})
     mod_q = {q["key"] for s in mod.get("steps", []) for q in s.get("questions", [])}
     types = cw.get("change_types", {})
     pages = {p["key"]: {q["key"]: q for q in p.get("questions", [])} for p in orig.get("pages", [])}
@@ -292,7 +303,7 @@ def check_seizure_crosswalk(r, files, bank_terms):
             for t in row.get("redesign") or []:
                 if t.startswith("q:"):
                     if t[2:] not in mod_q:
-                        r.error(w, f"{t} is not a question key in the epilepsy module.")
+                        r.error(w, f"{t} is not a question key in the seizure follow-up.")
                 elif t.startswith("page:"):
                     if t[5:] not in PAGES:
                         r.error(w, f"{t} must be one of {sorted('page:' + p for p in PAGES)}.")

@@ -942,7 +942,7 @@ other_items:
   - id: wide.timing-grid
     label: Changed across the survey
     change: replaced
-    note: Each checked item asked age at first symptoms and age at diagnosis in single years. The redesign asks one age band, mapped to an HPO onset term, and who noticed or confirmed the feature.
+    note: Each checked item asked age at first symptoms and age at diagnosis in single years. The redesign asks once when the feature started, with choices that fit the person's age, each mapped to an HPO onset term, and whether it is present now.
     question_for_reviewers: Is the loss of single-year ages and of age at diagnosis acceptable for the uses you have in mind?
   - id: wide.other-box
     label: Changed across the survey

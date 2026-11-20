@@ -1,25 +1,25 @@
-# Family history page. Conditions appear in this order unless a module moves its own to the top.
+# Family history page. Conditions appear in this order.
 conditions:
+  - key: fh_id
+    plain: Developmental delay, intellectual disability, or autism
+  - key: fh_epi
+    plain: Epilepsy or seizures
+  - key: fh_mus
+    plain: A muscle disease
+  - key: fh_walk
+    plain: A walking or balance problem that runs in the family
   - key: fh_als
     plain: ALS or another motor neuron disease
-  - key: fh_ftd
-    plain: Frontotemporal dementia (FTD)
   - key: fh_dem
     plain: Another dementia, such as Alzheimer disease
+  - key: fh_ftd
+    plain: Frontotemporal dementia (FTD)
   - key: fh_pd
     plain: Parkinson disease or parkinsonism
   - key: fh_psy
     plain: Schizophrenia, bipolar disorder, or another serious mental illness
-  - key: fh_epi
-    plain: Epilepsy or seizures
-  - key: fh_id
-    plain: Developmental delay, intellectual disability, or autism
-  - key: fh_walk
-    plain: A walking or balance problem that runs in the family
   - key: fh_bone
     plain: Paget disease of bone
-  - key: fh_mus
-    plain: A muscle disease
   - key: fh_ca
     plain: Cancer at a young age, or the same cancer in several relatives
   - key: fh_death

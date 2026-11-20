@@ -1,21 +1,22 @@
 # Head-to-toe health survey, redesigned
 
-A working redesign of the ClinGen GenomeConnect Health Survey, with epilepsy and amyotrophic lateral sclerosis (ALS) as test cases, built so that anyone can propose changes through pull requests or suggestion forms.
+A proposed replacement for the ClinGen GenomeConnect Health Survey, for children and adults, built so that anyone can propose changes through pull requests or suggestion forms.
 
-- **The survey:** `index.html` on the published site. It opens with an invented example loaded; the About page offers a blank start.
+The original survey stops at general answers, which are of limited help in rare and poorly understood conditions. This one asks for specific features in plain language, such as a broad forehead or inverted nipples, and stores them as specific Human Phenotype Ontology (HPO) terms.
+
+- **The survey:** `index.html` on the published site.
 - **Before and after:** `compare.html` sets each part of the 2018 Health Survey, and each question of the GenomeConnect Seizure Survey, beside its redesign, with a label on every row saying what changed.
 - **Review the original surveys:** `annotate.html` lets a reviewer mark every original item as *Keep all of it*, *Keep some of it*, *Reject it*, or *Not sure*, add comments, answer open questions, and download the review as CSV or JSON.
 
-Every feature is offered in plain language and maps to a term in the Human Phenotype Ontology (HPO). Every feature can be answered Yes, No, or Not sure, and the review page builds a record shaped like a GA4GH (Global Alliance for Genomics and Health) Phenopacket, with findings answered No recorded as excluded.
+Every feature can be answered Yes, No, or Not sure. A Yes opens more specific choices, when it started in choices that fit the person's age, and whether it is present now. The review page builds a record shaped like a GA4GH (Global Alliance for Genomics and Health) Phenopacket, with findings answered No recorded as excluded.
 
 ## How the repository is organized
 
 | Path | What it holds |
 |---|---|
 | `content/survey/systems/` | One file per body-system page of the head-to-toe screen, in page order |
-| `content/survey/modules/` | The epilepsy and ALS modules |
-| `content/survey/family.yaml`, `onset.yaml` | Family history conditions and the age bands offered for onset |
-| `content/examples/` | Invented example people that open the survey in a realistic state |
+| `content/survey/followups/` | Follow-up questions shown when Seizures is answered Yes |
+| `content/survey/family.yaml`, `onset.yaml` | Family history conditions, and the timing choices offered to each age band |
 | `content/review/` | The decision choices and reviewer roles for the annotation page, and its notes and open questions |
 | `notebooks/combine_reviews.ipynb` | The Colab notebook that combines reviewers' files, with invented sample files in `notebooks/sample_reviews/` |
 | `content/notes/design-notes.yaml` | The text of the Design notes page: changes, corrections, open questions, sources |
@@ -75,12 +76,12 @@ make check   # download the pinned HPO release and run the checks
 make serve   # build into _site/ and serve it at http://localhost:8000
 ```
 
-The pages read `funnel.json` and `search.json` from beside them, so open them through a local server rather than by double-clicking the file.
+The pages read `drill.json` and `search.json` from beside them, so open them through a local server rather than by double-clicking the file.
 
 ## What the build computes
 
 - **Term labels** for every HPO identifier in the content, from the pinned release, so labels stay current when the release changes.
-- **Funnel counts** for the coordinator view. ALS genes are the genes linked to a disease record annotated with Amyotrophic lateral sclerosis (HP:0007354) or named as ALS; the records searched include every record linked to those genes. Seizure-associated genes are the genes linked to a record annotated with Seizure (HP:0001250) or a term beneath it. Annotations marked NOT are ignored, and annotations propagate up the ontology. The counts describe public annotations, not diagnoses or probabilities.
+- **More specific choices** for every survey term: its HPO child terms that are used in at least one disease annotation, most used first, under HPO's layperson synonym where one exists.
 - **A search index** of HPO terms that have layperson synonyms, for the plain-language search near the end of the survey.
 
 ## Moving to a newer HPO release
@@ -89,7 +90,7 @@ Change `hpo_release` in `config.yaml` to the new tag (for example `v2026-12-01`)
 
 ## The seizure survey
 
-`content/original/seizure-survey-v1.3.yaml` transcribes the GenomeConnect Seizure Survey, version 1.3, and `seizure-crosswalk.yaml` maps each of its questions to the epilepsy module. The Before and after page shows the comparison when both files are present, and the build works without them.
+`content/original/seizure-survey-v1.3.yaml` transcribes the GenomeConnect Seizure Survey, version 1.3, and `seizure-crosswalk.yaml` maps each of its questions to the seizure follow-up. The Before and after page shows the comparison when both files are present, and the build works without them.
 
 Before making this repository public, confirm that GenomeConnect permits publishing the transcription. If it does not, delete those two files; the survey and the Health Survey comparison are unaffected.
 

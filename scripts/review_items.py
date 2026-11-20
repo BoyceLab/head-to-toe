@@ -38,7 +38,7 @@ def build(files, plain, labels, current):
     types = cw.get("change_types", {})
     sz = files.get("content/original/seizure-survey-v1.3.yaml")
     szc = files.get("content/original/seizure-crosswalk.yaml")
-    mods = [f for p, f in files.items() if p.startswith("content/survey/modules/")]
+    mods = [f for p, f in files.items() if p.startswith("content/survey/followups/")]
     qtext = {q["key"]: q["question"].replace("{you}", "you").replace("{your}", "your").replace("{were_was}", "were").replace("{have_has}", "have")
              for m in mods for s in m.get("steps", []) for q in s.get("questions", [])}
     pages = {"you": "The Who is answering page", "testing": "The Genetic testing page", "family": "The shared Family history page",

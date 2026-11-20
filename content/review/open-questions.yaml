@@ -18,16 +18,18 @@ notes:
 
 questions:
   - id: age-precision
-    question: Should the redesign keep single-year ages, as the originals ask, instead of age bands mapped to HPO onset terms?
-    context: Age bands store cleanly as HPO onset terms, and single years are more precise for natural history work.
+    question: Do the timing choices work, with months for babies and toddlers, years for children, and broad life stages for adults?
+    context: The originals ask every age from one list of months and single years. Broad stages are easier for adults and less precise for natural history work.
   - id: age-at-diagnosis
     question: Should age at diagnosis be asked beside the age when a feature started?
-    context: The Health Survey asked both for every item. The redesign asks only when a feature started, plus who noticed or confirmed it.
+    context: The Health Survey asked both for every item. The redesign asks only when a feature started, and whether it is present now.
   - id: prefer-not
     question: Should every item offer a prefer-not-to-answer choice, as the oral health page did?
     context: The redesign offers Not sure on every item and no prefer-not-to-answer choice.
-  - id: gene-names
-    question: Should participants ever see gene names from the funnel check, or should that stay a coordinator view?
+  - id: small-features
+    question: Small physical features, such as inverted nipples or a broad forehead, are reached through the body-area questions. Will families who answer No to an area miss them?
+  - id: plain-terms
+    question: Many HPO terms in the longer lists have no plain-language synonym. Who should write plain wording for them?
   - id: not-sure-follow-up
     question: How should a coordinator follow up on Not sure answers and on general answers that could be more specific?
   - id: seizure-comparability

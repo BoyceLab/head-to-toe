@@ -1,90 +1,45 @@
-# Text for the Design notes page and the Before and after page.
-# Each change has a short name and a sentence or two on what it does.
-
-intro: >-
-  The original survey is the GenomeConnect Health Survey published as supplementary material to the 2018
-  description of ClinGen's GenomeConnect registry. This redesign keeps its head-to-toe order and most of its
-  items, and rebuilds the logic around them. The epilepsy and ALS modules draw on the phenotype funnels,
-  which narrow a gene list by checking which disease records are annotated with a set of findings.
-
+# Text for the Design notes page.
+intro: 'This survey is a proposed replacement for the GenomeConnect Health Survey published with the 2018 description
+  of ClinGen''s GenomeConnect registry. It keeps the head-to-toe order and changes what limited the original for
+  rare and poorly understood conditions: HPO terms that have since changed, timing questions that were hard for
+  adults to answer, and answers too general to help narrow a search for a cause.'
 changes:
+  - name: Specific features in plain language
+    text: 'Each body area opens a list of features in everyday words, and a Yes opens more specific choices: for
+      example a broad forehead under forehead shape, or inverted nipples under bones, joints, and chest. A longer
+      list drawn from HPO sits behind a link, and each choice can open its own more specific choices. The record
+      keeps the most specific term chosen. The original stopped at general answers such as Skull or General face
+      shape.'
+  - name: Current HPO terms
+    text: Every term is checked against a pinned HPO release each time the content changes. Terms that were mismapped
+      or have become obsolete since 2018 are corrected, and listed below.
+  - name: Timing that fits children and adults
+    text: 'When a feature started is asked once, with choices that follow the person''s age: months for babies and
+      toddlers, years for children, and broad life stages for adults. A second question asks whether the feature
+      is present now or only in the past. The original asked two ages for every item from one list of months and
+      single years.'
   - name: Yes, No, or Not sure for every feature
-    text: >-
-      A No is exported as an excluded finding, which phenotype matching tools can use. In the original, a No
-      existed only for the body-system screen, and each detail page was a select-all-that-apply list, so an
-      unchecked item could mean absent, unknown, or skipped.
-  - name: Not sure keeps the branch open
-    text: >-
-      A Not sure on the head-to-toe screen opens the detail page for that area with a short note. In the
-      original, Unsure ended the branch the same way No did.
-  - name: Plain language first
-    text: >-
-      Every feature is written in everyday words, with the clinical name beneath it. HPO layperson synonyms
-      informed the wording, and the search on the Anything else page covers the layperson synonyms in the
-      pinned release.
-  - name: Specificity ladders
-    text: >-
-      A general finding opens more specific choices when answered Yes. In the funnels, specific terms narrowed
-      candidate genes far more than general ones, and the review page lists general answers that a
-      coordinator could follow up.
-  - name: One answer per term
-    text: >-
-      A term that appears in more than one place shares one answer, and the later page shows where it was
-      answered. Items in the epilepsy and ALS modules reuse the body-system answers.
-  - name: Onset and source once per feature
-    text: >-
-      Each Yes asks for an age band, mapped to HPO onset terms, and who noticed or confirmed it. This replaces
-      the repeated grid that asked age at first symptoms and age at diagnosis in single years for every item.
-      The bands are less precise than single years, and age at diagnosis is no longer asked; a deployment that
-      needs either could add it back as a field beside the onset band.
-  - name: Wording follows the respondent
-    text: >-
-      Questions read correctly for a person answering about themselves, a parent, a caregiver, or a family
-      member answering after a death. Milestone items for adults read "as a child".
-  - name: Age and sex filters
-    text: >-
-      Puberty items follow age band. Sex-specific cancers and genital items follow sex recorded at birth, with
-      every item shown when sex is not known or is intersex.
-  - name: Condition modules with triggers
-    text: >-
-      The epilepsy module opens when seizures or epilepsy is a reason for joining, or when Seizures is answered
-      Yes anywhere. The ALS module opens from the reason page, and a twitching-plus-weakness pattern on the
-      muscles page offers it.
-  - name: Targeted re-asks
-    text: >-
-      The modules ask about features that help distinguish gene families, such as inverted nipples and fat pads
-      in epilepsy, or Paget disease of bone, cataract, and sensory neuropathy in ALS, even when the body-system
-      answer was No. People may not connect these features to the main condition.
-  - name: Genetic testing branches
-    text: >-
-      The testing page asks result type, gene if known, sample tested, and reanalysis. The epilepsy module asks
-      whether tissue removed during epilepsy surgery was tested, since a variant present in only some cells can
-      be missed in blood.
-  - name: The seizure survey folded into the epilepsy module
-    text: >-
-      The GenomeConnect Seizure Survey (version 1.3) is reworked as the seizure history, frequency, and treatment
-      steps of the epilepsy module. Seizure types are stored as HPO terms, combined options such as atypical
-      absence with focal seizures are separated, syndromes use the 2022 ILAE names, and treatment questions ask
-      how seizures changed separately from side effects.
-  - name: Structured family history
-    text: >-
-      Conditions, relatives, and side of the family are asked directly, ordered by the active module. The
-      original had no family history section.
-  - name: De-identified by design
-    text: >-
-      Age bands replace dates of birth, no names are asked, and referral sources are generic categories rather
-      than named organizations.
-  - name: A standard export
-    text: >-
-      The review page builds a record shaped like a GA4GH Phenopacket, with onset, modifiers, and excluded
-      findings, plus survey context for answers that are not phenotype terms.
-
-# Errors or retirements in the original term mapping, checked against the pinned HPO release.
-# The same corrections appear row by row on the Before and after page, from crosswalk.yaml.
+    text: A No is stored as a finding that was looked for and is absent, which phenotype matching tools can use.
+      In the original, an unchecked item could mean absent, unknown, or skipped. A Not sure on a body area opens
+      its list instead of closing it.
+  - name: Wording follows who is answering
+    text: Questions read correctly for a person answering about themselves, a parent, a caregiver, or a family member
+      answering after a death. Items follow age band and sex recorded at birth, and gender identity is a separate,
+      optional question.
+  - name: Follow-up questions about seizures
+    text: 'A Yes to seizures opens follow-up questions that rework the GenomeConnect Seizure Survey: seizure types
+      stored as HPO terms, history, frequency, and treatments.'
+  - name: Genetic testing and family history
+    text: The testing page adds the result, the sample tested, and reanalysis. Family history asks conditions, relatives,
+      and side of the family.
+  - name: A standard record
+    text: The review page builds a record shaped like a GA4GH Phenopacket, with onset and excluded findings. Age
+      bands replace dates of birth, and no names are asked.
 fixes:
   - original: Hyperthyroidism
     printed_term: HP:0000853 (now Goiter)
-    problem: The rows for hyperthyroidism, hypothyroidism, and goiter are shifted by one, and hypothyroidism is never mapped
+    problem: The rows for hyperthyroidism, hypothyroidism, and goiter are shifted by one, and hypothyroidism is
+      never mapped
     redesign: Hyperthyroidism HP:0000836
   - original: Hypothyroidism
     printed_term: HP:0000836 (Hyperthyroidism)
@@ -140,7 +95,8 @@ fixes:
     redesign: Hypotonia HP:0001252, with trunk and generalized hypotonia beneath it
   - original: Growth hormone deficiency
     printed_term: HP:0000824, asked in both Growth and Hormones
-    problem: The same term asked twice with separate answers; the term at this identifier is now labeled Decreased response to growth hormone stimulation test
+    problem: The same term asked twice with separate answers; the term at this identifier is now labeled Decreased
+      response to growth hormone stimulation test
     redesign: Reduced circulating growth hormone concentration HP:0034323, asked once
   - original: Issue with muscle function
     printed_term: Description copied from the facial muscle row
@@ -166,28 +122,35 @@ fixes:
     printed_term: As printed, one option joins family history without symptoms and being proactive while healthy
     problem: Two different reasons in one answer
     redesign: Separate options
-
 open_questions:
   - Cognitive interviews with families and people living with ALS, to test the plain wording and the reading level.
-  - Whether participants ever see gene names. Here the funnel check is a coordinator view only.
+  - Small physical features are reached through the body-area questions. A person who answers No to an area never
+    sees its list, so the screen wording needs testing with families.
+  - Many HPO terms in the longer lists have no plain-language synonym and appear under their clinical names.
   - How a coordinator follows up on Not sure answers and on general answers that could be more specific.
-  - Whether to restore age at diagnosis, or single-year ages, beside the onset bands.
+  - Whether single-year ages, or age at diagnosis, are needed beside the age-based timing choices.
   - Translation, and whether HPO layperson synonyms exist in the target languages.
-  - Which partner organizations a program lists in the membership question, and consent language for recontact and reanalysis.
-  - "Versioning: storing the HPO release with every record, and a plan for terms that become obsolete, as several original terms did."
-  - Whether the redesigned seizure questions keep comparability with answers already collected through version 1.3 of the seizure survey, and how to convert those answers.
-
+  - Which partner organizations a program lists in the membership question, and consent language for recontact and
+    reanalysis.
+  - 'Versioning: storing the HPO release with every record, and a plan for terms that become obsolete, as several
+    original terms did.'
+  - Whether the redesigned seizure questions keep comparability with answers already collected through version 1.3
+    of the seizure survey, and how to convert those answers.
 sources:
-  - title: "Savatt and colleagues, ClinGen's GenomeConnect Registry Enables Patient-Centered Data Sharing (Human Mutation, 2018), with the Health Survey as supplementary information"
+  - title: Savatt and colleagues, ClinGen's GenomeConnect Registry Enables Patient-Centered Data Sharing (Human
+      Mutation, 2018), with the Health Survey as supplementary information
     url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6188701/
-  - title: "Vasilevsky and colleagues, Plain-language medical vocabulary for precision diagnosis (Nature Genetics, 2018), on HPO layperson synonyms"
+  - title: Vasilevsky and colleagues, Plain-language medical vocabulary for precision diagnosis (Nature Genetics,
+      2018), on HPO layperson synonyms
     url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6258202/
   - title: Comparison of the GenomeConnect and Phenotypr self-phenotyping surveys (medRxiv preprint, 2024)
     url: https://www.medrxiv.org/content/10.1101/2024.06.13.24308791
-  - title: "The Brain Gene Registry: a data snapshot (Journal of Neurodevelopmental Disorders, 2024), which reports data from the GenomeConnect seizure survey"
+  - title: 'The Brain Gene Registry: a data snapshot (Journal of Neurodevelopmental Disorders, 2024), which reports
+      data from the GenomeConnect seizure survey'
     url: https://jneurodevdisorders.biomedcentral.com/articles/10.1186/s11689-024-09530-3
-  - title: GenomeConnect Seizure Survey, version 1.3 (IRB 2014-0408, dated April 23, 2025), transcribed in this repository
-  - title: Human Phenotype Ontology releases (hp.obo, phenotype.hpoa, genes_to_disease.txt)
+  - title: GenomeConnect Seizure Survey, version 1.3 (IRB 2014-0408, dated April 23, 2025), transcribed in this
+      repository
+  - title: Human Phenotype Ontology releases (hp.obo and phenotype.hpoa)
     url: https://github.com/obophenotype/human-phenotype-ontology/releases
   - title: GA4GH Phenopacket schema documentation
     url: https://phenopacket-schema.readthedocs.io/

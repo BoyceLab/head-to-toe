@@ -1,7 +1,7 @@
 # Maps every question of the GenomeConnect Seizure Survey (version 1.3) to the redesign.
 # original: a question key from seizure-survey-v1.3.yaml, or "question key: option label" for one option
 # change: one of the keys under change_types
-# redesign: HPO terms in the survey, q:<question key> for a module question, or page:<name> for a whole page
+# redesign: HPO terms in the survey, q:<question key> for a seizure follow-up question, or page:<name> for a whole page
 # note: optional, one or two plain sentences
 change_types:
   same: Same question, plain wording

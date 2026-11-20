@@ -1,10 +1,10 @@
-# Body-system section of the head-to-toe screen.
+# Body-system section of the head-to-toe survey.
 # Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
 # the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
 key: hormones
-title: Hormones and glands
-question: '{HasHad} problems with hormones or hormone-producing glands?'
-examples: 'For example: diabetes, thyroid problems, puberty that came early or late, or growth hormone problems.'
+title: Hormones, glands, and metabolism
+question: '{HasHad} problems with hormones, hormone-producing glands, or metabolism?'
+examples: 'For example: diabetes, thyroid problems, puberty that came early or late, growth hormone problems, or a metabolic condition found on blood or urine tests.'
 items:
   - hpo: HP:0100651
     plain: Type 1 diabetes
@@ -54,3 +54,12 @@ items:
     show_when: teen
   - hpo: HP:0008221
     plain: Enlarged adrenal glands (adrenal hyperplasia)
+  - hpo: HP:0012347
+    plain: A blood test for glycosylation (transferrin) that was not typical
+    from_a_report: true
+  - hpo: HP:0003128
+    plain: High lactic acid in the blood
+    from_a_report: true
+  - hpo: HP:0001987
+    plain: High ammonia in the blood
+    from_a_report: true

@@ -2,7 +2,7 @@
 site_title: Head-to-toe health survey, redesigned
 repo_url: https://github.com/BoyceLab/head-to-toe-survey
 
-# Human Phenotype Ontology release used for labels, validation, funnel counts, and search.
+# Human Phenotype Ontology release used for labels, validation, more specific choices, and search.
 # To move to a newer release, change this tag, run the build, and review what the checks report.
 hpo_release: v2026-09-01
 

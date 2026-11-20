@@ -1,9 +1,9 @@
-# Body-system section of the head-to-toe screen.
+# Body-system section of the head-to-toe survey.
 # Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
 # the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
 key: bones
 title: Bones, joints, and chest
-question: '{HasHad} differences in the bones, joints, hands, feet, or chest?'
+question: '{HasHad} differences in the bones, joints, hands, feet, or chest, including small ones that look different from the rest of the family?'
 examples: 'For example: scoliosis, very flexible joints, bones that break easily, extra or joined fingers, a curved little finger, or inverted nipples.'
 items:
   - hpo: HP:0010674
@@ -42,6 +42,14 @@ items:
         plain: Long, thin fingers
       - hpo: HP:0001182
         plain: Fingers that taper at the ends
+      - hpo: HP:0011304
+        plain: Broad thumb
+      - hpo: HP:0010055
+        plain: Broad big toe
+      - hpo: HP:0001845
+        plain: Toes that overlap
+      - hpo: HP:0001852
+        plain: Wide gap between the first and second toes
   - hpo: HP:0001155
     plain: Hands
     more_specific:
@@ -49,6 +57,8 @@ items:
         plain: A single crease across the palm
       - hpo: HP:0001171
         plain: A split or cleft hand
+      - hpo: HP:0006191
+        plain: Deep creases in the palm
   - hpo: HP:0001760
     plain: Feet
     more_specific:
@@ -69,6 +79,10 @@ items:
     description: Nipples that point inward.
   - hpo: HP:0006610
     plain: Nipples set wide apart
+  - hpo: HP:0002558
+    plain: An extra nipple
+  - hpo: HP:0000960
+    plain: A dimple at the base of the spine
   - hpo: HP:0002652
     plain: A skeletal dysplasia diagnosis
     description: Differences in how bone and cartilage grow.

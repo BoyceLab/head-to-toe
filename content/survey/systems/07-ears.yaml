@@ -1,4 +1,4 @@
-# Body-system section of the head-to-toe screen.
+# Body-system section of the head-to-toe survey.
 # Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
 # the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
 key: ears
@@ -38,3 +38,5 @@ items:
         plain: Small or underdeveloped ear
       - hpo: HP:0004467
         plain: Small pit or tag in front of the ear
+      - hpo: HP:0000400
+        plain: Large ears

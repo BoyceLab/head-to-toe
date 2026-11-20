@@ -1,5 +1,5 @@
 name: Suggest a feature to add
-description: Propose a new item for a body-system page or for the epilepsy or ALS module.
+description: Propose a new item for a body-system page or the seizure follow-up.
 labels: [new-item]
 body:
   - type: input
@@ -20,8 +20,7 @@ body:
       label: Where should it go?
       options:
         - A body-system page
-        - Epilepsy module
-        - ALS module
+        - Seizure follow-up
         - Not sure
     validations:
       required: true

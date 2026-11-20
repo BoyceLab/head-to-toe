@@ -1,0 +1,491 @@
+# Follow-up questions shown when Seizures is answered Yes on the Brain and nerves page.
+# They rework the GenomeConnect Seizure Survey (version 1.3); content/original/seizure-crosswalk.yaml
+# records how each of its questions maps here.
+followup: seizures
+opens_when: Seizures (HP:0001250) or Seizures in the first month (HP:0032807) answered Yes
+frequency_options:
+  - Several a day
+  - About once a day
+  - Weekly, but not every day
+  - Monthly, but not every week
+  - At least once a year, but not every month
+  - Less than once a year
+  - Only in the past, not now
+  - Not sure
+steps:
+  - key: sz_types
+    title: Seizure types
+    intro: Answer for any seizure {you} {have_has} ever had, including seizures that have stopped. Plain descriptions come first; the term a neurologist might use is below each one. Each Yes asks when that type started and how often it happens now.
+    items:
+      - hpo: HP:0002069
+        plain: Stiffening and jerking of the whole body with loss of awareness
+        description: Sometimes called a grand mal or convulsive seizure.
+        asks_frequency: true
+        more_specific:
+          - hpo: HP:0007334
+            plain: Starts in one part of the body, then spreads to the whole body
+          - hpo: HP:0007193
+            plain: Mostly happens soon after waking
+      - hpo: HP:0002121
+        plain: Staring spells or brief pauses in awareness
+        asks_frequency: true
+        more_specific:
+          - hpo: HP:0011147
+            plain: Brief staring spells that start and stop suddenly
+          - hpo: HP:0007270
+            plain: Staring spells that start and end more slowly, sometimes with other movements
+          - hpo: HP:0011149
+            plain: Staring spells with eyelid fluttering
+      - hpo: HP:0002349
+        plain: Seizures in one part of the body with awareness kept
+        description: 'For example: one arm jerking, or a strange feeling, taste, or smell, while still aware.'
+        asks_frequency: true
+        more_specific:
+          - hpo: HP:0033348
+            plain: A warning feeling just before a seizure (aura)
+      - hpo: HP:0002384
+        plain: Seizures with loss of awareness and automatic movements
+        description: 'For example: staring with lip smacking, chewing, or fumbling hands.'
+        asks_frequency: true
+      - hpo: HP:0032794
+        plain: Sudden, brief muscle jerks
+        asks_frequency: true
+      - hpo: HP:0020221
+        plain: Rhythmic jerking of one part of the body or the whole body, without stiffening first
+        asks_frequency: true
+      - hpo: HP:0010819
+        plain: Sudden loss of muscle tone, drop attacks
+        asks_frequency: true
+      - hpo: HP:0032792
+        plain: Body stiffens without jerking
+        asks_frequency: true
+      - hpo: HP:0011097
+        plain: Clusters of sudden bending or stiffening movements (spasms)
+        description: Often starts in babies; may look like a startle or crunch, in a series. The age band records whether spasms began before or after age 2.
+        asks_frequency: true
+      - hpo: HP:0025613
+        plain: Seizures with sudden laughing or crying
+        asks_frequency: true
+        more_specific:
+          - hpo: HP:0010821
+            plain: Sudden laughing
+          - hpo: HP:0010820
+            plain: Sudden crying
+      - hpo: HP:0032807
+        plain: Seizures in the first month of life, diagnosed by a doctor
+      - hpo: HP:0002373
+        plain: Seizures with fever in early childhood
+        more_specific:
+          - hpo: HP:0011172
+            plain: Seizures with fever that lasted a long time, came in a cluster, or affected one side
+      - hpo: HP:0032895
+        plain: Seizures with fever before 3 months or after 6 years of age
+      - hpo: HP:0002133
+        plain: A seizure lasting more than 5 minutes, or seizures one after another without recovery
+        more_specific:
+          - hpo: HP:0032867
+            plain: Long seizures that did not stop with the first medicines given
+      - hpo: HP:0031951
+        plain: Seizures mostly during sleep
+      - hpo: HP:0020216
+        plain: Seizures set off by flashing lights or patterns
+  - key: sz_history
+    title: Seizure history
+    intro: These questions describe how seizures began and what is known about their cause. Some answers are stored as separate fields rather than HPO terms.
+    questions:
+      - key: sz_first
+        question: How old {were_was} {you} at the first seizure that a doctor diagnosed?
+        type: onset
+      - key: sz_first_length
+        question: How long did that first seizure last?
+        type: single
+        options:
+          - Less than 1 minute
+          - 1 to 5 minutes
+          - 5 to 29 minutes
+          - 30 minutes or more
+          - Not sure
+      - key: sz_before
+        question: Before that first diagnosed seizure, were there episodes that later seemed to be seizures? Choose any that fit.
+        type: multi
+        options:
+          - Automatic movements, such as lip smacking, chewing, fumbling, or wandering
+          - Jerking of the arms, legs, or body
+          - Episodes of unusual behavior
+          - Staring spells
+          - None of these
+          - Not sure
+      - key: sz_before_age
+        question: How old {were_was} {you} when those episodes started?
+        type: onset
+        show_when: sz_before:!None of these|Not sure
+      - key: sz_before_seen
+        question: Did a doctor or other health professional see {you} for those episodes before seizures were diagnosed?
+        type: single
+        options:
+          - 'Yes'
+          - 'No'
+          - Not sure
+        show_when: sz_before:!None of these|Not sure
+      - key: sz_dev_before
+        question: Before the first seizure, were there any known delays in development, learning, or thinking?
+        type: single
+        options:
+          - 'Yes'
+          - 'No'
+          - Not sure
+        help: This helps a reviewer tell apart developmental delay that came before seizures from changes that followed them.
+      - key: sz_cause
+        question: Has a cause for the seizures been found? Choose any that fit.
+        type: multi
+        options:
+          - A difference in brain structure
+          - An infection
+          - An immune or inflammatory condition
+          - A metabolic condition
+          - A genetic condition
+          - No cause found yet
+          - Not sure
+          - Another cause
+      - key: sz_syndrome
+        question: Has a doctor named an epilepsy syndrome? Choose any that fit. Names follow the 2022 ILAE (International League Against Epilepsy) classification, with former names in parentheses.
+        type: multi
+        options:
+          - Developmental and epileptic encephalopathy (DEE), including early infantile epileptic encephalopathy (EIEE)
+          - Early infantile developmental and epileptic encephalopathy (formerly Ohtahara syndrome or early myoclonic encephalopathy)
+          - Infantile epileptic spasms syndrome (including West syndrome)
+          - Dravet syndrome
+          - Lennox-Gastaut syndrome
+          - Epilepsy of infancy with migrating focal seizures
+          - Epilepsy with myoclonic-atonic seizures (formerly myoclonic-astatic epilepsy)
+          - Epileptic encephalopathy with spike-and-wave activation in sleep (formerly CSWS), including Landau-Kleffner syndrome
+          - Myoclonic epilepsy in infancy
+          - Genetic epilepsy with febrile seizures plus (GEFS+)
+          - Febrile seizures
+          - Self-limited neonatal or infantile epilepsy, familial or not (formerly benign neonatal or infantile epilepsy)
+          - Self-limited epilepsy with centrotemporal spikes (formerly benign epilepsy with centrotemporal spikes, BECTS)
+          - Self-limited epilepsy with autonomic seizures (formerly Panayiotopoulos syndrome)
+          - Childhood occipital visual epilepsy (formerly late-onset occipital epilepsy, Gastaut type)
+          - Childhood absence epilepsy
+          - Juvenile absence epilepsy
+          - Juvenile myoclonic epilepsy
+          - Epilepsy with generalized tonic-clonic seizures alone
+          - Epilepsy with myoclonic absences
+          - Sleep-related hypermotor epilepsy (formerly autosomal dominant nocturnal frontal lobe epilepsy)
+          - Epilepsy with auditory features (formerly autosomal dominant epilepsy with auditory features)
+          - Familial focal epilepsy with variable foci
+          - Myoclonic encephalopathy in non-progressive disorders
+          - Another syndrome
+          - No syndrome has been named
+          - Not sure
+  - key: sz_course
+    title: Seizure frequency and triggers
+    questions:
+      - key: sz_now
+        question: How often do seizures happen now, counting every type?
+        type: single
+        options:
+          - Daily
+          - Weekly
+          - Monthly
+          - Less than monthly
+          - Seizure-free for at least a year
+          - Not sure
+      - key: sz_past6
+        question: About how many seizures in the past 6 months?
+        type: single
+        options:
+          - None
+          - 1 to 2
+          - 3 to 5
+          - 6 to 12
+          - 13 to 24
+          - 25 to 100
+          - 101 to 500
+          - More than 500
+          - Not sure
+      - key: sz_lifetime
+        question: About how many seizures in total, over {your} whole life?
+        type: single
+        options:
+          - '1'
+          - 2 to 9
+          - 10 to 24
+          - 25 to 100
+          - 101 to 500
+          - 501 to 1,000
+          - 1,001 to 5,000
+          - More than 5,000
+          - Not sure
+      - key: sz_longest_free
+        question: Since the first seizure, what is the longest time without any seizures?
+        type: single
+        options:
+          - Less than a month
+          - 1 to 6 months
+          - 7 to 12 months
+          - More than 12 months
+          - Not sure
+      - key: sz_free_after
+        question: Did that seizure-free time start soon after any of these? Choose any that fit.
+        type: multi
+        options:
+          - A new medicine
+          - A new diet
+          - A vagus nerve stimulator
+          - Epilepsy surgery
+          - Another new treatment
+          - None of these
+          - Not sure
+        show_when: sz_longest_free:!Less than a month|Not sure
+      - key: sz_rescue
+        question: Has there been a long seizure, or a cluster of seizures, that needed rescue medicine to stop?
+        type: single
+        options:
+          - 'Yes'
+          - 'No'
+          - Not sure
+      - key: sz_triggers
+        question: Have any of these been noticed to make a seizure more likely? Choose any that fit.
+        type: multi
+        options:
+          - Alcohol or drug use
+          - Missed meals, too much caffeine, or low blood sugar
+          - Fever or illness
+          - Flashing lights or patterns
+          - Menstrual cycle or other hormone changes
+          - Overstimulation, such as noise, crowds, or excitement
+          - A particular time of day or night
+          - Lack of sleep
+          - Stress
+          - A particular medicine
+          - None noticed
+          - Not sure
+        hpo_by_answer:
+          Flashing lights or patterns: HP:0020216
+      - key: sz_hosp
+        question: How many hospital stays for seizures, not counting stays only for an EEG?
+        type: single
+        options:
+          - None
+          - '1'
+          - 2 to 5
+          - 6 to 10
+          - 11 to 24
+          - More than 24
+          - Not sure
+      - key: sz_hosp12
+        question: How many of those were in the past 12 months?
+        type: single
+        options:
+          - None
+          - '1'
+          - 2 to 5
+          - 6 to 10
+          - 11 to 24
+          - More than 24
+          - Not sure
+        show_when: sz_hosp:!None|Not sure
+      - key: sz_control
+        question: Which best describes seizure control now?
+        type: single
+        options:
+          - Seizure-free
+          - Controlled as well as possible, with some seizures
+          - Not controlled
+          - Not sure
+      - key: sz_control_age
+        question: How old {were_was} {you} when that control was reached?
+        type: onset
+        show_when: sz_control:Seizure-free|Controlled as well as possible, with some seizures
+  - key: sz_treatment
+    title: Seizure treatments
+    intro: Answer what you know. A coordinator can fill in medicine names and dates from records later.
+    questions:
+      - key: sz_meds
+        question: How many seizure medicines taken every day have been tried, counting ones that were stopped?
+        type: single
+        options:
+          - None
+          - One
+          - Two
+          - Three or more
+          - Not sure
+        hpo_by_answer:
+          Two: HP:0020174
+          Three or more: HP:0020174
+        hpo_note: Seizures that continue after two or more medicines are recorded with Refractory drug response (HP:0020174) only when seizures are still happening.
+      - key: sz_tried
+        question: Which treatments have been tried, whatever the result? Choose any that fit.
+        type: multi
+        options:
+          - Seizure medicines
+          - A medical diet
+          - Surgery or an implanted device
+          - None of these
+          - Not sure
+      - key: sz_med_list
+        question: Which seizure medicines? Choose any you know.
+        type: multi
+        show_when: sz_tried:Seizure medicines
+        options:
+          - Acetazolamide
+          - Adrenocorticotropic hormone (ACTH)
+          - Brivaracetam (Briviact)
+          - Cannabidiol (Epidiolex)
+          - Carbamazepine (Tegretol, Carbatrol, Epitol)
+          - Cenobamate (Xcopri)
+          - Clobazam (Onfi, Sympazan)
+          - Clonazepam (Klonopin, Rivotril)
+          - Diazepam (Valium, Diastat, Valtoco)
+          - Eslicarbazepine acetate (Aptiom)
+          - Ethosuximide (Zarontin)
+          - Everolimus (Afinitor)
+          - Felbamate (Felbatol)
+          - Fenfluramine (Fintepla)
+          - Gabapentin (Neurontin)
+          - Ganaxolone (Ztalmy)
+          - Immunoglobulins
+          - Lacosamide (Vimpat)
+          - Lamotrigine (Lamictal)
+          - Levetiracetam (Keppra, Roweepra)
+          - Methsuximide
+          - Midazolam (Nayzilam)
+          - Nitrazepam
+          - Oxcarbazepine (Trileptal, Oxtellar)
+          - Perampanel (Fycompa)
+          - Phenobarbital
+          - Phenytoin (Dilantin, Epanutin, Phenytek)
+          - Pregabalin (Lyrica)
+          - Primidone (Mysoline)
+          - Retigabine
+          - Rufinamide (Banzel, Inovelon)
+          - Steroids
+          - Stiripentol (Diacomit)
+          - Sulthiame
+          - Tiagabine (Gabitril)
+          - Topiramate (Topamax, Qudexy, Trokendi)
+          - Valproate, valproic acid, or divalproex (Depakote, Depakene, Epival)
+          - Vigabatrin (Sabril)
+          - Zonisamide (Zonegran)
+          - Another medicine
+        per_choice:
+          - key: status
+            question: Is X taken now?
+            type: single
+            options:
+              - Taking now
+              - Used in the past
+              - Not sure
+          - key: effect
+            question: How did seizures change on X?
+            type: single
+            options:
+              - Became seizure-free
+              - Much better
+              - Somewhat better
+              - No change
+              - Worse
+              - Not sure
+          - key: side
+            question: Did side effects lead to stopping or lowering X?
+            type: single
+            options:
+              - 'Yes'
+              - 'No'
+              - Not sure
+          - key: age
+            question: Age when X started
+            type: onset
+      - key: sz_med_other
+        question: Other medicines, with when they started and how they worked, if known
+        type: text
+        show_when: sz_med_list:Another medicine
+      - key: sz_diets
+        question: Which medical diets? Choose any that fit.
+        type: multi
+        show_when: sz_tried:A medical diet
+        options:
+          - Ketogenic diet
+          - Modified Atkins diet
+          - Low glycemic index treatment
+          - Gluten-free diet, with a celiac disease diagnosis
+          - Gluten-free diet, without a celiac disease diagnosis
+          - Casein-free diet
+          - Another diet
+          - Not sure
+        per_choice:
+          - key: status
+            question: Is the X followed now?
+            type: single
+            options:
+              - Following now
+              - Followed in the past
+              - Not sure
+          - key: length
+            question: How long was the X followed?
+            type: single
+            options:
+              - Less than a month
+              - 1 to 5 months
+              - 6 to 11 months
+              - 1 to 2 years
+              - 3 to 5 years
+              - More than 5 years
+              - Not sure
+          - key: effect
+            question: How did seizures change on the X?
+            type: single
+            options:
+              - Became seizure-free
+              - Much better
+              - Somewhat better
+              - No change
+              - Worse
+              - Not sure
+          - key: side
+            question: Did side effects lead to stopping the X?
+            type: single
+            options:
+              - 'Yes'
+              - 'No'
+              - Not sure
+      - key: sz_surgery
+        question: Which surgeries or implanted devices? Choose any that fit.
+        type: multi
+        show_when: sz_tried:Surgery or an implanted device
+        options:
+          - Vagus nerve stimulator (VNS)
+          - Responsive neurostimulation (RNS)
+          - Deep brain stimulation (DBS)
+          - Removal of a lobe or part of a lobe (lobectomy or resection)
+          - Removal of a lesion, such as a tumor or malformed blood vessels (lesionectomy)
+          - Laser ablation (LITT)
+          - Removal or disconnection of one side of the brain (hemispherectomy or hemispherotomy)
+          - Cutting the band that connects the two sides of the brain (corpus callosotomy)
+          - Multiple subpial transection
+          - Another surgery
+          - Not sure
+        per_choice:
+          - key: effect
+            question: How did seizures change after the X?
+            type: single
+            options:
+              - Became seizure-free
+              - Many fewer seizures
+              - Somewhat fewer seizures
+              - No change
+              - More seizures
+              - Not sure
+          - key: age
+            question: Age at the X
+            type: onset
+      - key: sz_tissue
+        question: Was the brain tissue removed during surgery tested for genetic changes?
+        type: single
+        options:
+          - 'Yes'
+          - 'No'
+          - Not sure
+        show_when: sz_surgery:Removal of a lobe or part of a lobe (lobectomy or resection)|Removal of a lesion, such as a tumor or malformed blood vessels (lesionectomy)|Removal or disconnection of one side of the brain (hemispherectomy or hemispherotomy)
+        help: Some genetic changes are present in only some cells. A blood test can miss a change that is present only in brain tissue.

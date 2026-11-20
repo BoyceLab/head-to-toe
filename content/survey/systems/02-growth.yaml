@@ -1,4 +1,4 @@
-# Body-system section of the head-to-toe screen.
+# Body-system section of the head-to-toe survey.
 # Edit plain wording freely. Every hpo value must be a current, non-obsolete HPO term;
 # the checks on each pull request confirm this. See CONTRIBUTING.md for every field.
 key: growth
@@ -20,6 +20,8 @@ items:
     description: Often noticed from birth or early childhood.
   - hpo: HP:0001528
     plain: One side of the body larger or longer than the other
+  - hpo: HP:0100555
+    plain: Uneven growth of one body part
   - hpo: HP:0001513
     plain: Obesity
     description: Long-term trouble with weight that a doctor has noted.
