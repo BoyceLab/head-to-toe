@@ -2,6 +2,10 @@
 site_title: Head-to-toe health survey, redesigned
 repo_url: https://github.com/BoyceLab/head-to-toe-survey
 
+# Notice shown at the top of every page. Edit it here; leave it empty to remove the banner.
+notice: >-
+  Prototype for discussion only. This survey has not been peer reviewed, has not been tested or validated with patients, families, or clinicians, and is not endorsed by ClinGen or GenomeConnect. It is not for clinical use or for collecting research data. Do not enter real personal or health information.
+
 # Human Phenotype Ontology release used for labels, validation, more specific choices, and search.
 # To move to a newer release, change this tag, run the build, and review what the checks report.
 hpo_release: v2026-09-01

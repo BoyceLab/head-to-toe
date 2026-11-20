@@ -2,7 +2,7 @@
 import pathlib, sys, urllib.request, yaml
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-FILES = ["hp.obo", "phenotype.hpoa"]
+FILES = ["hp.obo", "phenotype.hpoa", "genes_to_disease.txt"]  # the last is used only by coverage_example.py
 BASE = "https://github.com/obophenotype/human-phenotype-ontology/releases/download/{tag}/{name}"
 
 

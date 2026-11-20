@@ -5,6 +5,7 @@ python scripts/build.py --check-only  validate only
 Run scripts/fetch_hpo.py first (make build does both).
 """
 import argparse
+import html
 import re
 import json
 import os
@@ -79,8 +80,13 @@ def search_index(onto, labels, plain):
     return rows
 
 
+NOTICE = ""
+
+
 def embed(template, marker, data):
     text = (SITE / template).read_text(encoding="utf-8")
+    banner = f'<div class="notice" role="note"><div class="wrap">{html.escape(NOTICE)}</div></div>' if NOTICE else ""
+    text = text.replace("<!--NOTICE-->", banner)
     assert text.count(marker) == 1, f"{template} must contain {marker} once"
     return text.replace(marker, json.dumps(data, separators=(",", ":"), ensure_ascii=False).replace("</", "<\\/"))
 
@@ -93,6 +99,8 @@ def main():
     args = ap.parse_args()
 
     config = yaml.safe_load((ROOT / "config.yaml").read_text())
+    global NOTICE
+    NOTICE = (config.get("notice") or "").strip()
     hdir = ROOT / ".cache" / "hpo" / config["hpo_release"]
     if not (hdir / "hp.obo").exists():
         sys.exit(f"HPO files are missing from {hdir}. Run: python scripts/fetch_hpo.py")
@@ -181,6 +189,22 @@ def main():
             w.writerow(review_items.csv_row(it, titles, review["build"], {}, {}))
         for q in review["questions"]:
             w.writerow(review_items.question_row(q, review["build"], {}))
+    pc = files["content/notes/proposed-changes.yaml"]
+    sec_title = {s["key"]: s["heading"] for s in orig["detail"]}
+    printed = {(s["key"], r["answer"]): r.get("hpo_as_printed", "No term printed") for s in orig["detail"] for r in s["rows"]}
+    term_rows = [{"section": sec_title.get(sec["section"], sec["section"]), "original": row["original"],
+                  "printed": printed.get((sec["section"], row["original"]), ""),
+                  "proposed": "; ".join(f"{labels.get(h, h)} ({h})" for h in row.get("redesign") or []) or "Not asked",
+                  "note": row.get("note", "")}
+                 for sec in cw["sections"] for row in sec["rows"] if row["change"] in ("corrected", "retired", "refined", "merged")]
+    szc = compare["seizure_crosswalk"] or {}
+    sz_titles = {p["key"]: p["title"] for p in (compare["seizure"] or {}).get("pages", [])}
+    seizure_rows = [{"page": sz_titles.get(pg["page"], pg["page"]), "original": str(row["original"]).split(": ", 1)[-1],
+                     "label": szc.get("change_types", {}).get(row["change"], row["change"]), "note": row.get("note", "")}
+                    for pg in szc.get("pages", []) for row in pg["rows"] if row["change"] in ("corrected", "split", "merged")]
+    changes = {"intro": pc["intro"], "sections": pc["sections"], "sources": pc["sources"], "term_rows": term_rows,
+               "seizure_rows": seizure_rows, "hpo_version": onto.version}
+    (out / "changes.html").write_text(embed("changes.html", "/*CHANGES*/", changes), encoding="utf-8")
     (out / "drill.json").write_text(json.dumps(drill, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     (out / "search.json").write_text(json.dumps(search_index(onto, labels, plain), separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     (out / ".nojekyll").write_text("")

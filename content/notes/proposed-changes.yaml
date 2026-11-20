@@ -1,0 +1,212 @@
+# Summary of proposed changes, shown on the Summary of changes page (changes.html).
+# Each change names what the original did, what is proposed, why, and what the reason rests on.
+# basis is one of: source (a published source or standard), analysis (a reproducible analysis in this
+# repository), or judgment (a design judgment that reviewers are asked to test).
+# sources lists keys from the sources block at the end of this file.
+
+intro: >-
+  This page lists every proposed change to the GenomeConnect Health Survey and Seizure Survey, with the reason
+  for each and what that reason rests on. Some reasons rest on a published source or standard, some on an
+  analysis of Human Phenotype Ontology (HPO) data that can be rerun from the repository, and some on design
+  judgment that has not been tested with families. Each row says which. The proposals are a prototype for discussion and
+  have not been peer reviewed.
+
+sections:
+  - title: Level of detail
+    changes:
+      - change: Specific features in place of general answers
+        original: Detail pages offered general answers, such as Skull, General face shape, or Hand differences, each mapped to a broad HPO term.
+        proposed: Each body area lists specific features in plain language, a Yes opens more specific choices, and a longer list drawn from HPO sits behind a link. The record keeps the most specific term chosen.
+        rationale: >-
+          General terms do little to narrow a search for a cause in rare and poorly understood conditions. In the HPO
+          disease records for SLC35A2, 14 of 105 annotated features can be chosen exactly in the original survey and
+          76 in this one. Among 2,107 seizure-associated genes, hypotonia leaves 1,389; adding inverted nipples,
+          which the original cannot record, leaves 40.
+        basis: analysis
+        sources: [coverage, hpo]
+      - change: Small physical features are asked directly
+        original: Features such as inverted nipples, a broad forehead, or a skin fold at the inner corner of the eye had no answer.
+        proposed: They are listed in plain words on the body-area pages.
+        rationale: These features can be absent from medical records and are among the findings that separate one genetic condition from another in HPO disease annotations.
+        basis: analysis
+        sources: [coverage]
+      - change: Plain language first
+        original: Answers mixed everyday and clinical wording, and help text was sometimes copied from another item.
+        proposed: Every feature is worded in everyday language, with the clinical name available on request. A search covers HPO's layperson synonyms.
+        rationale: HPO added layperson synonyms so that patients and families can describe phenotypes themselves. In a comparison study, participants preferred the GenomeConnect multiple-choice format to free-text autocomplete, so the multiple-choice format is kept.
+        basis: source
+        sources: [vasilevsky2018, pcori2024]
+
+  - title: Answers and logic
+    changes:
+      - change: Yes, No, or Not sure for every feature
+        original: Detail pages were select-all-that-apply lists, so an unchecked item could mean absent, unknown, or skipped.
+        proposed: Every feature is answered Yes, No, or Not sure, and a No is stored as an excluded finding.
+        rationale: The Phenopacket schema records excluded findings, and phenotype-driven diagnostic tools can use a finding that was looked for and is absent.
+        basis: source
+        sources: [jacobsen2022, robinson2020]
+      - change: Not sure keeps a body area open
+        original: On the body-system screen, only Yes opened the detail page.
+        proposed: Yes and Not sure both open it.
+        rationale: A person who is unsure about an area may still recognize a specific feature when it is listed.
+        basis: judgment
+      - change: Wording follows who is answering
+        original: Every question was written to a person answering about themselves.
+        proposed: The survey asks who is answering, and questions read correctly for a person, a parent, a caregiver, or a family member answering after a death.
+        rationale: Parents and caregivers answer for many people with rare conditions.
+        basis: judgment
+      - change: Sex recorded at birth, and gender identity as a separate question
+        original: One question combined gender and sex.
+        proposed: Sex recorded at birth is asked on its own, and gender identity is a separate, optional question.
+        rationale: Sex-specific items and phenotype interpretation use sex recorded at birth. The Phenopacket schema also records sex and gender separately.
+        basis: source
+        sources: [jacobsen2022]
+      - change: One answer per term
+        original: Some terms were asked in more than one section with separate answers, for example growth hormone deficiency.
+        proposed: A term that appears in more than one place shares one answer.
+        rationale: Two answers to the same question can disagree, and the record then has no single value.
+        basis: judgment
+
+  - title: Timing
+    changes:
+      - change: Timing choices that follow the person's age
+        original: Every checked item asked age at first symptoms and age at diagnosis from one list of months and single years.
+        proposed: When a feature started is asked once. Babies and toddlers see months, children see years, and adults see broad life stages. Each choice maps to an HPO onset term.
+        rationale: An adult can rarely give the month a childhood condition began, and a parent of an infant can. HPO onset terms are bands, so the choices store without loss.
+        basis: judgment
+        sources: [hpo]
+      - change: Present now or only in the past
+        original: Not asked.
+        proposed: Each Yes asks whether the feature is present now or only in the past.
+        rationale: A childhood finding that resolved and a current one are read differently, and adults report many of the first kind.
+        basis: judgment
+      - change: Age bands for routing, not as the record of age
+        original: Not applicable; the registry held date of birth.
+        proposed: The survey asks an age band to choose which questions and timing choices to offer.
+        rationale: The bands assume date of birth or exact age is collected another way, such as at enrollment, and are not recommended as a study's only record of age. Where exact ages are shared, the HIPAA Safe Harbor method groups ages over 89.
+        basis: source
+        sources: [hhs]
+
+  - title: HPO terms
+    changes:
+      - change: Terms corrected
+        original: Some answers were mapped to the wrong term, for example hypothyroidism to hyperthyroidism, and nearsightedness and farsightedness to each other.
+        proposed: Each is mapped to the matching current term. The full list is in the table under this section.
+        rationale: A wrong mapping changes what a stored answer means.
+        basis: analysis
+        sources: [hpo, savatt2018]
+      - change: Obsolete and renamed terms updated
+        original: Several terms printed in 2018 are now obsolete or have new labels.
+        proposed: Terms are checked against a pinned HPO release every time the content changes, and labels are read from that release.
+        rationale: HPO is revised several times a year, so a survey needs a routine check to stay current.
+        basis: analysis
+        sources: [hpo]
+
+  - title: Genetic testing and family history
+    changes:
+      - change: Result, sample, and reanalysis
+        original: The survey asked whether testing was done, what kind, why, and whether the person had a copy.
+        proposed: It also asks what the result said, which sample was tested, and whether reanalysis has been offered.
+        rationale: A variant present in only some cells can be absent from blood. Somatic SLC35A2 variants have been found in brain tissue removed at epilepsy surgery and not in blood cells from the same people.
+        basis: source
+        sources: [winawer2018]
+      - change: Reasons for testing separated
+        original: One option joined family history without symptoms and being proactive while healthy.
+        proposed: They are separate options, and family planning is added.
+        rationale: They are different reasons and lead to different interpretation of a result.
+        basis: judgment
+      - change: Family history page
+        original: Family history appeared only as a reason for testing.
+        proposed: Conditions, relatives, and side of the family are asked directly, along with whether the parents are related by blood.
+        rationale: Inheritance pattern is part of interpreting a genetic result.
+        basis: judgment
+
+  - title: Seizure follow-up
+    changes:
+      - change: Seizure types stored as HPO terms, with combined options separated
+        original: The Seizure Survey printed no HPO terms. One option joined atypical absence with focal seizures that impair awareness, another joined spasms with clonic seizures, and typical absence was not listed.
+        proposed: Each seizure type is its own item with an HPO term, in plain language.
+        rationale: The ILAE classification treats these as different seizure types, with different onsets.
+        basis: source
+        sources: [fisher2017, seizure13]
+      - change: Current syndrome names
+        original: The syndrome list used older names, such as benign epilepsy with centrotemporal spikes and Ohtahara syndrome.
+        proposed: The list uses the 2022 ILAE names, with former names in parentheses.
+        rationale: The ILAE Task Force on Nosology and Definitions published agreed syndrome names and definitions in 2022.
+        basis: source
+        sources: [wirrell2022]
+      - change: Drug resistance recorded from the number of medicines tried
+        original: Medicines were listed one by one, with no summary.
+        proposed: A count question comes first, and seizures continuing after two or more medicines are stored with an HPO term.
+        rationale: The ILAE consensus definition of drug resistant epilepsy rests on failure of two tolerated, appropriately chosen medicine schedules. A survey count is a proxy for that definition, since it cannot judge whether each trial was adequate.
+        basis: source
+        sources: [kwan2010]
+      - change: Effect and side effects asked separately
+        original: The effectiveness scale for diets and medicines included too many side effects as one of its levels.
+        proposed: How seizures changed and whether side effects led to stopping are separate questions.
+        rationale: A treatment can work well and still be stopped for side effects, and one scale cannot record both.
+        basis: judgment
+      - change: Surgery wording corrected, and tissue testing added
+        original: The surgery question asked for age of diagnosis, and described the responsive neurostimulation device as a neurotransmitter.
+        proposed: It asks age at surgery, corrects the descriptions, adds laser ablation, and asks whether removed tissue was tested for genetic changes.
+        rationale: The original wording contains errors. Tissue testing is asked because some genetic causes are found only in brain tissue.
+        basis: source
+        sources: [seizure13, winawer2018]
+      - change: Frequency choices in order, and questions shown only when they apply
+        original: Frequency choices listed once daily before multiple per day, and follow-up questions appeared whatever the earlier answer.
+        proposed: Choices run from most to least often, and a follow-up appears only when the earlier answer makes it apply.
+        rationale: An ordered scale is easier to answer and to analyze.
+        basis: judgment
+
+  - title: The record
+    changes:
+      - change: A standard, shareable record
+        original: Answers were stored in the registry's own format.
+        proposed: The survey builds a record shaped like a GA4GH Phenopacket, with onset and excluded findings.
+        rationale: The Phenopacket schema is a published standard for exchanging phenotype data, and diagnostic tools accept it as input.
+        basis: source
+        sources: [jacobsen2022]
+      - change: Generic categories for referral and membership
+        original: The membership question listed named organizations.
+        proposed: It uses generic categories; a program using the survey would list its own partners.
+        rationale: A template that names organizations dates quickly and favors the groups listed.
+        basis: judgment
+
+sources:
+  savatt2018:
+    title: "Savatt JM, et al. ClinGen's GenomeConnect registry enables patient-centered data sharing. Human Mutation. 2018. The Health Survey is its supplementary information."
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6188701/
+  seizure13:
+    title: GenomeConnect Seizure Survey, version 1.3, dated April 23, 2025 (transcribed in this repository).
+  vasilevsky2018:
+    title: "Vasilevsky NA, et al. Plain-language medical vocabulary for precision diagnosis. Nature Genetics. 2018;50:474-476."
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6258202/
+  pcori2024:
+    title: "Comparison of the GenomeConnect and Phenotypr self-phenotyping surveys. medRxiv preprint. 2024. Not peer reviewed."
+    url: https://www.medrxiv.org/content/10.1101/2024.06.13.24308791
+  jacobsen2022:
+    title: "Jacobsen JOB, et al. The GA4GH Phenopacket schema defines a computable representation of clinical data. Nature Biotechnology. 2022;40:817-820."
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC9363006
+  robinson2020:
+    title: "Robinson PN, et al. Interpretable clinical genomics with a likelihood ratio paradigm. American Journal of Human Genetics. 2020;107:403-417."
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC7477017
+  fisher2017:
+    title: "Fisher RS, et al. Operational classification of seizure types by the International League Against Epilepsy. Epilepsia. 2017;58:522-530."
+    url: https://pubmed.ncbi.nlm.nih.gov/28276060/
+  wirrell2022:
+    title: "Wirrell EC, et al. Methodology for classification and definition of epilepsy syndromes with list of syndromes: report of the ILAE Task Force on Nosology and Definitions. Epilepsia. 2022;63:1333-1348."
+    url: https://pubmed.ncbi.nlm.nih.gov/35503715/
+  kwan2010:
+    title: "Kwan P, et al. Definition of drug resistant epilepsy: consensus proposal by the ad hoc Task Force of the ILAE Commission on Therapeutic Strategies. Epilepsia. 2010;51:1069-1077."
+    url: https://pubmed.ncbi.nlm.nih.gov/19889013/
+  winawer2018:
+    title: "Winawer MR, et al. Somatic SLC35A2 variants in the brain are associated with intractable neocortical epilepsy. Annals of Neurology. 2018;83:1133-1146."
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6105543
+  hhs:
+    title: "U.S. Department of Health and Human Services. Guidance regarding methods for de-identification of protected health information in accordance with the HIPAA Privacy Rule."
+    url: https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html
+  hpo:
+    title: Human Phenotype Ontology, the release pinned in config.yaml, with its disease annotations.
+    url: https://github.com/obophenotype/human-phenotype-ontology/releases
+  coverage:
+    title: "Analysis in this repository: scripts/coverage_example.py compares what the original survey and this survey can record for a set of HPO disease records. Counts are a snapshot of the pinned release."

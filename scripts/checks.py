@@ -233,7 +233,32 @@ def run(files, onto, config):
                     r.error("content/original/crosswalk.yaml", f"no row for '{row['answer']}' in section {sec['key']}.")
     check_seizure_crosswalk(r, files, bank_terms)
     check_review(r, files)
+    check_proposed_changes(r, files)
     return r
+
+
+def check_proposed_changes(r, files):
+    path = "content/notes/proposed-changes.yaml"
+    pc = files.get(path)
+    if not pc:
+        return
+    sources = pc.get("sources") or {}
+    for k, s in sources.items():
+        if not s.get("title"):
+            r.error(path, f"source {k} needs a title.")
+    for sec in pc.get("sections", []):
+        for c in sec.get("changes", []):
+            w = f"{path} {sec.get('title')} / {c.get('change')}"
+            for field in ("change", "original", "proposed", "rationale", "basis"):
+                if not c.get(field):
+                    r.error(w, f"needs {field}.")
+            if c.get("basis") not in ("source", "analysis", "judgment"):
+                r.error(w, "basis must be source, analysis, or judgment.")
+            if c.get("basis") in ("source", "analysis") and not c.get("sources"):
+                r.error(w, "a change that rests on a source or an analysis must list at least one key under sources.")
+            for k in c.get("sources") or []:
+                if k not in sources:
+                    r.error(w, f"source key '{k}' is not in the sources block.")
 
 
 PAGES = {"you", "testing", "family", "more", "review"}

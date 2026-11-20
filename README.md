@@ -1,10 +1,13 @@
 # Head-to-toe health survey, redesigned
 
+> **Prototype for discussion only.** This survey has not been peer reviewed, has not been tested or validated with patients, families, or clinicians, and is not endorsed by ClinGen or GenomeConnect. It is not for clinical use or for collecting research data. Do not enter real personal or health information.
+
 A proposed replacement for the ClinGen GenomeConnect Health Survey, for children and adults, built so that anyone can propose changes through pull requests or suggestion forms.
 
 The original survey stops at general answers, which are of limited help in rare and poorly understood conditions. This one asks for specific features in plain language, such as a broad forehead or inverted nipples, and stores them as specific Human Phenotype Ontology (HPO) terms.
 
 - **The survey:** `index.html` on the published site.
+- **Summary of changes:** `changes.html` lists every proposed change on one page, with its rationale and what the rationale rests on: a published source, an analysis of HPO data that `scripts/coverage_example.py` reproduces, or design judgment still to be tested.
 - **Before and after:** `compare.html` sets each part of the 2018 Health Survey, and each question of the GenomeConnect Seizure Survey, beside its redesign, with a label on every row saying what changed.
 - **Review the original surveys:** `annotate.html` lets a reviewer mark every original item as *Keep all of it*, *Keep some of it*, *Reject it*, or *Not sure*, add comments, answer open questions, and download the review as CSV or JSON.
 
@@ -21,6 +24,7 @@ Every feature can be answered Yes, No, or Not sure. A Yes opens more specific ch
 | `content/survey/family.yaml`, `onset.yaml` | Family history conditions, and the timing choices offered to each age band |
 | `content/review/` | The decision choices and reviewer roles for the annotation page, and its notes and open questions |
 | `notebooks/combine_reviews.ipynb` | The Colab notebook that combines reviewers' files, with invented sample files in `notebooks/sample_reviews/` |
+| `content/notes/proposed-changes.yaml` | The Summary of changes page: each change, its rationale, and its sources |
 | `content/notes/design-notes.yaml` | The text of the Design notes page: changes, corrections, open questions, sources |
 | `content/original/` | The 2018 Health Survey as transcribed from the published supplement, the Seizure Survey (version 1.3), and a crosswalk for each that maps every original answer or question to the redesign |
 | `site/` | Page templates, styles, and scripts |
